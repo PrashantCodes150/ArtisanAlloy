@@ -1,0 +1,33 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+  functions = "netlify/functions"
+
+[build.environment]
+  NODE_VERSION = "20"
+  NPM_VERSION = "10"
+
+# Redirects for SPA routing - all routes go to index.html
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# API proxy - uncomment when backend URL is ready
+# [[redirects]]
+#   from = "/api/*"
+#   to = "https://your-backend-url/api/:splat"
+#   status = 200
+#   force = true
+
+[context.production]
+  command = "npm run build"
+  environment = { VITE_API_URL = "https://your-backend-production-url/api/v1" }
+
+[context.deploy-preview]
+  command = "npm run build"
+  environment = { VITE_API_URL = "https://your-backend-staging-url/api/v1" }
+
+[context.branch-deploy]
+  command = "npm run build"
+  environment = { VITE_API_URL = "https://your-backend-staging-url/api/v1" }
