@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <rect width="200" height="200" fill="#f8f9fa"/>
+  <g transform="scale(1)">
+    
+                <!-- Bichiya - toe rings -->
+                <circle cx="80" cy="110" r="10" stroke="#FFD700" stroke-width="6" fill="none"/>
+                <circle cx="100" cy="110" r="10" stroke="#FFD700" stroke-width="6" fill="none"/>
+                <circle cx="120" cy="110" r="10" stroke="#FFD700" stroke-width="6" fill="none"/>
+                <circle cx="140" cy="110" r="10" stroke="#FFD700" stroke-width="6" fill="none"/>
+            
+  </g>
+  <text x="50%" y="180" text-anchor="middle" font-family="Arial" font-size="10" fill="#6c757d">Bichiya</text>
+  <text x="50%" y="192" text-anchor="middle" font-family="Arial" font-size="8" fill="#6c757d">Toe rings for married women</text>
+</svg>

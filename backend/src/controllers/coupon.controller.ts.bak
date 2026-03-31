@@ -1,0 +1,417 @@
+import { Request, Response, NextFunction } from 'express';
+import { Coupon } from '../models';
+import { AppError } from '../utils/AppError';
+import { asyncHandler } from '../middleware/errorHandler';
+import { logger } from '../utils/logger';
+import mongoose from 'mongoose';
+
+/**
+ * Create new coupon
+ * POST /api/v1/coupons
+ */
+export const createCoupon = asyncHandler(async (req: Request, res: Response) => {
+  const couponData = {
+    ...req.body,
+    createdBy: req.user!._id,
+    code: req.body.code?.toUpperCase(),
+  };
+
+  const coupon = await Coupon.create(couponData);
+
+  logger.info(`Coupon created: ${coupon.code} by ${req.user!.email}`);
+
+  res.status(201).json({
+    status: 'success',
+    message: 'Coupon created successfully',
+    data: { coupon }
+  });
+});
+
+/**
+ * Get all coupons
+ * GET /api/v1/coupons
+ */
+import { ICoupon } from '../models/Coupon.model';
+export const getAllCoupons = asyncHandler(async (req: Request, res: Response) => {
+  const page = parseInt(req.query.page as string) || 1;
+  const limit = parseInt(req.query.limit as string) || 20;
+  const skip = (page - 1) * limit;
+  
+  const { status, type, search } = req.query;
+
+  // Build filter
+  const filter: mongoose.FilterQuery<ICoupon> = {};
+  
+  if (status === 'active') {
+    filter.isActive = true;
+    filter.validFrom = { $lte: new Date() };
+    filter.validUntil = { $gte: new Date() };
+  } else if (status === 'expired') {
+    filter.validUntil = { $lt: new Date() };
+  } else if (status === 'inactive') {
+    filter.isActive = false;
+  }
+  
+  if (type) {
+    filter.type = type;
+  }
+  
+  if (search) {
+    filter.$or = [
+      { code: { $regex: search, $options: 'i' } },
+      { name: { $regex: search, $options: 'i' } },
+      { description: { $regex: search, $options: 'i' } }
+    ];
+  }
+
+  const coupons = await Coupon.find(filter)
+    .populate('createdBy', 'firstName lastName email')
+    .populate('applicableProducts', 'name')
+    .populate('applicableCategories', 'name')
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(limit);
+
+  const total = await Coupon.countDocuments(filter);
+
+  res.status(200).json({
+    status: 'success',
+    results: coupons.length,
+    total,
+    page,
+    totalPages: Math.ceil(total / limit),
+    data: { coupons }
+  });
+});
+
+/**
+ * Get coupon by ID
+ * GET /api/v1/coupons/:id
+ */
+export const getCoupon = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const coupon = await Coupon.findById(req.params.id)
+    .populate('createdBy', 'firstName lastName email')
+    .populate('applicableProducts', 'name sku price')
+    .populate('applicableCategories', 'name')
+    .populate('excludedProducts', 'name')
+    .populate('excludedCategories', 'name');
+
+  if (!coupon) {
+    return next(new AppError('Coupon not found', 404));
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: { coupon }
+  });
+});
+
+/**
+ * Update coupon
+ * PATCH /api/v1/coupons/:id
+ */
+export const updateCoupon = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const coupon = await Coupon.findById(req.params.id);
+
+  if (!coupon) {
+    return next(new AppError('Coupon not found', 404));
+  }
+
+  const updateData = {
+    ...req.body,
+    code: req.body.code ? req.body.code.toUpperCase() : undefined,
+  };
+
+  const updatedCoupon = await Coupon.findByIdAndUpdate(
+    req.params.id,
+    updateData,
+    { new: true, runValidators: true }
+  );
+
+  logger.info(`Coupon updated: ${updatedCoupon?.code} by ${req.user!.email}`);
+
+  res.status(200).json({
+    status: 'success',
+    message: 'Coupon updated successfully',
+    data: { coupon: updatedCoupon }
+  });
+});
+
+/**
+ * Delete coupon
+ * DELETE /api/v1/coupons/:id
+ */
+export const deleteCoupon = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const coupon = await Coupon.findById(req.params.id);
+
+  if (!coupon) {
+    return next(new AppError('Coupon not found', 404));
+  }
+
+  await Coupon.findByIdAndDelete(req.params.id);
+
+  logger.info(`Coupon deleted: ${coupon.code} by ${req.user!.email}`);
+
+  res.status(200).json({
+    status: 'success',
+    message: 'Coupon deleted successfully'
+  });
+});
+
+/**
+ * Validate coupon
+ * POST /api/v1/coupons/validate
+ */
+export const validateCoupon = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const { code, cartValue = 0, userId, userOrderCount = 0 } = req.body;
+
+  if (!code) {
+    return next(new AppError('Coupon code is required', 400));
+  }
+
+  const coupon = await Coupon.findValidCoupon(code);
+
+  if (!coupon) {
+    return next(new AppError('Invalid coupon code', 404));
+  }
+
+  // Check if user can use this coupon
+  const userCanUse = coupon.canUserUse(
+    userId ? new mongoose.Types.ObjectId(userId) : undefined,
+    userOrderCount
+  );
+
+  if (!userCanUse.canUse) {
+    return next(new AppError(userCanUse.reason || 'Cannot use this coupon', 400));
+  }
+
+  // Calculate discount amount
+  let discountAmount = 0;
+  let finalCartValue = cartValue;
+
+  switch (coupon.type) {
+    case 'percentage':
+      discountAmount = (cartValue * coupon.value) / 100;
+      if (coupon.maxDiscount && discountAmount > coupon.maxDiscount) {
+        discountAmount = coupon.maxDiscount;
+      }
+      finalCartValue = cartValue - discountAmount;
+      break;
+      
+    case 'fixed':
+      discountAmount = coupon.value;
+      finalCartValue = cartValue - discountAmount;
+      break;
+      
+    case 'free-shipping':
+      // Shipping cost would be calculated based on cart
+      discountAmount = 0; // Free shipping removes shipping cost
+      break;
+      
+    case 'buy-x-get-y':
+      // Handle BOGO logic - would need cart details
+      discountAmount = 0;
+      break;
+      
+    case 'gift-card':
+      discountAmount = Math.min(coupon.value, cartValue);
+      finalCartValue = cartValue - discountAmount;
+      break;
+  }
+
+  res.status(200).json({
+    status: 'success',
+    message: 'Coupon is valid',
+    data: {
+      coupon: {
+        id: coupon._id,
+        code: coupon.code,
+        type: coupon.type,
+        value: coupon.value,
+        name: coupon.name,
+        description: coupon.description,
+      },
+      discount: {
+        amount: discountAmount,
+        type: coupon.type,
+        percentage: coupon.type === 'percentage' ? coupon.value : undefined
+      },
+      cart: {
+        originalValue: cartValue,
+        finalValue: Math.max(0, finalCartValue),
+        savings: discountAmount
+      },
+      restrictions: {
+        minimumOrderAmount: coupon.minOrderAmount,
+        usageLimitPerUser: coupon.usageLimitPerUser,
+        remainingUses: coupon.remainingUses,
+        validUntil: coupon.validUntil
+      }
+    }
+  });
+});
+
+/**
+ * Apply coupon to order (used in checkout)
+ * POST /api/v1/coupons/apply
+ */
+export const applyCoupon = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const { code, orderId, cartValue = 0, userId } = req.body;
+
+  if (!code || !orderId || !userId) {
+    return next(new AppError('Coupon code, order ID, and user ID are required', 400));
+  }
+
+  const coupon = await Coupon.findValidCoupon(code);
+
+  if (!coupon) {
+    return next(new AppError('Invalid coupon code', 404));
+  }
+
+  // Check if user can use this coupon
+  const userCanUse = coupon.canUserUse(
+    new mongoose.Types.ObjectId(userId)
+  );
+
+  if (!userCanUse.canUse) {
+    return next(new AppError(userCanUse.reason || 'Cannot use this coupon', 400));
+  }
+
+  // Calculate discount amount
+  let discountAmount = 0;
+  switch (coupon.type) {
+    case 'percentage':
+      discountAmount = (cartValue * coupon.value) / 100;
+      if (coupon.maxDiscount && discountAmount > coupon.maxDiscount) {
+        discountAmount = coupon.maxDiscount;
+      }
+      break;
+    case 'fixed':
+      discountAmount = coupon.value;
+      break;
+    case 'gift-card':
+      discountAmount = Math.min(coupon.value, cartValue);
+      break;
+  }
+
+  // Record usage
+  coupon.incrementUsage(
+    new mongoose.Types.ObjectId(userId),
+    new mongoose.Types.ObjectId(orderId),
+    discountAmount
+  );
+  await coupon.save({ validateBeforeSave: false });
+
+  logger.info(`Coupon applied: ${code} by user ${userId}, discount: ₹${discountAmount}`);
+
+  res.status(200).json({
+    status: 'success',
+    message: 'Coupon applied successfully',
+    data: {
+      couponId: coupon._id,
+      code: coupon.code,
+      discountAmount,
+      type: coupon.type
+    }
+  });
+});
+
+/**
+ * Get active coupons for public display
+ * GET /api/v1/coupons/active
+ */
+export const getActiveCoupons = asyncHandler(async (req: Request, res: Response) => {
+  const coupons = await Coupon.getActiveCoupons();
+
+  res.status(200).json({
+    status: 'success',
+    data: { coupons }
+  });
+});
+
+/**
+ * Get flash sale coupons
+ * GET /api/v1/coupons/flash-sales
+ */
+export const getFlashSaleCoupons = asyncHandler(async (req: Request, res: Response) => {
+  const coupons = await Coupon.getFlashSaleCoupons();
+
+  res.status(200).json({
+    status: 'success',
+    data: { coupons }
+  });
+});
+
+/**
+ * Get coupon analytics
+ * GET /api/v1/coupons/analytics
+ */
+export const getCouponAnalytics = asyncHandler(async (req: Request, res: Response) => {
+  const { period = '30' } = req.query;
+  const days = parseInt(period as string);
+  const startDate = new Date();
+  startDate.setDate(startDate.getDate() - days);
+
+  const [
+    totalCoupons,
+    activeCoupons,
+    expiredCoupons,
+    totalUsage,
+    popularCoupons,
+    recentUsage
+  ] = await Promise.all([
+    Coupon.countDocuments(),
+    Coupon.countDocuments({
+      isActive: true,
+      validFrom: { $lte: new Date() },
+      validUntil: { $gte: new Date() }
+    }),
+    Coupon.countDocuments({ validUntil: { $lt: new Date() } }),
+    Coupon.aggregate([
+      { $match: { usedAt: { $gte: startDate } } },
+      { $unwind: '$usedBy' },
+      { $match: { 'usedBy.usedAt': { $gte: startDate } } },
+      { $group: { _id: null, totalUsage: { $sum: 1 } } }
+    ]),
+    Coupon.aggregate([
+      { $unwind: '$usedBy' },
+      { $match: { 'usedBy.usedAt': { $gte: startDate } } },
+      { $group: { _id: '$_id', usageCount: { $sum: 1 }, discountAmount: { $sum: '$usedBy.discountAmount' } } },
+      { $sort: { usageCount: -1 } },
+      { $limit: 10 },
+      { $lookup: { from: 'coupons', localField: '_id', foreignField: '_id', as: 'coupon' } },
+      { $unwind: '$coupon' },
+      { $project: { code: '$coupon.code', usageCount: 1, discountAmount: 1 } }
+    ]),
+    Coupon.aggregate([
+      { $unwind: '$usedBy' },
+      { $match: { 'usedBy.usedAt': { $gte: startDate } } },
+      { $sort: { 'usedBy.usedAt': -1 } },
+      { $limit: 10 },
+      { $lookup: { from: 'users', localField: 'usedBy.user', foreignField: '_id', as: 'user' } },
+      { $lookup: { from: 'orders', localField: 'usedBy.orderId', foreignField: '_id', as: 'order' } },
+      { $project: {
+        couponCode: '$code',
+        userEmail: { $arrayElemAt: ['$user.email', 0] },
+        orderId: { $arrayElemAt: ['$order._id', 0] },
+        discountAmount: '$usedBy.discountAmount',
+        usedAt: '$usedBy.usedAt'
+      }}
+    ])
+  ]);
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      overview: {
+        totalCoupons,
+        activeCoupons,
+        expiredCoupons,
+        totalUsage: totalUsage[0]?.totalUsage || 0
+      },
+      popularCoupons,
+      recentUsage,
+      period: `${days} days`
+    }
+  });
+});

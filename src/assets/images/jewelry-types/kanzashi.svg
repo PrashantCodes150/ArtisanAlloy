@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <rect width="200" height="200" fill="#f8f9fa"/>
+  <g transform="scale(1)">
+    
+                <!-- Kanzashi - hair ornament -->
+                <path d="M 80 100 Q 90 80, 100 90 Q 110 80, 120 100" stroke="#FF69B4" stroke-width="5" fill="none"/>
+                <circle cx="90" cy="85" r="5" fill="#FF69B4"/>
+                <circle cx="110" cy="85" r="5" fill="#FFB6C1"/>
+                <circle cx="100" cy="95" r="4" fill="#FFD700"/>
+            
+  </g>
+  <text x="50%" y="180" text-anchor="middle" font-family="Arial" font-size="10" fill="#6c757d">Kanzashi</text>
+  <text x="50%" y="192" text-anchor="middle" font-family="Arial" font-size="8" fill="#6c757d">Intricate hair ornaments with floral motifs</text>
+</svg>

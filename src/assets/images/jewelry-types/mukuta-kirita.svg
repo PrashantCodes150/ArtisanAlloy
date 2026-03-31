@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <rect width="200" height="200" fill="#f8f9fa"/>
+  <g transform="scale(1)">
+    
+                <!-- Crown representation -->
+                <path d="M 50 150 L 70 80 L 90 120 L 110 70 L 130 120 L 150 80 L 170 150 Z" fill="#D4AF37" stroke="#000" stroke-width="1"/>
+                <circle cx="110" cy="60" r="15" fill="#D4AF37" stroke="#000" stroke-width="1"/>
+                <circle cx="110" cy="60" r="8" fill="#FFD700" opacity="0.7"/>
+            
+  </g>
+  <text x="50%" y="180" text-anchor="middle" font-family="Arial" font-size="10" fill="#6c757d">Mukuta / Kirita</text>
+  <text x="50%" y="192" text-anchor="middle" font-family="Arial" font-size="8" fill="#6c757d">Elaborate crowns symbolizing royalty and divinity</text>
+</svg>

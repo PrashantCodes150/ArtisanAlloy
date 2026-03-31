@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <rect width="200" height="200" fill="#f8f9fa"/>
+  <g transform="scale(1)">
+    
+                <!-- Chatelaine - belt hook with chains -->
+                <rect x="85" y="80" width="30" height="15" rx="5" fill="#8B4513" stroke="#000" stroke-width="1"/>
+                <line x1="100" y1="95" x2="100" y2="130" stroke="#8B4513" stroke-width="2"/>
+                <circle cx="90" cy="110" r="5" fill="#FF69B4"/>
+                <rect x="95" y="120" width="10" height="8" fill="#00CED1"/>
+                <circle cx="110" cy="125" r="4" fill="#FFD700"/>
+            
+  </g>
+  <text x="50%" y="180" text-anchor="middle" font-family="Arial" font-size="10" fill="#6c757d">Chatelaine</text>
+  <text x="50%" y="192" text-anchor="middle" font-family="Arial" font-size="8" fill="#6c757d">Decorative belt hook with chains</text>
+</svg>

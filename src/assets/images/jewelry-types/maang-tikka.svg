@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <rect width="200" height="200" fill="#f8f9fa"/>
+  <g transform="scale(1)">
+    
+                <!-- Maang Tikka - forehead ornament -->
+                <circle cx="100" cy="100" r="25" fill="#B76E79" stroke="#000" stroke-width="1"/>
+                <circle cx="100" cy="100" r="15" fill="#FFB6C1" stroke="#000" stroke-width="1"/>
+                <circle cx="100" cy="100" r="8" fill="#FF69B4" stroke="#000" stroke-width="1"/>
+                <path d="M 100 125 L 100 150" stroke="#B76E79" stroke-width="3"/>
+                <circle cx="100" cy="155" r="5" fill="#B76E79"/>
+            
+  </g>
+  <text x="50%" y="180" text-anchor="middle" font-family="Arial" font-size="10" fill="#6c757d">Maang Tikka</text>
+  <text x="50%" y="192" text-anchor="middle" font-family="Arial" font-size="8" fill="#6c757d">Forehead ornament worn at the parting of the hair</text>
+</svg>

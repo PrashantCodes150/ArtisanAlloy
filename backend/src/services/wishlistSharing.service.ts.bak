@@ -1,0 +1,171 @@
+import { Wishlist, User } from '../models';
+import { sendEmail } from '../utils/emailService';
+import { logger } from '../utils/logger';
+
+export interface WishlistShareData {
+  senderName: string;
+  recipientEmail: string;
+  wishlistId: string;
+  wishlistName?: string;
+  message?: string;
+}
+
+class WishlistSharingService {
+  /**
+   * Generate a shareable link for a wishlist
+   */
+  generateWishlistShareLink(wishlistId: string): string {
+    return `${process.env.FRONTEND_URL}/wishlist/share/${wishlistId}`;
+  }
+
+  /**
+   * Send wishlist to friend via email
+   */
+  async sendWishlistToFriend(wishlistShareData: WishlistShareData): Promise<boolean> {
+    try {
+      const wishlist = await Wishlist.findById(wishlistShareData.wishlistId)
+        .populate('items.product', 'name price images slug');
+
+      if (!wishlist) {
+        throw new Error('Wishlist not found');
+      }
+
+      const emailSent = await sendEmail({
+        to: wishlistShareData.recipientEmail,
+        subject: `${wishlistShareData.senderName} shared a wishlist with you!`,
+        html: this.wishlistShareEmailTemplate(wishlistShareData, wishlist)
+      });
+
+      if (emailSent) {
+        logger.info(`Wishlist shared with ${wishlistShareData.recipientEmail} by ${wishlistShareData.senderName}`);
+      }
+
+      return emailSent;
+    } catch (error) {
+      logger.error('Error sharing wishlist:', error);
+      return false;
+    }
+  }
+
+  /**
+   * Create a public wishlist that can be shared
+   */
+  async createPublicWishlist(userId: string, wishlistName: string, isPublic: boolean = false): Promise<any> {
+    try {
+      const wishlist = await Wishlist.findOne({ user: userId });
+      
+      if (!wishlist) {
+        throw new Error('Wishlist not found');
+      }
+
+      // Update wishlist to be public
+      wishlist.isPublic = isPublic;
+      wishlist.publicName = wishlistName;
+      await wishlist.save();
+
+      return wishlist;
+    } catch (error) {
+      logger.error('Error creating public wishlist:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get a public wishlist by ID
+   */
+  async getPublicWishlist(wishlistId: string): Promise<any> {
+    try {
+      const wishlist = await Wishlist.findById(wishlistId)
+        .populate('items.product', 'name price images slug')
+        .populate('user', 'firstName lastName');
+
+      if (!wishlist || !wishlist.isPublic) {
+        throw new Error('Wishlist not found or not public');
+      }
+
+      return wishlist;
+    } catch (error) {
+      logger.error('Error getting public wishlist:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Wishlist share email template
+   */
+  private wishlistShareEmailTemplate(data: WishlistShareData, wishlist: any): string {
+    // Format wishlist items HTML
+    const itemsHtml = wishlist.items.slice(0, 5).map((item: any) => `
+      <div style="display: flex; align-items: center; margin-bottom: 15px; padding: 10px; border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 8px;">
+        <img src="${item.product.images[0]?.url || '/placeholder.svg'}" 
+             alt="${item.product.name}" 
+             style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px; margin-right: 15px;">
+        <div>
+          <h4 style="margin: 0; color: #d4af37; font-size: 16px;">${item.product.name}</h4>
+          <p style="margin: 5px 0 0 0; color: #e0e0e0; font-size: 14px;">₹${item.product.price.toLocaleString()}</p>
+        </div>
+      </div>
+    `).join('');
+
+    const moreItemsText = wishlist.items.length > 5 
+      ? `<p style="color: #e0e0e0; font-size: 14px; margin-top: 10px;">...and ${wishlist.items.length - 5} more items</p>`
+      : '';
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Wishlist Shared with You - F Jewelry</title>
+        <style>
+          body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #1a1a2e; color: #ffffff; margin: 0; padding: 0; }
+          .container { max-width: 600px; margin: 0 auto; padding: 40px 20px; }
+          .header { text-align: center; margin-bottom: 40px; }
+          .logo { font-size: 32px; font-weight: bold; color: #d4af37; }
+          .content { background: linear-gradient(135deg, #16213e 0%, #1a1a2e 100%); border-radius: 16px; padding: 40px; border: 1px solid rgba(212, 175, 55, 0.3); }
+          h1 { color: #d4af37; margin-bottom: 20px; }
+          p { line-height: 1.8; color: #e0e0e0; margin-bottom: 20px; }
+          .sender-message { background: rgba(212, 175, 55, 0.1); border-left: 4px solid #d4af37; padding: 15px; margin: 20px 0; }
+          .button { display: inline-block; background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%); color: #1a1a2e; padding: 16px 40px; text-decoration: none; border-radius: 50px; font-weight: bold; margin: 20px 0; }
+          .footer { text-align: center; margin-top: 40px; color: #888; font-size: 14px; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <div class="logo">✦ F Jewelry</div>
+          </div>
+          <div class="content">
+            <h1>You've Received a Wishlist!</h1>
+            <p><strong>${data.senderName}</strong> has shared a wishlist with you on F Jewelry.</p>
+            
+            ${data.message ? `
+            <div class="sender-message">
+              <p style="margin: 0; font-style: italic;">"${data.message}"</p>
+            </div>
+            ` : ''}
+            
+            <h3 style="color: #d4af37; margin-top: 30px;">Wishlist Items:</h3>
+            ${itemsHtml}
+            ${moreItemsText}
+            
+            <p style="text-align: center; margin-top: 30px;">
+              <a href="${this.generateWishlistShareLink(data.wishlistId)}" class="button">View Full Wishlist</a>
+            </p>
+            
+            <p>You can browse all items and even purchase them directly for ${data.senderName}!</p>
+          </div>
+          <div class="footer">
+            <p>© ${new Date().getFullYear()} F Jewelry. All rights reserved.</p>
+            <p>Questions? Contact us at support@f-jewelry.com</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+  }
+}
+
+export const wishlistSharingService = new WishlistSharingService();
+export default wishlistSharingService;

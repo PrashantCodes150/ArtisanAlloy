@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <rect width="200" height="200" fill="#f8f9fa"/>
+  <g transform="scale(1)">
+    
+                <rect x="60" y="70" width="80" height="60" rx="5" fill="#FF69B4"/>
+                <rect x="65" y="75" width="70" height="20" fill="#FFB6C1"/>
+                <rect x="85" y="70" width="10" height="60" fill="#FF69B4"/>
+                <polygon points="100,50 90,70 110,70" fill="#FFD700"/>
+  </g>
+  <text x="50%" y="180" text-anchor="middle" font-family="Arial" font-size="12" fill="#6c757d">Gift Box #13</text>
+</svg>
