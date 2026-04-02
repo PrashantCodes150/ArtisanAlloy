@@ -3,6 +3,7 @@ import { User } from '../models';
 import { AppError } from '../utils/AppError';
 import { asyncHandler } from '../middleware/errorHandler';
 import { APIFeatures } from '../utils/apiFeatures';
+import { logger } from '../utils/logger';
 
 // Helper to filter allowed fields
 const filterObj = (obj: Record<string, any>, ...allowedFields: string[]) => {
