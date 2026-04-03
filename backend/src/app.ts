@@ -110,6 +110,14 @@ app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 const API_VERSION = '/api/v1';
 
+// Root route
+app.get('/', (req: Request, res: Response) => {
+  res.status(200).json({
+    status: 'success',
+    message: 'F Jewelry API is live! 💎',
+  });
+});
+
 // Health check endpoint
 app.get(`${API_VERSION}/health`, (req: Request, res: Response) => {
   res.status(200).json({
