@@ -106,7 +106,7 @@ export default function ProductComparison() {
   const sortProducts = (key: string) => {
     setSortBy(key);
 
-    let sorted = [...compareProducts];
+    const sorted = [...compareProducts];
     switch (key) {
       case 'price-low':
         sorted.sort((a, b) => a.price - b.price);

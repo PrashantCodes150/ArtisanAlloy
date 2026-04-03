@@ -22,10 +22,3 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-
-# Reserved Windows filenames
-nul
-backend/nul
-
-# Embedded git repository
-f-jewellery-website-/
