@@ -5,7 +5,7 @@
   "main": "dist/server.js",
   "scripts": {
     "dev": "nodemon --exec ts-node src/server.ts",
-    "build": "tsc",
+    "build": "echo 'Vercel will use native serverless builder'",
     "start": "node dist/server.js",
     "seed": "ts-node src/scripts/seedData.ts",
     "lint": "eslint src/**/*.ts",
