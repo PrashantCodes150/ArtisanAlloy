@@ -17,36 +17,74 @@ import { sendVerificationEmail, sendPasswordResetEmail } from '../utils/emailSer
 export const register = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
   const { firstName, lastName, email, password, passwordConfirm, phone } = req.body;
 
-  // Check if user already exists
-  const existingUser = await User.findOne({ email });
-  if (existingUser) {
-    return next(new AppError('Email already registered. Please use another email or login.', 400));
+  // Validate required fields
+  if (!firstName || !lastName || !email || !password || !passwordConfirm) {
+    return next(new AppError('Please provide all required fields: firstName, lastName, email, password, passwordConfirm', 400));
   }
 
-  // Create new user
-  const newUser = await User.create({
-    firstName,
-    lastName,
-    email,
-    password,
-    passwordConfirm,
-    phone,
-  });
+  // Validate email format
+  const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
+  if (!emailRegex.test(email)) {
+    return next(new AppError('Please provide a valid email address', 400));
+  }
 
-  // Generate email verification token
-  const verificationToken = newUser.createEmailVerificationToken();
-  await newUser.save({ validateBeforeSave: false });
+  // Validate password length
+  if (password.length < 8) {
+    return next(new AppError('Password must be at least 8 characters long', 400));
+  }
 
-  // Send verification email
+  // Validate password match
+  if (password !== passwordConfirm) {
+    return next(new AppError('Passwords do not match', 400));
+  }
+
   try {
-    await sendVerificationEmail(email, firstName, verificationToken);
-    logger.info(`Verification email sent to ${email}`);
-  } catch (emailError) {
-    logger.error(`Failed to send verification email to ${email}:`, emailError);
-    // Don't fail registration if email fails
-  }
+    // Check if user already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return next(new AppError('Email already registered. Please login instead.', 400));
+    }
 
-  createSendToken(newUser, 201, res, 'Registration successful! Please check your email to verify your account.');
+    // Create new user
+    const newUser = await User.create({
+      firstName,
+      lastName,
+      email: email.toLowerCase(),
+      password,
+      passwordConfirm,
+      phone,
+      role: 'customer',
+      isActive: true,
+      isEmailVerified: false,
+    });
+
+    // Generate email verification token
+    const verificationToken = newUser.createEmailVerificationToken();
+    await newUser.save({ validateBeforeSave: false });
+
+    // Send verification email (non-blocking)
+    sendVerificationEmail(newUser.email, newUser.firstName, verificationToken)
+      .then(() => logger.info(`Verification email sent to ${newUser.email}`))
+      .catch((err) => logger.error(`Failed to send verification email: ${err.message}`));
+
+    // Send response with tokens
+    createSendToken(newUser, 201, res, 'Registration successful! Welcome to F Jewelry.');
+  } catch (error: any) {
+    logger.error('Registration error:', error);
+
+    // Handle MongoDB connection errors gracefully
+    if (error.message?.includes('connect') || error.message?.includes('buffering') || error.name === 'MongooseServerSelectionError') {
+      return next(new AppError('Database connection error. Please try again in a moment.', 503));
+    }
+
+    // Handle validation errors
+    if (error.name === 'ValidationError') {
+      const messages = Object.values(error.errors).map((err: any) => err.message).join(', ');
+      return next(new AppError(messages, 400));
+    }
+
+    throw error;
+  }
 });
 
 /**
@@ -56,49 +94,44 @@ export const register = asyncHandler(async (req: Request, res: Response, next: N
 export const login = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
   const { email, password } = req.body;
 
-  // Check if email and password exist
+  // Validate input
   if (!email || !password) {
     return next(new AppError('Please provide email and password', 400));
   }
 
-  // Check if user exists && password is correct
-  const user = await User.findOne({ email }).select('+password');
+  try {
+    // Find user with password field
+    const user = await User.findOne({ email: email.toLowerCase() }).select('+password');
 
-  if (!user || !(await user.comparePassword(password))) {
-    return next(new AppError('Incorrect email or password', 401));
+    // Check if user exists and password is correct
+    if (!user || !(await user.comparePassword(password))) {
+      return next(new AppError('Invalid email or password', 401));
+    }
+
+    // Check if user is active
+    if (!user.isActive) {
+      return next(new AppError('Your account has been deactivated. Please contact support.', 401));
+    }
+
+    // Update last login time
+    user.lastLogin = new Date();
+    await user.save({ validateBeforeSave: false });
+
+    // Create and send token
+    const message = user.isEmailVerified
+      ? 'Login successful!'
+      : 'Login successful! Please verify your email for full access.';
+
+    createSendToken(user, 200, res, message);
+  } catch (error: any) {
+    logger.error('Login error:', error);
+
+    if (error.message?.includes('connect') || error.message?.includes('buffering') || error.name === 'MongooseServerSelectionError') {
+      return next(new AppError('Database connection error. Please try again in a moment.', 503));
+    }
+
+    throw error;
   }
-
-  // Check if user is active
-  if (!user.isActive) {
-    return next(new AppError('Your account has been deactivated. Please contact support.', 401));
-  }
-
-  // Check if 2FA is enabled
-  const userWith2FA = await User.findById(user._id).select('+twoFactorEnabled');
-
-  if (userWith2FA && userWith2FA.twoFactorEnabled) {
-    // Generate temporary token for 2FA verification
-    const tempToken = userWith2FA.createTemporaryTwoFactorToken();
-    await userWith2FA.save({ validateBeforeSave: false });
-
-    return res.status(200).json({
-      status: 'success',
-      message: 'Password verified. Please enter your two-factor authentication code.',
-      requiresTwoFactor: true,
-      temporaryToken: tempToken,
-    });
-  }
-
-  // Update last login
-  user.lastLogin = new Date();
-  await user.save({ validateBeforeSave: false });
-
-  // Include email verification status in response
-  const message = user.isEmailVerified
-    ? 'Login successful!'
-    : 'Login successful! Please verify your email for full access.';
-
-  createSendToken(user, 200, res, message);
 });
 
 /**
@@ -106,7 +139,7 @@ export const login = asyncHandler(async (req: Request, res: Response, next: Next
  * POST /api/v1/auth/logout
  */
 export const logout = asyncHandler(async (req: Request, res: Response) => {
-  // Clear HttpOnly cookies
+  // Clear cookies
   res.cookie('jwt', 'loggedout', {
     expires: new Date(Date.now() + 10 * 1000),
     httpOnly: true,
@@ -121,11 +154,11 @@ export const logout = asyncHandler(async (req: Request, res: Response) => {
     sameSite: 'strict',
   });
 
-  // If user is authenticated, also clear refresh tokens from database
+  // Clear refresh tokens from database if user is authenticated
   if (req.user) {
     await User.findByIdAndUpdate(req.user._id, {
       $pull: { refreshTokens: { $exists: true } }
-    });
+    }).catch(() => {}); // Don't fail logout if this fails
   }
 
   res.status(200).json({
@@ -135,7 +168,7 @@ export const logout = asyncHandler(async (req: Request, res: Response) => {
 });
 
 /**
- * Forgot password - send reset token
+ * Forgot password
  * POST /api/v1/auth/forgot-password
  */
 export const forgotPassword = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
@@ -145,9 +178,10 @@ export const forgotPassword = asyncHandler(async (req: Request, res: Response, n
     return next(new AppError('Please provide an email address', 400));
   }
 
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ email: email.toLowerCase() });
+
+  // Always return success (don't reveal if email exists)
   if (!user) {
-    // Don't reveal if email exists or not for security
     return res.status(200).json({
       status: 'success',
       message: 'If an account exists with this email, you will receive a password reset link.',
@@ -158,19 +192,16 @@ export const forgotPassword = asyncHandler(async (req: Request, res: Response, n
   const resetToken = user.createPasswordResetToken();
   await user.save({ validateBeforeSave: false });
 
-  // Send email with reset token
-  try {
-    await sendPasswordResetEmail(user.email, user.firstName, resetToken);
-    logger.info(`Password reset email sent to ${email}`);
-  } catch (emailError) {
-    // Reset the token if email fails
-    user.passwordResetToken = undefined;
-    user.passwordResetExpires = undefined;
-    await user.save({ validateBeforeSave: false });
-
-    logger.error(`Failed to send password reset email to ${email}:`, emailError);
-    return next(new AppError('Failed to send password reset email. Please try again later.', 500));
-  }
+  // Send email
+  sendPasswordResetEmail(user.email, user.firstName, resetToken)
+    .then(() => logger.info(`Password reset email sent to ${user.email}`))
+    .catch(async (err) => {
+      logger.error(`Failed to send reset email: ${err.message}`);
+      // Clear token if email fails
+      user.passwordResetToken = undefined;
+      user.passwordResetExpires = undefined;
+      await user.save({ validateBeforeSave: false });
+    });
 
   res.status(200).json({
     status: 'success',
@@ -179,7 +210,7 @@ export const forgotPassword = asyncHandler(async (req: Request, res: Response, n
 });
 
 /**
- * Reset password with token
+ * Reset password
  * PATCH /api/v1/auth/reset-password/:token
  */
 export const resetPassword = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
@@ -193,43 +224,38 @@ export const resetPassword = asyncHandler(async (req: Request, res: Response, ne
     return next(new AppError('Passwords do not match', 400));
   }
 
-  // Hash the token from params
-  const hashedToken = crypto
-    .createHash('sha256')
-    .update(req.params.token)
-    .digest('hex');
+  if (password.length < 8) {
+    return next(new AppError('Password must be at least 8 characters long', 400));
+  }
 
-  // Find user with valid token
+  // Hash token and find user
+  const hashedToken = crypto.createHash('sha256').update(req.params.token).digest('hex');
+
   const user = await User.findOne({
     passwordResetToken: hashedToken,
     passwordResetExpires: { $gt: Date.now() },
   });
 
   if (!user) {
-    return next(new AppError('Token is invalid or has expired. Please request a new password reset.', 400));
+    return next(new AppError('Token is invalid or has expired', 400));
   }
 
-  // Set new password
+  // Update password
   user.password = password;
   user.passwordConfirm = passwordConfirm;
   user.passwordResetToken = undefined;
   user.passwordResetExpires = undefined;
   await user.save();
 
-  logger.info(`Password reset successful for ${user.email}`);
-
   createSendToken(user, 200, res, 'Password reset successful!');
 });
 
 /**
- * Verify email with token
+ * Verify email
  * GET /api/v1/auth/verify-email/:token
  */
 export const verifyEmail = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-  const hashedToken = crypto
-    .createHash('sha256')
-    .update(req.params.token)
-    .digest('hex');
+  const hashedToken = crypto.createHash('sha256').update(req.params.token).digest('hex');
 
   const user = await User.findOne({
     emailVerificationToken: hashedToken,
@@ -237,14 +263,13 @@ export const verifyEmail = asyncHandler(async (req: Request, res: Response, next
   });
 
   if (!user) {
-    return next(new AppError('Verification link is invalid or has expired. Please request a new one.', 400));
+    return next(new AppError('Verification link is invalid or has expired', 400));
   }
 
-  // Check if already verified
   if (user.isEmailVerified) {
     return res.status(200).json({
       status: 'success',
-      message: 'Email is already verified.',
+      message: 'Email is already verified',
     });
   }
 
@@ -253,11 +278,11 @@ export const verifyEmail = asyncHandler(async (req: Request, res: Response, next
   user.emailVerificationExpires = undefined;
   await user.save({ validateBeforeSave: false });
 
-  logger.info(`Email verified successfully for ${user.email}`);
+  logger.info(`Email verified: ${user.email}`);
 
   res.status(200).json({
     status: 'success',
-    message: 'Email verified successfully! You now have full access to your account.',
+    message: 'Email verified successfully! You now have full access.',
   });
 });
 
@@ -272,13 +297,12 @@ export const resendVerificationEmail = asyncHandler(async (req: Request, res: Re
     return next(new AppError('Please provide an email address', 400));
   }
 
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ email: email.toLowerCase() });
 
-  // Don't reveal if email exists for security
   if (!user) {
     return res.status(200).json({
       status: 'success',
-      message: 'If your email is registered and not yet verified, you will receive a verification link.',
+      message: 'If your email is registered, you will receive a verification link.',
     });
   }
 
@@ -289,26 +313,17 @@ export const resendVerificationEmail = asyncHandler(async (req: Request, res: Re
     });
   }
 
-  // Check if we recently sent an email (rate limiting - 1 minute)
-  if (user.emailVerificationExpires &&
-    user.emailVerificationExpires.getTime() > Date.now() + 23 * 60 * 60 * 1000) {
-    return next(new AppError('Please wait a minute before requesting another verification email.', 429));
-  }
-
+  // Generate new token
   const verificationToken = user.createEmailVerificationToken();
   await user.save({ validateBeforeSave: false });
 
-  try {
-    await sendVerificationEmail(user.email, user.firstName, verificationToken);
-    logger.info(`Verification email resent to ${email}`);
-  } catch (emailError) {
-    logger.error(`Failed to resend verification email to ${email}:`, emailError);
-    return next(new AppError('Failed to send verification email. Please try again later.', 500));
-  }
+  sendVerificationEmail(user.email, user.firstName, verificationToken)
+    .then(() => logger.info(`Verification email resent to ${user.email}`))
+    .catch((err) => logger.error(`Failed to resend verification email: ${err.message}`));
 
   res.status(200).json({
     status: 'success',
-    message: 'If your email is registered and not yet verified, you will receive a verification link.',
+    message: 'If your email is registered, you will receive a verification link.',
   });
 });
 
@@ -320,7 +335,7 @@ export const refreshToken = asyncHandler(async (req: Request, res: Response, nex
   const { refreshToken: token } = req.body;
 
   if (!token) {
-    return next(new AppError('Refresh token is required.', 400));
+    return next(new AppError('Refresh token is required', 400));
   }
 
   try {
@@ -328,7 +343,7 @@ export const refreshToken = asyncHandler(async (req: Request, res: Response, nex
     const user = await User.findById(decoded.id);
 
     if (!user || !user.isActive) {
-      return next(new AppError('User not found or inactive.', 401));
+      return next(new AppError('User not found or inactive', 401));
     }
 
     const accessToken = generateAccessToken(user);
@@ -338,12 +353,12 @@ export const refreshToken = asyncHandler(async (req: Request, res: Response, nex
       data: { accessToken },
     });
   } catch {
-    return next(new AppError('Invalid or expired refresh token.', 401));
+    return next(new AppError('Invalid or expired refresh token', 401));
   }
 });
 
 /**
- * Get current logged-in user
+ * Get current user
  * GET /api/v1/auth/me
  */
 export const getMe = asyncHandler(async (req: Request, res: Response) => {
@@ -356,7 +371,7 @@ export const getMe = asyncHandler(async (req: Request, res: Response) => {
 });
 
 /**
- * Update password for logged-in user
+ * Update password (logged in user)
  * PATCH /api/v1/auth/update-password
  */
 export const updatePassword = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
@@ -370,16 +385,19 @@ export const updatePassword = asyncHandler(async (req: Request, res: Response, n
     return next(new AppError('New passwords do not match', 400));
   }
 
-  // Get user with password
+  if (newPassword.length < 8) {
+    return next(new AppError('Password must be at least 8 characters long', 400));
+  }
+
   const user = await User.findById(req.user!._id).select('+password');
 
   if (!user) {
-    return next(new AppError('User not found.', 404));
+    return next(new AppError('User not found', 404));
   }
 
   // Check current password
   if (!(await user.comparePassword(currentPassword))) {
-    return next(new AppError('Your current password is incorrect.', 401));
+    return next(new AppError('Current password is incorrect', 401));
   }
 
   // Update password
@@ -387,21 +405,15 @@ export const updatePassword = asyncHandler(async (req: Request, res: Response, n
   user.passwordConfirm = newPasswordConfirm;
   await user.save();
 
-  logger.info(`Password updated for ${user.email}`);
-
   createSendToken(user, 200, res, 'Password updated successfully!');
 });
 
 /**
- * Check email verification status
+ * Get verification status
  * GET /api/v1/auth/verification-status
  */
-export const getVerificationStatus = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+export const getVerificationStatus = asyncHandler(async (req: Request, res: Response) => {
   const user = await User.findById(req.user!._id);
-
-  if (!user) {
-    return next(new AppError('User not found.', 404));
-  }
 
   res.status(200).json({
     status: 'success',
@@ -414,37 +426,28 @@ export const getVerificationStatus = asyncHandler(async (req: Request, res: Resp
 });
 
 /**
- * Enable Two-Factor Authentication
+ * Enable 2FA
  * POST /api/v1/auth/enable-2fa
  */
 export const enableTwoFactor = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
   const user = await User.findById(req.user!._id).select('+twoFactorEnabled +twoFactorSecret');
 
   if (!user) {
-    return next(new AppError('User not found.', 404));
+    return next(new AppError('User not found', 404));
   }
 
   if (user.twoFactorEnabled) {
-    return next(new AppError('Two-factor authentication is already enabled.', 400));
+    return next(new AppError('Two-factor authentication is already enabled', 400));
   }
 
-  // Generate 2FA secret and QR code
   const otpauthUrl = user.createTwoFactorSecret();
   const qrCodeDataURL = await qrcode.toDataURL(otpauthUrl);
 
   await user.save({ validateBeforeSave: false });
 
-  // Send backup codes via email
-  try {
-    // TODO: Create email template for backup codes
-    logger.info(`2FA backup codes generated for ${user.email}`);
-  } catch (error) {
-    logger.error(`Failed to send 2FA backup codes to ${user.email}:`, error);
-  }
-
   res.status(200).json({
     status: 'success',
-    message: 'Two-factor authentication setup initiated. Please scan the QR code and verify.',
+    message: 'Scan the QR code with your authenticator app',
     data: {
       qrCode: qrCodeDataURL,
       secret: user.twoFactorSecret,
@@ -454,121 +457,107 @@ export const enableTwoFactor = asyncHandler(async (req: Request, res: Response, 
 });
 
 /**
- * Verify Two-Factor Authentication setup
+ * Verify 2FA setup
  * POST /api/v1/auth/verify-2fa-setup
  */
 export const verifyTwoFactorSetup = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
   const { token } = req.body;
 
   if (!token) {
-    return next(new AppError('Verification token is required.', 400));
+    return next(new AppError('Verification token is required', 400));
   }
 
   const user = await User.findById(req.user!._id).select('+twoFactorSecret +twoFactorEnabled');
 
   if (!user) {
-    return next(new AppError('User not found.', 404));
+    return next(new AppError('User not found', 404));
   }
 
   if (user.twoFactorEnabled) {
-    return next(new AppError('Two-factor authentication is already enabled.', 400));
+    return next(new AppError('Two-factor authentication is already enabled', 400));
   }
 
   if (!user.twoFactorSecret) {
     return next(new AppError('Two-factor secret not found. Please enable 2FA first.', 400));
   }
 
-  // Verify the token
   const isValid = speakeasy.totp.verify({
     secret: user.twoFactorSecret,
     encoding: 'base32',
-    token: token,
+    token,
     window: 2,
   });
 
   if (!isValid) {
-    return next(new AppError('Invalid verification token. Please try again.', 400));
+    return next(new AppError('Invalid verification token', 400));
   }
 
-  // Enable 2FA for the user
   user.twoFactorEnabled = true;
   await user.save({ validateBeforeSave: false });
 
-  logger.info(`Two-factor authentication enabled for ${user.email}`);
+  logger.info(`2FA enabled for ${user.email}`);
 
   res.status(200).json({
     status: 'success',
-    message: 'Two-factor authentication enabled successfully!',
-    data: {
-      twoFactorEnabled: true,
-    },
+    message: 'Two-factor authentication enabled!',
+    data: { twoFactorEnabled: true },
   });
 });
 
 /**
- * Disable Two-Factor Authentication
+ * Disable 2FA
  * POST /api/v1/auth/disable-2fa
  */
 export const disableTwoFactor = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
   const { password } = req.body;
 
   if (!password) {
-    return next(new AppError('Password is required to disable two-factor authentication.', 400));
+    return next(new AppError('Password is required', 400));
   }
 
-  const user = await User.findById(req.user!._id).select('+password +twoFactorEnabled +twoFactorSecret');
+  const user = await User.findById(req.user!._id).select('+password +twoFactorEnabled');
 
   if (!user) {
-    return next(new AppError('User not found.', 404));
+    return next(new AppError('User not found', 404));
   }
 
-  // Verify password
   if (!(await user.comparePassword(password))) {
-    return next(new AppError('Password is incorrect.', 401));
+    return next(new AppError('Password is incorrect', 401));
   }
 
   if (!user.twoFactorEnabled) {
-    return next(new AppError('Two-factor authentication is not enabled.', 400));
+    return next(new AppError('Two-factor authentication is not enabled', 400));
   }
 
-  // Disable 2FA
   user.twoFactorEnabled = false;
   user.twoFactorSecret = undefined;
   user.twoFactorBackupCodes = [];
   await user.save({ validateBeforeSave: false });
 
-  logger.info(`Two-factor authentication disabled for ${user.email}`);
-
   res.status(200).json({
     status: 'success',
-    message: 'Two-factor authentication disabled successfully.',
-    data: {
-      twoFactorEnabled: false,
-    },
+    message: 'Two-factor authentication disabled',
+    data: { twoFactorEnabled: false },
   });
 });
 
 /**
- * Verify Two-Factor Authentication token during login
+ * Verify 2FA login
  * POST /api/v1/auth/verify-2fa-login
  */
 export const verifyTwoFactorLogin = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
   const { tempToken, twoFactorToken, backupCode } = req.body;
 
   if (!tempToken || (!twoFactorToken && !backupCode)) {
-    return next(new AppError('Temporary token and 2FA token or backup code are required.', 400));
+    return next(new AppError('Temporary token and 2FA token or backup code are required', 400));
   }
 
-  // Hash the temporary token to find the user
-  const hashedTempToken = crypto
-    .createHash('sha256')
-    .update(tempToken)
-    .digest('hex');
+  const hashedTempToken = crypto.createHash('sha256').update(tempToken).digest('hex');
 
   const user = await User.findOne({
     twoFactorTemporaryToken: hashedTempToken,
     twoFactorTemporaryTokenExpires: { $gt: Date.now() },
-  }).select('+twoFactorSecret +twoFactorEnabled +twoFactorBackupCodes +twoFactorTemporaryToken +twoFactorTemporaryTokenExpires');
+  }).select('+twoFactorSecret +twoFactorBackupCodes');
 
   if (!user) {
     return next(new AppError('Invalid or expired session. Please login again.', 401));
@@ -576,79 +565,64 @@ export const verifyTwoFactorLogin = asyncHandler(async (req: Request, res: Respo
 
   let isVerified = false;
 
-  // Check 2FA token
   if (twoFactorToken && user.verifyTwoFactorToken(twoFactorToken)) {
     isVerified = true;
   }
 
-  // Check backup code
   if (!isVerified && backupCode && user.twoFactorBackupCodes) {
-    const backupCodeIndex = user.twoFactorBackupCodes.indexOf(backupCode.toUpperCase());
-    if (backupCodeIndex !== -1) {
-      // Remove the used backup code
-      user.twoFactorBackupCodes.splice(backupCodeIndex, 1);
+    const index = user.twoFactorBackupCodes.indexOf(backupCode.toUpperCase());
+    if (index !== -1) {
+      user.twoFactorBackupCodes.splice(index, 1);
       isVerified = true;
       await user.save({ validateBeforeSave: false });
     }
   }
 
   if (!isVerified) {
-    return next(new AppError('Invalid two-factor authentication code.', 401));
+    return next(new AppError('Invalid two-factor authentication code', 401));
   }
 
-  // Clear temporary 2FA token
   user.twoFactorTemporaryToken = undefined;
   user.twoFactorTemporaryTokenExpires = undefined;
   await user.save({ validateBeforeSave: false });
 
-  // Generate access token
   createSendToken(user, 200, res, 'Login successful!');
 });
 
 /**
- * Generate new backup codes
+ * Generate backup codes
  * POST /api/v1/auth/generate-backup-codes
  */
 export const generateBackupCodes = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
   const { password } = req.body;
 
   if (!password) {
-    return next(new AppError('Password is required to generate new backup codes.', 400));
+    return next(new AppError('Password is required', 400));
   }
 
   const user = await User.findById(req.user!._id).select('+password +twoFactorEnabled');
 
-  if (!user) {
-    return next(new AppError('User not found.', 404));
+  if (!user || !(await user.comparePassword(password))) {
+    return next(new AppError('Password is incorrect', 401));
   }
 
   if (!user.twoFactorEnabled) {
-    return next(new AppError('Two-factor authentication is not enabled.', 400));
+    return next(new AppError('Two-factor authentication is not enabled', 400));
   }
 
-  // Verify password
-  if (!(await user.comparePassword(password))) {
-    return next(new AppError('Password is incorrect.', 401));
-  }
-
-  // Generate new backup codes
   const newBackupCodes = user.generateBackupCodes();
   user.twoFactorBackupCodes = newBackupCodes;
   await user.save({ validateBeforeSave: false });
 
-  logger.info(`New backup codes generated for ${user.email}`);
-
   res.status(200).json({
     status: 'success',
-    message: 'New backup codes generated successfully.',
-    data: {
-      backupCodes: newBackupCodes,
-    },
+    message: 'New backup codes generated',
+    data: { backupCodes: newBackupCodes },
   });
 });
 
 /**
- * Google OAuth login
+ * Google OAuth
  * GET /api/v1/auth/google
  */
 export const googleAuth = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
@@ -660,22 +634,17 @@ export const googleAuth = asyncHandler(async (req: Request, res: Response, next:
  * GET /api/v1/auth/google/callback
  */
 export const googleAuthCallback = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-  passport.authenticate('google', { session: false }, (err: any, user: any, info: any) => {
+  passport.authenticate('google', { session: false }, (err: any, user: any) => {
     if (err || !user) {
       return res.redirect(`${process.env.FRONTEND_URL}/login?error=auth_failed`);
     }
 
-    // Generate tokens
     const accessToken = generateAccessToken(user);
     const refreshToken = generateRefreshToken(user);
 
-    // Update last login
     user.lastLogin = new Date();
     user.save({ validateBeforeSave: false });
 
-    // Redirect to frontend with tokens
-    const redirectUrl = `${process.env.FRONTEND_URL}/auth/success?token=${accessToken}&refresh=${refreshToken}`;
-    res.redirect(redirectUrl);
+    res.redirect(`${process.env.FRONTEND_URL}/auth/success?token=${accessToken}&refresh=${refreshToken}`);
   })(req, res, next);
 });
-

@@ -1,88 +1,92 @@
 import axios from 'axios';
 import type { AxiosError, InternalAxiosRequestConfig } from 'axios';
 
-// Normalize base URL to prevent duplicate paths
-const getBaseURL = () => {
-  const envUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
-  
-  // If it's a relative URL (starts with /), use as-is
-  if (envUrl.startsWith('/')) {
-    return envUrl;
-  }
-  
-  // If it's an absolute URL, extract the path to avoid duplication
+// ============================================
+// API CONFIGURATION
+// ============================================
+
+const getBaseURL = (): string => {
+  const envUrl = import.meta.env.VITE_API_URL?.trim();
+
+  // If empty or missing, use localhost
+  if (!envUrl) return 'http://localhost:5000/api/v1';
+
+  // If it's a relative URL (starts with /), keep it as-is for Vercel
+  if (envUrl.startsWith('/')) return envUrl;
+
+  // If it's a full URL, return as-is
   try {
-    const url = new URL(envUrl);
-    return url.pathname;
-  } catch {
+    new URL(envUrl);
     return envUrl;
+  } catch {
+    // Invalid URL, treat as path
+    return envUrl.startsWith('/') ? envUrl : `/${envUrl}`;
   }
 };
 
-// Create axios instance with default config
+// ============================================
+// AXIOS INSTANCE
+// ============================================
+
 const api = axios.create({
   baseURL: getBaseURL(),
-  timeout: 15000, // Increased timeout for better reliability
+  timeout: 30000, // 30 seconds for slow connections
   headers: {
     'Content-Type': 'application/json',
   },
-  withCredentials: false, // We'll handle credentials manually
 });
 
-// Request interceptor - add auth token
+// ============================================
+// REQUEST INTERCEPTOR - Add auth token
+// ============================================
+
 api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     const token = localStorage.getItem('accessToken');
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
-      // Add cache control headers to prevent service worker interference
-      config.headers['Cache-Control'] = 'no-cache';
-      config.headers['Pragma'] = 'no-cache';
     }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
-// Response interceptor - handle errors and token refresh
+// ============================================
+// RESPONSE INTERCEPTOR - Handle errors & refresh
+// ============================================
+
 api.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
     const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
 
-    // Handle 401 errors - try to refresh token
+    // Handle 401 - try token refresh
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
-try {
+      try {
         const refreshToken = localStorage.getItem('refreshToken');
+
         if (refreshToken) {
           const response = await axios.post(
             `${getBaseURL()}/auth/refresh-token`,
             { refreshToken },
-            {
-              headers: {
-                'Content-Type': 'application/json',
-                'Cache-Control': 'no-cache',
-                'Pragma': 'no-cache',
-              },
-              timeout: 10000,
-            }
+            { timeout: 10000 }
           );
 
-          const { accessToken } = response.data.data;
-          localStorage.setItem('accessToken', accessToken);
+          const newAccessToken = response.data.data?.accessToken;
+          if (newAccessToken) {
+            localStorage.setItem('accessToken', newAccessToken);
 
-          if (originalRequest.headers) {
-            originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+            if (originalRequest.headers) {
+              originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+            }
+
+            return api(originalRequest);
           }
-          return api(originalRequest);
         }
       } catch (refreshError) {
-        // Refresh failed - clear tokens and redirect to login
-        console.error('Token refresh failed:', refreshError);
+        console.warn('Token refresh failed, redirecting to login');
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
         localStorage.removeItem('user');
@@ -90,9 +94,9 @@ try {
       }
     }
 
-    // Log network errors for debugging
-    if (error.code === 'NETWORK_ERROR' || error.code === 'ERR_NETWORK') {
-      console.error('Network error detected. This might be caused by service worker interference.');
+    // Handle network errors
+    if (error.code === 'ERR_NETWORK' || error.code === 'ECONNABORTED') {
+      console.error('Network error:', error.message);
     }
 
     return Promise.reject(error);
@@ -101,7 +105,10 @@ try {
 
 export default api;
 
-// Type for API responses
+// ============================================
+// TYPES
+// ============================================
+
 export interface ApiResponse<T> {
   status: 'success' | 'fail' | 'error';
   message?: string;

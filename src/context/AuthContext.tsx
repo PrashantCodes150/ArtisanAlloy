@@ -2,6 +2,10 @@ import React, { createContext, useContext, useState, useEffect, useCallback } fr
 import authService from '../services/auth.service';
 import type { User, LoginCredentials, RegisterData } from '../services/auth.service';
 
+// ============================================
+// CONTEXT TYPE
+// ============================================
+
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
@@ -30,56 +34,68 @@ export const useAuth = (): AuthContextType => {
   return context;
 };
 
-interface AuthProviderProps {
-  children: React.ReactNode;
-}
+// ============================================
+// PROVIDER
+// ============================================
 
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(() => {
-    // Initialize from localStorage synchronously to prevent flash
-    return authService.getStoredUser();
-  });
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authModalView, setAuthModalView] = useState<'login' | 'signup'>('login');
+  const [isInitialized, setIsInitialized] = useState(false);
 
-  // Verify token on mount (optional - only if backend is running)
+  // Initialize auth state from localStorage
   useEffect(() => {
-    const verifyAuth = async () => {
+    const initAuth = async () => {
       const storedUser = authService.getStoredUser();
-      if (storedUser && authService.isAuthenticated()) {
+      const hasToken = authService.isAuthenticated();
+
+      if (storedUser && hasToken) {
         try {
+          // Verify token is still valid
           const response = await authService.getMe();
           if (response.data?.user) {
             setUser(response.data.user);
+          } else {
+            // Token invalid, clear storage
+            authService.clearTokens();
           }
         } catch (err) {
-          // Token expired or backend not running - keep local user for now
-          console.log('Auth verification skipped - backend may not be running');
+          console.warn('Auth verification failed:', authService.getErrorMessage(err));
+          // Keep user in UI but token might be expired - will be caught on next API call
         }
+      } else {
+        // No valid auth, clear everything
+        authService.clearTokens();
       }
+
+      setIsInitialized(true);
     };
 
-    verifyAuth();
+    initAuth();
   }, []);
+
+  // ============================================
+  // AUTH ACTIONS
+  // ============================================
 
   const login = useCallback(async (credentials: LoginCredentials): Promise<User | null> => {
     setIsLoading(true);
     setError(null);
-    console.log('🔐 Login attempt:', credentials.email);
+
     try {
       const response = await authService.login(credentials);
-      console.log('✅ Login response:', response);
+
       if (response.data?.user) {
         setUser(response.data.user);
-        console.log('👤 User set in context:', response.data.user);
         return response.data.user;
       }
-      return null;
+
+      throw new Error('Login failed: No user data returned');
     } catch (err: any) {
-      console.error('❌ Login error:', err);
-      const message = err.response?.data?.message || err.message || 'Login failed. Please try again.';
+      const message = authService.getErrorMessage(err);
       setError(message);
       throw new Error(message);
     } finally {
@@ -90,19 +106,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const register = useCallback(async (data: RegisterData): Promise<User | null> => {
     setIsLoading(true);
     setError(null);
-    console.log('🔐 Register attempt:', data.email);
+
     try {
       const response = await authService.register(data);
-      console.log('✅ Register response:', response);
+
       if (response.data?.user) {
         setUser(response.data.user);
-        console.log('👤 User set in context:', response.data.user);
         return response.data.user;
       }
-      return null;
+
+      throw new Error('Registration failed: No user data returned');
     } catch (err: any) {
-      console.error('❌ Register error:', err);
-      const message = err.response?.data?.message || err.message || 'Registration failed. Please try again.';
+      const message = authService.getErrorMessage(err);
       setError(message);
       throw new Error(message);
     } finally {
@@ -112,22 +127,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const logout = useCallback(async () => {
     setIsLoading(true);
+
     try {
       await authService.logout();
-      // Clear all tokens and user data
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
-      localStorage.removeItem('user');
-      localStorage.removeItem('tempToken');
-      setUser(null);
     } catch (err) {
-      // Logout locally even if API fails
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
-      localStorage.removeItem('user');
-      localStorage.removeItem('tempToken');
-      setUser(null);
+      console.warn('Logout API failed, clearing locally anyway');
     } finally {
+      authService.clearTokens();
+      setUser(null);
       setIsLoading(false);
     }
   }, []);
@@ -137,9 +144,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     localStorage.setItem('user', JSON.stringify(updatedUser));
   }, []);
 
-  const clearError = useCallback(() => {
-    setError(null);
-  }, []);
+  const clearError = useCallback(() => setError(null), []);
 
   const openAuthModal = useCallback((view: 'login' | 'signup' = 'login') => {
     setAuthModalView(view);
@@ -153,6 +158,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const completeOnboarding = useCallback(async (preferences: any) => {
     setIsLoading(true);
     setError(null);
+
     try {
       const response = await authService.completeOnboarding(preferences);
       if (response.data?.user) {
@@ -160,7 +166,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         localStorage.setItem('user', JSON.stringify(response.data.user));
       }
     } catch (err: any) {
-      const message = err.response?.data?.message || err.message || 'Failed to complete onboarding.';
+      const message = authService.getErrorMessage(err);
       setError(message);
       throw new Error(message);
     } finally {
@@ -171,6 +177,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const updatePreferences = useCallback(async (preferences: any) => {
     setIsLoading(true);
     setError(null);
+
     try {
       const response = await authService.updatePreferences(preferences);
       if (response.data?.user) {
@@ -178,13 +185,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         localStorage.setItem('user', JSON.stringify(response.data.user));
       }
     } catch (err: any) {
-      const message = err.response?.data?.message || err.message || 'Failed to update preferences.';
+      const message = authService.getErrorMessage(err);
       setError(message);
       throw new Error(message);
     } finally {
       setIsLoading(false);
     }
   }, []);
+
+  // ============================================
+  // CONTEXT VALUE
+  // ============================================
 
   const value: AuthContextType = {
     user,
@@ -203,6 +214,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     completeOnboarding,
     updatePreferences,
   };
+
+  // Show loading screen while initializing
+  if (!isInitialized) {
+    return (
+      <div className="min-h-screen bg-jewelry-dark flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-jewelry-gold border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-jewelry-cream/60">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

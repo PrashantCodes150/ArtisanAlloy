@@ -1,25 +1,9 @@
 import api from './api';
 import type { ApiResponse } from './api';
-import mockAuthService from './mock-auth.service';
 
-// Flag to use mock service when backend is not available
-const USE_MOCK_SERVICE = import.meta.env.VITE_USE_MOCK_AUTH === 'true' || !import.meta.env.VITE_API_URL;
-
-export interface UserPreferences {
-  categories: string[];
-  bodyParts: string[];
-  metalTypes: string[];
-  designStyles: string[];
-  astrology: {
-    sunSign?: string;
-    birthMonth?: string;
-    birthStone?: string;
-    nakshatra?: string;
-  };
-  onboardingCompleted: boolean;
-  onboardingCompletedAt?: Date;
-  lastUpdated: Date;
-}
+// ============================================
+// TYPES
+// ============================================
 
 export interface User {
   _id: string;
@@ -30,23 +14,18 @@ export interface User {
   avatar?: string;
   role: 'customer' | 'admin' | 'manager';
   isEmailVerified: boolean;
-  addresses: Address[];
-  preferences: UserPreferences;
+  isActive: boolean;
+  preferences: {
+    onboardingCompleted: boolean;
+    [key: string]: any;
+  };
   createdAt: string;
 }
 
-export interface Address {
-  _id?: string;
-  type: 'home' | 'work' | 'other';
-  fullName: string;
-  phone: string;
-  addressLine1: string;
-  addressLine2?: string;
-  city: string;
-  state: string;
-  postalCode: string;
-  country: string;
-  isDefault: boolean;
+export interface AuthResponse {
+  user: User;
+  accessToken: string;
+  refreshToken: string;
 }
 
 export interface LoginCredentials {
@@ -59,86 +38,83 @@ export interface RegisterData {
   lastName: string;
   email: string;
   password: string;
-  passwordConfirm: string;
+  passwordConfirm?: string;
   phone?: string;
 }
 
-export interface AuthResponse {
-  user: User;
-  accessToken: string;
-  refreshToken: string;
-}
+// ============================================
+// AUTH SERVICE
+// ============================================
 
 const authService = {
-  // Register new user
+  /**
+   * Register new user
+   */
   async register(data: RegisterData): Promise<ApiResponse<AuthResponse>> {
-    if (USE_MOCK_SERVICE) {
-      return await mockAuthService.register(data);
-    }
-    
-    const response = await api.post('/auth/register', data);
+    const response = await api.post('/auth/register', {
+      firstName: data.firstName,
+      lastName: data.lastName,
+      email: data.email.toLowerCase(),
+      password: data.password,
+      passwordConfirm: data.passwordConfirm || data.password,
+      phone: data.phone,
+    });
+
     if (response.data.data) {
       this.setTokens(response.data.data);
     }
+
     return response.data;
   },
 
-  // Login user
+  /**
+   * Login user
+   */
   async login(credentials: LoginCredentials): Promise<ApiResponse<AuthResponse>> {
-    if (USE_MOCK_SERVICE) {
-      return await mockAuthService.login(credentials);
-    }
-    
-    const response = await api.post('/auth/login', credentials);
+    const response = await api.post('/auth/login', {
+      email: credentials.email.toLowerCase(),
+      password: credentials.password,
+    });
+
     if (response.data.data) {
       this.setTokens(response.data.data);
     }
+
     return response.data;
   },
 
-// Logout user
+  /**
+   * Logout user
+   */
   async logout(): Promise<void> {
-    if (USE_MOCK_SERVICE) {
-      return await mockAuthService.logout();
-    }
-    
     try {
-      await api.post('/auth/logout', {}, { withCredentials: true });
+      await api.post('/auth/logout');
+    } catch (error) {
+      console.warn('Logout API call failed:', error);
     } finally {
       this.clearTokens();
     }
   },
 
-  // Get current user
+  /**
+   * Get current user
+   */
   async getMe(): Promise<ApiResponse<{ user: User }>> {
-    if (USE_MOCK_SERVICE) {
-      return await mockAuthService.getMe();
-    }
-    
     const response = await api.get('/auth/me');
     return response.data;
   },
 
-  // Update password
-  async updatePassword(currentPassword: string, newPassword: string, newPasswordConfirm: string): Promise<ApiResponse<AuthResponse>> {
-    const response = await api.patch('/auth/update-password', {
-      currentPassword,
-      newPassword,
-      newPasswordConfirm,
-    });
-    if (response.data.data) {
-      this.setTokens(response.data.data);
-    }
-    return response.data;
-  },
-
-  // Forgot password
+  /**
+   * Forgot password
+   */
   async forgotPassword(email: string): Promise<ApiResponse<null>> {
     const response = await api.post('/auth/forgot-password', { email });
     return response.data;
   },
 
-  // Reset password
+  /**
+   * Reset password
+   */
   async resetPassword(token: string, password: string, passwordConfirm: string): Promise<ApiResponse<AuthResponse>> {
     const response = await api.patch(`/auth/reset-password/${token}`, {
       password,
@@ -147,147 +123,87 @@ const authService = {
     return response.data;
   },
 
-  // Verify email
+  /**
+   * Verify email
+   */
   async verifyEmail(token: string): Promise<ApiResponse<null>> {
     const response = await api.get(`/auth/verify-email/${token}`);
     return response.data;
   },
 
-  // Resend verification email
-  async resendVerificationEmail(email: string): Promise<ApiResponse<null>> {
-    const response = await api.post('/auth/resend-verification', { email });
-    return response.data;
+  /**
+   * Refresh token
+   */
+  async refreshToken(): Promise<string> {
+    const refreshToken = localStorage.getItem('refreshToken');
+    if (!refreshToken) throw new Error('No refresh token');
+
+    const response = await api.post('/auth/refresh-token', { refreshToken });
+    if (response.data.data?.accessToken) {
+      localStorage.setItem('accessToken', response.data.data.accessToken);
+      return response.data.data.accessToken;
+    }
+    throw new Error('Failed to refresh token');
   },
 
-// Helper: Set tokens in localStorage
+  // ============================================
+  // TOKEN HELPERS
+  // ============================================
+
   setTokens(data: AuthResponse): void {
-    try {
-      localStorage.setItem('accessToken', data.accessToken);
-      localStorage.setItem('refreshToken', data.refreshToken);
-      localStorage.setItem('user', JSON.stringify(data.user));
-      console.log('Tokens stored successfully');
-    } catch (error) {
-      console.error('Failed to store tokens:', error);
-      throw new Error('Failed to store authentication tokens');
+    if (!data.accessToken || !data.refreshToken) {
+      throw new Error('Invalid auth response: missing tokens');
     }
+
+    localStorage.setItem('accessToken', data.accessToken);
+    localStorage.setItem('refreshToken', data.refreshToken);
+    localStorage.setItem('user', JSON.stringify(data.user));
   },
 
-  // Helper: Clear tokens from localStorage
   clearTokens(): void {
-    try {
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
-      localStorage.removeItem('user');
-      console.log('Tokens cleared successfully');
-    } catch (error) {
-      console.error('Failed to clear tokens:', error);
-    }
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('user');
   },
 
-  // Helper: Get stored user
   getStoredUser(): User | null {
     try {
-      const userStr = localStorage.getItem('user');
-      return userStr ? JSON.parse(userStr) : null;
-    } catch (error) {
-      console.error('Failed to parse stored user:', error);
+      const user = localStorage.getItem('user');
+      return user ? JSON.parse(user) : null;
+    } catch {
       return null;
     }
   },
 
-// Helper: Check if user is authenticated
   isAuthenticated(): boolean {
-    try {
-      const token = localStorage.getItem('accessToken');
-      if (!token) return false;
-      
-      // Basic token validation (check if it's JWT format)
-      const parts = token.split('.');
-      return parts.length === 3;
-    } catch (error) {
-      console.error('Token validation failed:', error);
-      return false;
+    const token = localStorage.getItem('accessToken');
+    if (!token) return false;
+
+    // Basic JWT format check
+    const parts = token.split('.');
+    return parts.length === 3;
+  },
+
+  /**
+   * Get formatted error message from API response
+   */
+  getErrorMessage(error: any): string {
+    // Axios error
+    if (error.response?.data?.message) {
+      return error.response.data.message;
     }
-  },
 
-  // Refresh access token
-  async refreshToken(): Promise<ApiResponse<{ accessToken: string }>> {
-    const refreshToken = localStorage.getItem('refreshToken');
-    if (!refreshToken) {
-      throw new Error('No refresh token available');
+    // Network error
+    if (error.code === 'ECONNABORTED' || error.message?.includes('timeout')) {
+      return 'Request timed out. Please check your connection and try again.';
     }
-    
-    const response = await api.post('/auth/refresh-token', { refreshToken });
-    if (response.data.data) {
-      localStorage.setItem('accessToken', response.data.data.accessToken);
+
+    if (error.code === 'ERR_NETWORK' || error.message?.includes('Network Error')) {
+      return 'Network error. Please check your internet connection.';
     }
-    return response.data;
-  },
 
-  // Get verification status
-  async getVerificationStatus(): Promise<ApiResponse<{ isEmailVerified: boolean; email: string; twoFactorEnabled: boolean }>> {
-    const response = await api.get('/auth/verification-status');
-    return response.data;
-  },
-
-  // Two-Factor Authentication methods
-  async enableTwoFactor(): Promise<ApiResponse<{ qrCode: string; secret: string; backupCodes: string[] }>> {
-    const response = await api.post('/auth/enable-2fa');
-    return response.data;
-  },
-
-  async verifyTwoFactorSetup(token: string): Promise<ApiResponse<{ twoFactorEnabled: boolean }>> {
-    const response = await api.post('/auth/verify-2fa-setup', { token });
-    return response.data;
-  },
-
-  async disableTwoFactor(password: string): Promise<ApiResponse<{ twoFactorEnabled: boolean }>> {
-    const response = await api.post('/auth/disable-2fa', { password });
-    return response.data;
-  },
-
-  async generateBackupCodes(password: string): Promise<ApiResponse<{ backupCodes: string[] }>> {
-    const response = await api.post('/auth/generate-backup-codes', { password });
-    return response.data;
-  },
-
-  async verifyTwoFactorLogin(tempToken: string, twoFactorToken?: string, backupCode?: string): Promise<ApiResponse<AuthResponse>> {
-    const payload: any = { tempToken };
-    if (twoFactorToken) payload.twoFactorToken = twoFactorToken;
-    if (backupCode) payload.backupCode = backupCode;
-    
-    const response = await api.post('/auth/verify-2fa-login', payload);
-    if (response.data.data) {
-      this.setTokens(response.data.data);
-    }
-    return response.data;
-  },
-
-  // Onboarding methods
-  async completeOnboarding(preferences: Partial<UserPreferences>): Promise<ApiResponse<{ user: User }>> {
-    if (USE_MOCK_SERVICE) {
-      return await mockAuthService.completeOnboarding(preferences);
-    }
-    
-    const response = await api.patch('/users/complete-onboarding', preferences);
-    if (response.data.data) {
-      // Update stored user with new preferences
-      localStorage.setItem('user', JSON.stringify(response.data.data.user));
-    }
-    return response.data;
-  },
-
-  async updatePreferences(preferences: Partial<UserPreferences>): Promise<ApiResponse<{ user: User }>> {
-    if (USE_MOCK_SERVICE) {
-      return await mockAuthService.updatePreferences(preferences);
-    }
-    
-    const response = await api.patch('/users/preferences', preferences);
-    if (response.data.data) {
-      // Update stored user with new preferences
-      localStorage.setItem('user', JSON.stringify(response.data.data.user));
-    }
-    return response.data;
+    // Generic error
+    return error.message || 'An unexpected error occurred. Please try again.';
   },
 };
 
