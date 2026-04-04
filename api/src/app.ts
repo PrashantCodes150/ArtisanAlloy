@@ -108,7 +108,7 @@ app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 // API ROUTES
 // ===========================================
 
-const API_VERSION = '/v1';
+const API_VERSION = '/api/v1';
 
 // Root route
 app.get('/', (req: Request, res: Response) => {
