@@ -27,7 +27,8 @@ export const connectDB = async (): Promise<void> => {
 
   } catch (error) {
     logger.error('❌ MongoDB connection failed:', error);
-    process.exit(1);
+    // In serverless, we don't want to exit the process as it crashes the function.
+    // Instead, we let the app stay alive and log the failure.
   }
 };
 
