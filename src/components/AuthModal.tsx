@@ -15,6 +15,13 @@ const AuthModal: React.FC = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [agreeTerms, setAgreeTerms] = useState(false);
 
+  // Sync internal view with context view when modal opens
+  useEffect(() => {
+    if (isAuthModalOpen) {
+      setView(authModalView);
+    }
+  }, [isAuthModalOpen, authModalView]);
+
   // Form states
   const [loginData, setLoginData] = useState({ email: '', password: '' });
   const [signupData, setSignupData] = useState({
@@ -26,72 +33,50 @@ const AuthModal: React.FC = () => {
     confirmPassword: ''
   });
 
-  // Sync view with context
-  useEffect(() => {
-    if (isAuthModalOpen) {
-      setView(authModalView);
-    }
-  }, [isAuthModalOpen, authModalView]);
-
   if (!isAuthModalOpen) return null;
-
-  // ============================================
-  // FORM HANDLERS
-  // ============================================
 
   const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     try {
       const user = await login(loginData);
-      toast.success('Welcome back to the elite circle! ✨');
+      toast.success('Welcome back to the elite circle.');
       closeAuthModal();
 
-      // Redirect to onboarding if not completed
       if (user && !user.preferences?.onboardingCompleted) {
         navigate('/onboarding');
       }
     } catch (err: any) {
-      toast.error(err.message || 'Login failed. Please try again.');
+      toast.error(err.message || 'The gates remain closed. Please verify your credentials.');
     }
   };
 
   const handleSignupSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    // Validation
     if (signupData.password !== signupData.confirmPassword) {
       toast.error('Passwords do not match');
       return;
     }
-
-    if (signupData.password.length < 8) {
-      toast.error('Password must be at least 8 characters');
-      return;
-    }
-
     if (!agreeTerms) {
-      toast.error('Please agree to the Terms & Privacy Policy');
+      toast.error('Please agree to the Terms of Excellence');
       return;
     }
 
     try {
       const { confirmPassword, ...registerData } = signupData;
       const user = await register(registerData);
-      toast.success('Welcome to F Jewelry! Your account has been created. ✨');
+      toast.success('Welcome to the elite circle of connoisseurs.');
       closeAuthModal();
 
-      // Redirect to onboarding if not completed
       if (user && !user.preferences?.onboardingCompleted) {
         navigate('/onboarding');
       }
     } catch (err: any) {
-      toast.error(err.message || 'Registration failed. Please try again.');
+      toast.error(err.message || 'Registration failed. We were unable to create your identity.');
     }
   };
 
   const handleGoogleAuth = () => {
-    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1';
     window.location.href = `${apiUrl}/auth/google`;
   };
 
@@ -100,10 +85,6 @@ const AuthModal: React.FC = () => {
     const numericValue = value.replace(/[^0-9]/g, '');
     setSignupData({ ...signupData, phone: numericValue });
   };
-
-  // ============================================
-  // RENDER
-  // ============================================
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-300">
@@ -146,9 +127,7 @@ const AuthModal: React.FC = () => {
           </div>
 
           <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar">
-            {/* ============================================ */}
-            {/* LOGIN FORM */}
-            {/* ============================================ */}
+            {/* Login Form */}
             {view === 'login' && (
               <form onSubmit={handleLoginSubmit} className="space-y-5">
                 <div className="space-y-4">
@@ -210,7 +189,7 @@ const AuthModal: React.FC = () => {
                   {isLoading ? (
                     <div className="flex items-center justify-center gap-2">
                       <div className="w-5 h-5 border-2 border-jewelry-dark border-t-transparent rounded-full animate-spin"></div>
-                      Signing in...
+                      Authenticating...
                     </div>
                   ) : 'Sign In'}
                 </button>
@@ -220,7 +199,7 @@ const AuthModal: React.FC = () => {
                     <div className="w-full border-t border-jewelry-gold/10"></div>
                   </div>
                   <div className="relative flex justify-center text-xs">
-                    <span className="px-4 bg-transparent text-jewelry-cream/40 uppercase tracking-widest">Or</span>
+                    <span className="px-4 bg-transparent text-jewelry-cream/40 uppercase tracking-widest">Or Securely</span>
                   </div>
                 </div>
 
@@ -239,9 +218,7 @@ const AuthModal: React.FC = () => {
               </form>
             )}
 
-            {/* ============================================ */}
-            {/* SIGNUP FORM */}
-            {/* ============================================ */}
+            {/* Signup Form */}
             {view === 'signup' && (
               <form onSubmit={handleSignupSubmit} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
@@ -282,7 +259,7 @@ const AuthModal: React.FC = () => {
                   <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-jewelry-gold/50 transition-colors" />
                   <input
                     type="tel"
-                    placeholder="Phone Number (optional)"
+                    placeholder="Phone Number"
                     value={signupData.phone}
                     onChange={handlePhoneChange}
                     className="w-full pl-10 pr-4 py-3 rounded-2xl bg-jewelry-dark/40 border border-jewelry-gold/20 text-jewelry-cream placeholder-jewelry-cream/30 focus:outline-none focus:ring-1 focus:ring-jewelry-gold/40 backdrop-blur-md transition-all text-sm"
@@ -294,12 +271,11 @@ const AuthModal: React.FC = () => {
                   <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-jewelry-gold/50 transition-colors" />
                   <input
                     type={showPassword ? "text" : "password"}
-                    placeholder="Create Password (min 8 chars)"
+                    placeholder="Create Password"
                     value={signupData.password}
                     onChange={(e) => setSignupData({ ...signupData, password: e.target.value })}
                     className="w-full pl-10 pr-10 py-3 rounded-2xl bg-jewelry-dark/40 border border-jewelry-gold/20 text-jewelry-cream placeholder-jewelry-cream/30 focus:outline-none focus:ring-1 focus:ring-jewelry-gold/40 backdrop-blur-md transition-all text-sm"
                     required
-                    minLength={8}
                   />
                   <button
                     type="button"
@@ -336,9 +312,10 @@ const AuthModal: React.FC = () => {
                     checked={agreeTerms}
                     onChange={(e) => setAgreeTerms(e.target.checked)}
                     className="mt-1 w-4 h-4 rounded-sm border border-jewelry-gold/40 bg-jewelry-dark/40 transition-all cursor-pointer"
+                    required
                   />
                   <label htmlFor="modal-terms" className="font-sans text-[11px] text-jewelry-cream/50 leading-tight">
-                    By joining, I agree to the <span className="text-jewelry-gold underline cursor-pointer">Terms of Service</span> and <span className="text-jewelry-gold underline cursor-pointer">Privacy Policy</span>.
+                    By joining, I agree to the <span className="text-jewelry-gold underline cursor-pointer">Terms of Excellence</span> and <span className="text-jewelry-gold underline cursor-pointer">Privacy Policy</span>.
                   </label>
                 </div>
 
@@ -350,15 +327,15 @@ const AuthModal: React.FC = () => {
                   {isLoading ? (
                     <div className="flex items-center justify-center gap-2">
                       <div className="w-5 h-5 border-2 border-jewelry-dark border-t-transparent rounded-full animate-spin"></div>
-                      Creating account...
+                      Creating Identity...
                     </div>
-                  ) : 'Create Account'}
+                  ) : 'Create Your Identity'}
                 </button>
 
                 <GoogleAuthButton onClick={handleGoogleAuth} loading={isLoading} />
 
                 <p className="text-center font-sans text-xs text-jewelry-cream/60 pt-1">
-                  Already a member?{' '}
+                  Already an elite member?{' '}
                   <button
                     type="button"
                     onClick={() => setView('login')}
