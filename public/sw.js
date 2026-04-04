@@ -80,13 +80,16 @@ self.addEventListener('fetch', (event) => {
   // For all other GET requests, use network-first strategy
   event.respondWith(
     fetch(request).then(networkResponse => {
+      // Clone the response early to avoid "body already used" error
+      const responseToReturn = networkResponse.clone();
+      
       // Only cache successful GET responses
       if (networkResponse.ok && request.method === 'GET') {
         caches.open(CACHE_NAME).then(cache => {
-          cache.put(request, networkResponse.clone());
+          cache.put(request, networkResponse);
         });
       }
-      return networkResponse;
+      return responseToReturn;
     }).catch(error => {
       // Network failed, try cache as fallback
       console.log('Network failed, trying cache for:', request.url);
