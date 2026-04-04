@@ -70,7 +70,7 @@ app.use(passport.session());
 
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
-const API_VERSION = '/v1';
+const API_VERSION = '/api/v1';
 
 app.get('/', (req: Request, res: Response) => {
   res.status(200).json({
