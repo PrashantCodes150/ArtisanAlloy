@@ -1,9 +1,27 @@
 import axios from 'axios';
 import type { AxiosError, InternalAxiosRequestConfig } from 'axios';
 
+// Normalize base URL to prevent duplicate paths
+const getBaseURL = () => {
+  const envUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+  
+  // If it's a relative URL (starts with /), use as-is
+  if (envUrl.startsWith('/')) {
+    return envUrl;
+  }
+  
+  // If it's an absolute URL, extract the path to avoid duplication
+  try {
+    const url = new URL(envUrl);
+    return url.pathname;
+  } catch {
+    return envUrl;
+  }
+};
+
 // Create axios instance with default config
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1',
+  baseURL: getBaseURL(),
   timeout: 15000, // Increased timeout for better reliability
   headers: {
     'Content-Type': 'application/json',
@@ -38,11 +56,11 @@ api.interceptors.response.use(
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
-      try {
+try {
         const refreshToken = localStorage.getItem('refreshToken');
         if (refreshToken) {
           const response = await axios.post(
-            `${import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1'}/auth/refresh-token`,
+            `${getBaseURL()}/auth/refresh-token`,
             { refreshToken },
             {
               headers: {
