@@ -60,7 +60,7 @@ export const errorHandler = (err: any, req: Request, res: Response, next: NextFu
     status: 'error',
     statusCode,
     message,
-    ...(process.env.NODE_ENV === 'development' && { stack: err.stack }),
+    stack: err.stack, // Temporarily show stack in production for 500 error debugging
     type: errorType,
   });
 };

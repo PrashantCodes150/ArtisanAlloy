@@ -118,11 +118,14 @@ app.get('/', (req: Request, res: Response) => {
   });
 });
 
+import mongoose from 'mongoose';
+
 // Health check endpoint
 app.get(`${API_VERSION}/health`, (req: Request, res: Response) => {
   res.status(200).json({
     status: 'success',
     message: 'F Jewelry API is running! 💎',
+    dbStatus: mongoose.connection.readyState === 1 ? 'connected' : 'connecting/disconnected',
     timestamp: new Date().toISOString(),
     environment: process.env.NODE_ENV,
   });
