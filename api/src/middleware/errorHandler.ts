@@ -94,9 +94,6 @@ export const handleUnhandledPromiseRejection = () => {
   process.on('unhandledRejection', (reason: any, promise) => {
     console.error('Unhandled Rejection at:', promise, 'reason:', reason);
     logger.error('Unhandled Rejection:', reason);
-
-    // Close server gracefully
-    process.exit(1);
   });
 };
 
@@ -107,7 +104,6 @@ export const handleUncaughtException = () => {
   process.on('uncaughtException', (err) => {
     console.error('Uncaught Exception:', err);
     logger.error('Uncaught Exception:', err);
-    process.exit(1);
   });
 };
 
