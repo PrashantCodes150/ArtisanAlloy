@@ -257,8 +257,7 @@ const couponSchema = new Schema<ICoupon>(
   }
 );
 
-// Indexes for better query performance
-couponSchema.index({ code: 1 });
+// Indexes for better query performance (code index already created by unique constraint)
 couponSchema.index({ isActive: 1, validFrom: 1, validUntil: 1 });
 couponSchema.index({ createdBy: 1 });
 couponSchema.index({ type: 1 });

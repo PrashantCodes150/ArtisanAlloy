@@ -200,9 +200,7 @@ const orderSchema = new Schema<IOrder>(
   }
 );
 
-// Indexes
-orderSchema.index({ orderNumber: 1 });
-orderSchema.index({ user: 1 });
+// Indexes (orderNumber and user indexes already created by unique/ref constraints)
 orderSchema.index({ status: 1 });
 orderSchema.index({ createdAt: -1 });
 orderSchema.index({ 'payment.status': 1 });

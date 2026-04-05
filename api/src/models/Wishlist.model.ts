@@ -54,8 +54,8 @@ const wishlistSchema = new Schema<IWishlist>(
   }
 );
 
-// Indexes
-wishlistSchema.index({ user: 1 });
+// Indexes (user index already created by unique constraint)
+// No additional indexes needed
 
 const Wishlist: Model<IWishlist> = mongoose.model<IWishlist>('Wishlist', wishlistSchema);
 

@@ -88,8 +88,7 @@ const categorySchema = new Schema<ICategory>(
   }
 );
 
-// Indexes
-categorySchema.index({ slug: 1 });
+// Indexes (slug index already created by unique constraint)
 categorySchema.index({ type: 1 });
 categorySchema.index({ parent: 1 });
 categorySchema.index({ isActive: 1, isFeatured: 1 });

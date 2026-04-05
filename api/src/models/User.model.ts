@@ -264,8 +264,7 @@ userSchema.virtual('fullName').get(function(this: IUser): string {
   return `${this.firstName} ${this.lastName}`;
 });
 
-// Index for better query performance
-userSchema.index({ email: 1 });
+// Index for better query performance (email index already created by unique constraint)
 userSchema.index({ role: 1 });
 userSchema.index({ createdAt: -1 });
 

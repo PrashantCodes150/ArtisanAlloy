@@ -389,8 +389,7 @@ const productSchema = new Schema<IProduct>(
   }
 );
 
-// Indexes for better query performance
-productSchema.index({ slug: 1 });
+// Indexes for better query performance (slug index already created by unique constraint)
 productSchema.index({ category: 1 });
 productSchema.index({ price: 1 });
 productSchema.index({ rating: -1 });
