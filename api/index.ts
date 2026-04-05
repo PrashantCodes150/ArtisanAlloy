@@ -88,22 +88,18 @@ app.get('/', (req: Request, res: Response) => {
   });
 });
 
-app.use(`${API_VERSION}/auth`, authRoutes);
-app.use(`${API_VERSION}/users`, userRoutes);
-app.use(`${API_VERSION}/products`, productRoutes);
-app.use(`${API_VERSION}/categories`, categoryRoutes);
-app.use(`${API_VERSION}/cart`, cartRoutes);
-app.use(`${API_VERSION}/orders`, orderRoutes);
-app.use(`${API_VERSION}/reviews`, reviewRoutes);
-app.use(`${API_VERSION}/wishlist`, wishlistRoutes);
-app.use(`${API_VERSION}/inventory`, inventoryRoutes);
-
-app.all('*', (req: Request, res: Response, next) => {
-  next(new AppError(`Cannot find ${req.originalUrl} on this server!`, 404));
+// Health check endpoint (must be before routes and DB middleware)
+app.get('/api/v1/health', (req: Request, res: Response) => {
+  res.status(200).json({
+    status: 'success',
+    message: 'F Jewelry API is running!',
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'production',
+    databaseConnected: isConnected,
+  });
 });
 
-app.use(errorHandler);
-
+// Database connection middleware (must be before routes)
 let isConnected = false;
 
 const ensureConnection = async () => {
@@ -124,18 +120,12 @@ const ensureConnection = async () => {
   }
 };
 
-// Health check endpoint that doesn't require DB
-app.get('/api/v1/health', (req: Request, res: Response) => {
-  res.status(200).json({
-    status: 'success',
-    message: 'F Jewelry API is running!',
-    timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV || 'production',
-    databaseConnected: isConnected,
-  });
-});
-
 app.use(async (req: Request, res: Response, next) => {
+  // Skip DB connection for health check
+  if (req.path === '/health') {
+    return next();
+  }
+  
   try {
     await ensureConnection();
     next();
@@ -147,5 +137,24 @@ app.use(async (req: Request, res: Response, next) => {
     });
   }
 });
+
+// API Routes (after DB middleware)
+app.use(`${API_VERSION}/auth`, authRoutes);
+app.use(`${API_VERSION}/users`, userRoutes);
+app.use(`${API_VERSION}/products`, productRoutes);
+app.use(`${API_VERSION}/categories`, categoryRoutes);
+app.use(`${API_VERSION}/cart`, cartRoutes);
+app.use(`${API_VERSION}/orders`, orderRoutes);
+app.use(`${API_VERSION}/reviews`, reviewRoutes);
+app.use(`${API_VERSION}/wishlist`, wishlistRoutes);
+app.use(`${API_VERSION}/inventory`, inventoryRoutes);
+
+// 404 handler
+app.all('*', (req: Request, res: Response, next) => {
+  next(new AppError(`Cannot find ${req.originalUrl} on this server!`, 404));
+});
+
+// Error handler (must be last)
+app.use(errorHandler);
 
 export default app;
