@@ -29,6 +29,15 @@ import { connectDB } from './src/config/database';
 
 const app = express();
 
+// Validate critical environment variables
+const requiredEnvVars = ['JWT_SECRET', 'REFRESH_TOKEN_SECRET'];
+const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
+
+if (missingVars.length > 0) {
+  console.error('❌ CRITICAL: Missing required environment variables:', missingVars.join(', '));
+  console.error('Please set these variables in your Vercel dashboard.');
+}
+
 app.use(helmet());
 
 const limiter = rateLimit({
@@ -79,15 +88,6 @@ app.get('/', (req: Request, res: Response) => {
   });
 });
 
-app.get(`${API_VERSION}/health`, (req: Request, res: Response) => {
-  res.status(200).json({
-    status: 'success',
-    message: 'F Jewelry API is running!',
-    timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV,
-  });
-});
-
 app.use(`${API_VERSION}/auth`, authRoutes);
 app.use(`${API_VERSION}/users`, userRoutes);
 app.use(`${API_VERSION}/products`, productRoutes);
@@ -109,17 +109,43 @@ let isConnected = false;
 const ensureConnection = async () => {
   if (!isConnected) {
     try {
+      if (!process.env.MONGODB_URI) {
+        console.error('❌ MONGODB_URI environment variable is not set');
+        throw new Error('MONGODB_URI is required');
+      }
       await connectDB();
       isConnected = true;
+      console.log('✅ Database connection established');
     } catch (error) {
-      console.error('Database connection failed:', error);
+      console.error('❌ Database connection failed:', error);
+      isConnected = false;
+      throw error;
     }
   }
 };
 
+// Health check endpoint that doesn't require DB
+app.get('/api/v1/health', (req: Request, res: Response) => {
+  res.status(200).json({
+    status: 'success',
+    message: 'F Jewelry API is running!',
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'production',
+    databaseConnected: isConnected,
+  });
+});
+
 app.use(async (req: Request, res: Response, next) => {
-  await ensureConnection();
-  next();
+  try {
+    await ensureConnection();
+    next();
+  } catch (error) {
+    console.error('Database connection error:', error);
+    res.status(503).json({
+      status: 'error',
+      message: 'Database connection failed. Please try again later.',
+    });
+  }
 });
 
 export default app;

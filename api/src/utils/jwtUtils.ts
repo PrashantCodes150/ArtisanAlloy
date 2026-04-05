@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { IUser } from '../models';
+import { logger } from './logger';
 
 interface TokenPayload {
   id: string;
@@ -9,9 +10,15 @@ interface TokenPayload {
  * Generate JWT access token
  */
 export const generateAccessToken = (user: IUser): string => {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    logger.error('JWT_SECRET environment variable is not set');
+    throw new Error('JWT_SECRET environment variable is not configured');
+  }
+  
   return jwt.sign(
     { id: user._id.toString() },
-    process.env.JWT_SECRET!,
+    secret,
     { expiresIn: process.env.JWT_EXPIRES_IN || '7d' } as jwt.SignOptions
   );
 };
@@ -20,9 +27,15 @@ export const generateAccessToken = (user: IUser): string => {
  * Generate refresh token
  */
 export const generateRefreshToken = (user: IUser): string => {
+  const secret = process.env.REFRESH_TOKEN_SECRET;
+  if (!secret) {
+    logger.error('REFRESH_TOKEN_SECRET environment variable is not set');
+    throw new Error('REFRESH_TOKEN_SECRET environment variable is not configured');
+  }
+  
   return jwt.sign(
     { id: user._id.toString() },
-    process.env.REFRESH_TOKEN_SECRET!,
+    secret,
     { expiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN || '30d' } as jwt.SignOptions
   );
 };

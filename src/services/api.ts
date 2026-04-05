@@ -4,25 +4,26 @@ import type { AxiosError, InternalAxiosRequestConfig } from 'axios';
 // Normalize base URL to prevent duplicate paths
 const getBaseURL = () => {
   const envUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
-  
+
   // If it's a relative URL (starts with /), use as-is
   if (envUrl.startsWith('/')) {
+    // In production, if VITE_BACKEND_URL is set, use it as the base
+    const backendUrl = import.meta.env.VITE_BACKEND_URL;
+    if (backendUrl) {
+      return `${backendUrl}${envUrl}`;
+    }
+    // For monolith deployments (same domain), keep relative path
     return envUrl;
   }
-  
-  // If it's an absolute URL, extract the path to avoid duplication
-  try {
-    const url = new URL(envUrl);
-    return url.pathname;
-  } catch {
-    return envUrl;
-  }
+
+  // If it's an absolute URL, return as-is
+  return envUrl;
 };
 
 // Create axios instance with default config
 const api = axios.create({
   baseURL: getBaseURL(),
-  timeout: 15000, // Increased timeout for better reliability
+  timeout: 30000, // 30 second timeout for slower connections
   headers: {
     'Content-Type': 'application/json',
   },

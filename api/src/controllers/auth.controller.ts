@@ -61,44 +61,49 @@ export const login = asyncHandler(async (req: Request, res: Response, next: Next
     return next(new AppError('Please provide email and password', 400));
   }
 
-  // Check if user exists && password is correct
-  const user = await User.findOne({ email }).select('+password');
+  try {
+    // Check if user exists && password is correct
+    const user = await User.findOne({ email }).select('+password');
 
-  if (!user || !(await user.comparePassword(password))) {
-    return next(new AppError('Incorrect email or password', 401));
+    if (!user || !(await user.comparePassword(password))) {
+      return next(new AppError('Incorrect email or password', 401));
+    }
+
+    // Check if user is active
+    if (!user.isActive) {
+      return next(new AppError('Your account has been deactivated. Please contact support.', 401));
+    }
+
+    // Check if 2FA is enabled
+    const userWith2FA = await User.findById(user._id).select('+twoFactorEnabled');
+
+    if (userWith2FA && userWith2FA.twoFactorEnabled) {
+      // Generate temporary token for 2FA verification
+      const tempToken = userWith2FA.createTemporaryTwoFactorToken();
+      await userWith2FA.save({ validateBeforeSave: false });
+
+      return res.status(200).json({
+        status: 'success',
+        message: 'Password verified. Please enter your two-factor authentication code.',
+        requiresTwoFactor: true,
+        temporaryToken: tempToken,
+      });
+    }
+
+    // Update last login
+    user.lastLogin = new Date();
+    await user.save({ validateBeforeSave: false });
+
+    // Include email verification status in response
+    const message = user.isEmailVerified
+      ? 'Login successful!'
+      : 'Login successful! Please verify your email for full access.';
+
+    createSendToken(user, 200, res, message);
+  } catch (error) {
+    logger.error('Login error:', error);
+    return next(new AppError('An error occurred during login. Please try again.', 500));
   }
-
-  // Check if user is active
-  if (!user.isActive) {
-    return next(new AppError('Your account has been deactivated. Please contact support.', 401));
-  }
-
-  // Check if 2FA is enabled
-  const userWith2FA = await User.findById(user._id).select('+twoFactorEnabled');
-
-  if (userWith2FA && userWith2FA.twoFactorEnabled) {
-    // Generate temporary token for 2FA verification
-    const tempToken = userWith2FA.createTemporaryTwoFactorToken();
-    await userWith2FA.save({ validateBeforeSave: false });
-
-    return res.status(200).json({
-      status: 'success',
-      message: 'Password verified. Please enter your two-factor authentication code.',
-      requiresTwoFactor: true,
-      temporaryToken: tempToken,
-    });
-  }
-
-  // Update last login
-  user.lastLogin = new Date();
-  await user.save({ validateBeforeSave: false });
-
-  // Include email verification status in response
-  const message = user.isEmailVerified
-    ? 'Login successful!'
-    : 'Login successful! Please verify your email for full access.';
-
-  createSendToken(user, 200, res, message);
 });
 
 /**
