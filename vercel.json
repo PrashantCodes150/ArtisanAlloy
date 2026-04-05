@@ -1,5 +1,7 @@
 {
   "version": 2,
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
   "builds": [
     {
       "src": "package.json",
@@ -8,21 +10,22 @@
     },
     {
       "src": "api/index.ts",
-      "use": "@vercel/node"
+      "use": "@vercel/node",
+      "config": {
+        "maxDuration": 60,
+        "memory": 1024
+      }
     }
   ],
-  "rewrites": [
+  "routes": [
     {
-      "source": "/api/v1/(.*)",
-      "destination": "/api/index.ts"
+      "src": "^/api/.*",
+      "dest": "/api/index.ts",
+      "methods": ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
     },
     {
-      "source": "/api/(.*)",
-      "destination": "/api/index.ts"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/$1"
+      "src": "^/(?!api).*",
+      "dest": "/index.html"
     }
   ],
   "headers": [
@@ -31,8 +34,18 @@
       "headers": [
         { "key": "Access-Control-Allow-Origin", "value": "*" },
         { "key": "Access-Control-Allow-Methods", "value": "GET, POST, PUT, PATCH, DELETE, OPTIONS" },
-        { "key": "Access-Control-Allow-Headers", "value": "Content-Type, Authorization, X-Requested-With" }
+        { "key": "Access-Control-Allow-Headers", "value": "Content-Type, Authorization, X-Requested-With" },
+        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=3600" }
       ]
     }
-  ]
+  ],
+  "env": {
+    "NODE_ENV": "production"
+  }
 }

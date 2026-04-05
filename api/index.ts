@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import compression from 'compression';
@@ -8,6 +8,7 @@ import hpp from 'hpp';
 import path from 'path';
 import passport from 'passport';
 import session from 'express-session';
+import mongoose from 'mongoose';
 
 import './src/config/googleAuth';
 
@@ -29,14 +30,33 @@ import { connectDB } from './src/config/database';
 
 const app = express();
 
-// Validate critical environment variables
-const requiredEnvVars = ['JWT_SECRET', 'REFRESH_TOKEN_SECRET'];
-const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
+// Initialize database connection immediately (once per serverless function)
+let dbConnecting = false;
+let dbConnected = false;
 
-if (missingVars.length > 0) {
-  console.error('❌ CRITICAL: Missing required environment variables:', missingVars.join(', '));
-  console.error('Please set these variables in your Vercel dashboard.');
-}
+const initializeDatabase = async () => {
+  if (dbConnecting || dbConnected) return;
+  
+  dbConnecting = true;
+  
+  try {
+    if (!process.env.MONGODB_URI) {
+      console.warn('⚠️  MONGODB_URI environment variable is not set. Database-dependent features will not work.');
+    } else {
+      await connectDB();
+      dbConnected = true;
+      console.log('✅ Database connection established');
+    }
+  } catch (error) {
+    console.error('❌ Database connection failed:', error);
+    dbConnected = false;
+  } finally {
+    dbConnecting = false;
+  }
+};
+
+// Start database connection in background (don't block request)
+initializeDatabase().catch(err => console.error('DB init error:', err));
 
 app.use(helmet());
 
@@ -67,11 +87,17 @@ app.use(hpp({
 
 app.use(compression());
 
+// Session middleware - only initialize if MongoDB is available
 app.use(session({
-  secret: process.env.JWT_SECRET || 'fallback-secret',
+  secret: process.env.JWT_SECRET || 'fallback-secret-key-change-in-production',
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: process.env.NODE_ENV === 'production' }
+  cookie: { 
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  }
 }));
 
 app.use(passport.initialize());
@@ -81,64 +107,56 @@ app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 const API_VERSION = '/api/v1';
 
+// Root route
 app.get('/', (req: Request, res: Response) => {
   res.status(200).json({
     status: 'success',
-    message: 'F Jewelry API is live!',
+    message: 'F Jewelry API is live! 💎',
   });
 });
 
-// Health check endpoint (must be before routes and DB middleware)
-app.get('/api/v1/health', (req: Request, res: Response) => {
+// Health check endpoint - fast and doesn't require database
+app.get(`${API_VERSION}/health`, (req: Request, res: Response) => {
   res.status(200).json({
     status: 'success',
-    message: 'F Jewelry API is running!',
+    message: 'F Jewelry API is running! 💎',
     timestamp: new Date().toISOString(),
     environment: process.env.NODE_ENV || 'production',
-    databaseConnected: isConnected,
+    databaseConnected: dbConnected,
+    mongooseState: mongoose.connection.readyState,
   });
 });
 
-// Database connection middleware (must be before routes)
-let isConnected = false;
-
-const ensureConnection = async () => {
-  if (!isConnected) {
-    try {
-      if (!process.env.MONGODB_URI) {
-        console.error('❌ MONGODB_URI environment variable is not set');
-        throw new Error('MONGODB_URI is required');
-      }
-      await connectDB();
-      isConnected = true;
-      console.log('✅ Database connection established');
-    } catch (error) {
-      console.error('❌ Database connection failed:', error);
-      isConnected = false;
-      throw error;
-    }
-  }
-};
-
-app.use(async (req: Request, res: Response, next) => {
-  // Skip DB connection for health check
-  if (req.path === '/health') {
+// Database check middleware - non-blocking for most routes
+const checkDatabaseConnection = async (req: Request, res: Response, next: NextFunction) => {
+  // Skip for health check
+  if (req.path === '/health' || req.path === '/') {
     return next();
   }
-  
-  try {
-    await ensureConnection();
-    next();
-  } catch (error) {
-    console.error('Database connection error:', error);
-    res.status(503).json({
-      status: 'error',
-      message: 'Database connection failed. Please try again later.',
-    });
-  }
-});
 
-// API Routes (after DB middleware)
+  // Check if database is connected
+  if (!dbConnected && process.env.MONGODB_URI) {
+    // Try to reconnect if not already connecting
+    if (!dbConnecting) {
+      initializeDatabase().catch(err => console.error('Reconnection error:', err));
+    }
+    
+    // If still not connected, return error for API routes
+    if (mongoose.connection.readyState !== 1) {
+      return res.status(503).json({
+        status: 'error',
+        message: 'Database service temporarily unavailable. Please try again later.',
+        code: 'DB_UNAVAILABLE',
+      });
+    }
+  }
+  
+  next();
+};
+
+app.use(checkDatabaseConnection);
+
+// API Routes (after middleware setup)
 app.use(`${API_VERSION}/auth`, authRoutes);
 app.use(`${API_VERSION}/users`, userRoutes);
 app.use(`${API_VERSION}/products`, productRoutes);
@@ -150,11 +168,11 @@ app.use(`${API_VERSION}/wishlist`, wishlistRoutes);
 app.use(`${API_VERSION}/inventory`, inventoryRoutes);
 
 // 404 handler
-app.all('*', (req: Request, res: Response, next) => {
+app.all('*', (req: Request, res: Response, next: NextFunction) => {
   next(new AppError(`Cannot find ${req.originalUrl} on this server!`, 404));
 });
 
-// Error handler (must be last)
+// Global error handler (must be last)
 app.use(errorHandler);
 
 export default app;

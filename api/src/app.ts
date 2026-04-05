@@ -10,6 +10,7 @@ import path from 'path';
 import passport from 'passport';
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
+import mongoose from 'mongoose';
 
 // Import passport configuration
 import './config/googleAuth';
@@ -114,22 +115,52 @@ app.use(hpp({
 // Compression
 app.use(compression());
 
-// Session middleware for passport (only for OAuth flows)
-app.use(session({
-  secret: process.env.JWT_SECRET || 'dev-secret',
-  resave: false,
-  saveUninitialized: false,
-  store: MongoStore.create({
-    mongoUrl: process.env.MONGO_URI || 'mongodb://localhost:27017/f-jewelry',
-    ttl: 24 * 60 * 60, // 24 hours
-    autoRemove: 'native'
-  }),
-  cookie: { 
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+// Session middleware for passport (only for OAuth flows) - safely handle MongoDB dependency
+const initializeSession = () => {
+  if (mongoose.connection.readyState === 1 || process.env.MONGODB_URI) {
+    try {
+      return session({
+        secret: process.env.JWT_SECRET || 'dev-secret-key-change-in-production',
+        resave: false,
+        saveUninitialized: false,
+        store: MongoStore.create({
+          mongoUrl: process.env.MONGODB_URI || 'mongodb://localhost:27017/f-jewelry',
+          ttl: 24 * 60 * 60, // 24 hours
+          autoRemove: 'native'
+        }),
+        cookie: { 
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+          maxAge: 24 * 60 * 60 * 1000 // 24 hours
+        }
+      });
+    } catch (error) {
+      console.warn('Could not initialize MongoDB session store:', error);
+      return session({
+        secret: process.env.JWT_SECRET || 'dev-secret-key-change-in-production',
+        resave: false,
+        saveUninitialized: false,
+        cookie: { 
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+          maxAge: 24 * 60 * 60 * 1000 // 24 hours
+        }
+      });
+    }
   }
-}));
+  return session({
+    secret: process.env.JWT_SECRET || 'dev-secret-key-change-in-production',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { 
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    }
+  });
+};
+
+app.use(initializeSession());
 
 // Initialize passport
 app.use(passport.initialize());
@@ -151,8 +182,6 @@ app.get('/', (req: Request, res: Response) => {
     message: 'F Jewelry API is live! 💎',
   });
 });
-
-import mongoose from 'mongoose';
 
 // Health check endpoint
 app.get(`${API_VERSION}/health`, (req: Request, res: Response) => {

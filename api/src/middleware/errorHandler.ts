@@ -18,6 +18,13 @@ export const errorHandler = (err: any, req: Request, res: Response, next: NextFu
     let error = { ...err };
     error.message = err.message;
 
+    // Handle MongoDB/Mongoose connection errors
+    if (err.name === 'MongoNetworkError' || err.name === 'MongoServerError' || 
+        err.name === 'MongoAuthenticationError' || err.message?.includes('ECONNREFUSED')) {
+      const message = 'Database service temporarily unavailable. Please try again later.';
+      error = { message, statusCode: 503, type: 'DB_UNAVAILABLE' };
+    }
+
     // Handle Mongoose CastError
     if (err.name === 'CastError') {
       const message = `Resource not found with id: ${err.value}`;
