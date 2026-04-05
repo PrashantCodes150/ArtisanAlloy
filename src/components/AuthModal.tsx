@@ -62,7 +62,14 @@ const AuthModal: React.FC = () => {
     }
 
     try {
-      const { confirmPassword, ...registerData } = signupData;
+      // Backend expects passwordConfirm, frontend has confirmPassword
+      // Map confirmPassword to passwordConfirm before sending
+      const { confirmPassword, ...restData } = signupData;
+      const registerData = {
+        ...restData,
+        passwordConfirm: confirmPassword,
+      };
+      
       const user = await register(registerData);
       toast.success('Welcome to the elite circle of connoisseurs.');
       closeAuthModal();
@@ -71,6 +78,7 @@ const AuthModal: React.FC = () => {
         navigate('/onboarding');
       }
     } catch (err: any) {
+      console.error('Registration error:', err);
       toast.error(err.message || 'Registration failed. We were unable to create your identity.');
     }
   };
