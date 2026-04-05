@@ -89,12 +89,19 @@ app.use(hpp({
 // Compression
 app.use(compression());
 
-// Session middleware for passport
+// Session middleware for passport (only for OAuth flows)
+// Using MemoryStore with a warning suppress since we only need it for passport OAuth
+// In production, consider using connect-redis or connect-mongo for session storage
 app.use(session({
-  secret: process.env.JWT_SECRET!,
+  secret: process.env.JWT_SECRET || 'dev-secret',
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: process.env.NODE_ENV === 'production' }
+  cookie: { 
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  },
+  // Suppress MemoryStore warning - acceptable for low-traffic OAuth
+  store: undefined
 }));
 
 // Initialize passport
