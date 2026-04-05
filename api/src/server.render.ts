@@ -46,14 +46,20 @@ process.on('unhandledRejection', (err: Error) => {
 // Graceful shutdown
 const gracefulShutdown = (signal: string) => {
   logger.info(`${signal} RECEIVED. Shutting down gracefully`);
-  server.close(() => {
-    logger.info('Process terminated');
+  if (serverInstance) {
+    serverInstance.close(() => {
+      logger.info('Process terminated');
+      process.exit(0);
+    });
+  } else {
     process.exit(0);
-  });
+  }
 };
 
 process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
 process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+
+let serverInstance: http.Server;
 
 // Connect to database and start server
 const startServer = async () => {
@@ -62,15 +68,15 @@ const startServer = async () => {
     await connectDB();
 
     // Create HTTP server (no SSL on Render, they handle it)
-    const server = http.createServer(app);
+    serverInstance = http.createServer(app);
 
-    server.listen(PORT, () => {
+    serverInstance.listen(PORT, () => {
       logger.info(`🚀 Server running in ${NODE_ENV} mode on port ${PORT}`);
       logger.info(`📍 API Base URL: http://localhost:${PORT}/api/v1`);
       logger.info(`❤️  Health Check: http://localhost:${PORT}/api/v1/health`);
     });
 
-    server.on('error', (error: NodeJS.ErrnoException) => {
+    serverInstance.on('error', (error: NodeJS.ErrnoException) => {
       if (error.code === 'EACCES') {
         logger.error(`Port ${PORT} requires elevated privileges`);
         process.exit(1);

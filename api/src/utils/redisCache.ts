@@ -14,7 +14,7 @@ redisClient.connect().catch(console.error);
 export const getFromCache = async (key: string): Promise<any> => {
   try {
     const value = await redisClient.get(key);
-    return value ? JSON.parse(value) : null;
+    return value ? JSON.parse(String(value)) : null;
   } catch (error) {
     console.error('Redis GET error:', error);
     return null;
