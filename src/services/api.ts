@@ -73,7 +73,10 @@ try {
             }
           );
 
-          const { accessToken } = response.data.data;
+          const accessToken = response?.data?.data?.accessToken;
+          if (!accessToken) {
+            throw new Error('No access token received');
+          }
           localStorage.setItem('accessToken', accessToken);
 
           if (originalRequest.headers) {

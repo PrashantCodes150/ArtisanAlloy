@@ -77,10 +77,10 @@ const authService = {
     }
     
     const response = await api.post('/auth/register', data);
-    if (response.data.data) {
+    if (response?.data?.data) {
       this.setTokens(response.data.data);
     }
-    return response.data;
+    return response?.data;
   },
 
   // Login user
@@ -90,10 +90,10 @@ const authService = {
     }
     
     const response = await api.post('/auth/login', credentials);
-    if (response.data.data) {
+    if (response?.data?.data) {
       this.setTokens(response.data.data);
     }
-    return response.data;
+    return response?.data;
   },
 
 // Logout user
@@ -116,7 +116,7 @@ const authService = {
     }
     
     const response = await api.get('/auth/me');
-    return response.data;
+    return response?.data;
   },
 
   // Update password
@@ -126,16 +126,16 @@ const authService = {
       newPassword,
       newPasswordConfirm,
     });
-    if (response.data.data) {
+    if (response?.data?.data) {
       this.setTokens(response.data.data);
     }
-    return response.data;
+    return response?.data;
   },
 
   // Forgot password
   async forgotPassword(email: string): Promise<ApiResponse<null>> {
     const response = await api.post('/auth/forgot-password', { email });
-    return response.data;
+    return response?.data;
   },
 
   // Reset password
@@ -144,19 +144,19 @@ const authService = {
       password,
       passwordConfirm,
     });
-    return response.data;
+    return response?.data;
   },
 
   // Verify email
   async verifyEmail(token: string): Promise<ApiResponse<null>> {
     const response = await api.get(`/auth/verify-email/${token}`);
-    return response.data;
+    return response?.data;
   },
 
   // Resend verification email
   async resendVerificationEmail(email: string): Promise<ApiResponse<null>> {
     const response = await api.post('/auth/resend-verification', { email });
-    return response.data;
+    return response?.data;
   },
 
 // Helper: Set tokens in localStorage
@@ -218,37 +218,37 @@ const authService = {
     }
     
     const response = await api.post('/auth/refresh-token', { refreshToken });
-    if (response.data.data) {
+    if (response?.data?.data) {
       localStorage.setItem('accessToken', response.data.data.accessToken);
     }
-    return response.data;
+    return response?.data;
   },
 
   // Get verification status
   async getVerificationStatus(): Promise<ApiResponse<{ isEmailVerified: boolean; email: string; twoFactorEnabled: boolean }>> {
     const response = await api.get('/auth/verification-status');
-    return response.data;
+    return response?.data;
   },
 
   // Two-Factor Authentication methods
   async enableTwoFactor(): Promise<ApiResponse<{ qrCode: string; secret: string; backupCodes: string[] }>> {
     const response = await api.post('/auth/enable-2fa');
-    return response.data;
+    return response?.data;
   },
 
   async verifyTwoFactorSetup(token: string): Promise<ApiResponse<{ twoFactorEnabled: boolean }>> {
-    const response = await api.post('/auth/verify-2fa-setup', { token });
-    return response.data;
+    const response = await api.post('/verify-2fa-setup', { token });
+    return response?.data;
   },
 
   async disableTwoFactor(password: string): Promise<ApiResponse<{ twoFactorEnabled: boolean }>> {
     const response = await api.post('/auth/disable-2fa', { password });
-    return response.data;
+    return response?.data;
   },
 
   async generateBackupCodes(password: string): Promise<ApiResponse<{ backupCodes: string[] }>> {
     const response = await api.post('/auth/generate-backup-codes', { password });
-    return response.data;
+    return response?.data;
   },
 
   async verifyTwoFactorLogin(tempToken: string, twoFactorToken?: string, backupCode?: string): Promise<ApiResponse<AuthResponse>> {
@@ -257,10 +257,10 @@ const authService = {
     if (backupCode) payload.backupCode = backupCode;
     
     const response = await api.post('/auth/verify-2fa-login', payload);
-    if (response.data.data) {
+    if (response?.data?.data) {
       this.setTokens(response.data.data);
     }
-    return response.data;
+    return response?.data;
   },
 
   // Onboarding methods
@@ -270,11 +270,11 @@ const authService = {
     }
     
     const response = await api.patch('/users/complete-onboarding', preferences);
-    if (response.data.data) {
+    if (response?.data?.data) {
       // Update stored user with new preferences
       localStorage.setItem('user', JSON.stringify(response.data.data.user));
     }
-    return response.data;
+    return response?.data;
   },
 
   async updatePreferences(preferences: Partial<UserPreferences>): Promise<ApiResponse<{ user: User }>> {
@@ -283,11 +283,11 @@ const authService = {
     }
     
     const response = await api.patch('/users/preferences', preferences);
-    if (response.data.data) {
+    if (response?.data?.data) {
       // Update stored user with new preferences
       localStorage.setItem('user', JSON.stringify(response.data.data.user));
     }
-    return response.data;
+    return response?.data;
   },
 };
 

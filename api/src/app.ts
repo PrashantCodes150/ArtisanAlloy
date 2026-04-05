@@ -9,6 +9,7 @@ import hpp from 'hpp';
 import path from 'path';
 import passport from 'passport';
 import session from 'express-session';
+import MongoStore from 'connect-mongo';
 
 // Import passport configuration
 import './config/googleAuth';
@@ -60,8 +61,32 @@ const limiter = rateLimit({
 app.use('/api', limiter);
 
 // CORS configuration
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  'http://localhost:5173',
+  'http://localhost:3000',
+  'https://f-jewelry-frontend.vercel.app', // Common pattern for Vercel
+].filter(Boolean) as string[];
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    const isAllowed = allowedOrigins.some(allowedOrigin => {
+      if (allowedOrigin.includes('*')) {
+        const regex = new RegExp('^' + allowedOrigin.replace(/\*/g, '.*') + '$');
+        return regex.test(origin);
+      }
+      return allowedOrigin === origin;
+    });
+
+    if (isAllowed || process.env.NODE_ENV === 'development') {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
@@ -90,18 +115,20 @@ app.use(hpp({
 app.use(compression());
 
 // Session middleware for passport (only for OAuth flows)
-// Using MemoryStore with a warning suppress since we only need it for passport OAuth
-// In production, consider using connect-redis or connect-mongo for session storage
 app.use(session({
   secret: process.env.JWT_SECRET || 'dev-secret',
   resave: false,
   saveUninitialized: false,
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGO_URI || 'mongodb://localhost:27017/f-jewelry',
+    ttl: 24 * 60 * 60, // 24 hours
+    autoRemove: 'native'
+  }),
   cookie: { 
     secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
     maxAge: 24 * 60 * 60 * 1000 // 24 hours
-  },
-  // Suppress MemoryStore warning - acceptable for low-traffic OAuth
-  store: undefined
+  }
 }));
 
 // Initialize passport
