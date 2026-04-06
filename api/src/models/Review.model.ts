@@ -90,7 +90,6 @@ const reviewSchema = new Schema<IReview>(
 // Indexes
 reviewSchema.index({ product: 1, user: 1 }, { unique: true }); // One review per user per product
 reviewSchema.index({ product: 1, rating: -1 });
-reviewSchema.index({ user: 1 });
 reviewSchema.index({ isApproved: 1 });
 
 // Static method to calculate average rating for a product

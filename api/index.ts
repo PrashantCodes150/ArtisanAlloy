@@ -9,6 +9,7 @@ import path from 'path';
 import passport from 'passport';
 import session from 'express-session';
 import mongoose from 'mongoose';
+import MongoStore from 'connect-mongo';
 
 import './src/config/googleAuth';
 
@@ -69,8 +70,22 @@ const limiter = rateLimit({
 });
 app.use('/api', limiter);
 
+// CORS configuration
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  'http://localhost:5173',
+  'http://localhost:3000',
+  'https://f-jewelry-frontend.vercel.app',
+].filter(Boolean) as string[];
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || '*',
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin) || process.env.NODE_ENV === 'development') {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
@@ -92,6 +107,10 @@ app.use(session({
   secret: process.env.JWT_SECRET || 'fallback-secret-key-change-in-production',
   resave: false,
   saveUninitialized: false,
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGODB_URI || process.env.MONGO_URI,
+    ttl: 24 * 60 * 60, // 24 hours
+  }),
   cookie: { 
     secure: process.env.NODE_ENV === 'production',
     sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',

@@ -66,8 +66,17 @@ const allowedOrigins = [
   process.env.FRONTEND_URL,
   'http://localhost:5173',
   'http://localhost:3000',
-  'https://f-jewelry-frontend.vercel.app', // Common pattern for Vercel
 ].filter(Boolean) as string[];
+
+// Add Vercel preview/production URLs dynamically
+if (process.env.VERCEL_URL) {
+  allowedOrigins.push(`https://${process.env.VERCEL_URL}`);
+}
+// Support multiple frontend domains (comma-separated)
+if (process.env.ALLOWED_ORIGINS) {
+  const additionalOrigins = process.env.ALLOWED_ORIGINS.split(',').map(o => o.trim());
+  allowedOrigins.push(...additionalOrigins);
+}
 
 app.use(cors({
   origin: (origin, callback) => {

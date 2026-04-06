@@ -132,7 +132,6 @@ const cartSchema = new Schema<ICart>(
 );
 
 // Indexes
-cartSchema.index({ user: 1 });
 cartSchema.index({ sessionId: 1 });
 cartSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 }); // TTL index for guest carts
 
