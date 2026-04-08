@@ -7,7 +7,10 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Dependencies
 node_modules
+
+# Build outputs
 dist
 dist-ssr
 *.local
@@ -22,9 +25,21 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Environment files
 .env
 .env.local
 .env.production
 .env.development
+
+# Legacy folders (old structure - now in backend/ and frontend/)
+api/
+src/
+public/
+scripts/
+generate-*.mjs
+
+# Misc
+*.local
 VERCEL_ENV_VAR.txt
 VERCEL_ENV_VARS.txt
