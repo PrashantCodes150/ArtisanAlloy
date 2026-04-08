@@ -1,4 +1,4 @@
-import { Helmet } from '@dr.pogodin/react-helmet';
+import { useEffect } from 'react';
 
 interface SEOProps {
     title?: string;
@@ -32,126 +32,151 @@ const SEO = ({
     const siteName = 'F Jewelry';
     const fullTitle = title.includes('F Jewelry') ? title : `${title} | F Jewelry`;
 
-    // Generate JSON-LD structured data
-    const generateStructuredData = () => {
-        const baseData = {
-            '@context': 'https://schema.org',
-            '@type': 'WebSite',
-            name: siteName,
-            url: url,
-            description: description,
-            potentialAction: {
-                '@type': 'SearchAction',
-                target: {
-                    '@type': 'EntryPoint',
-                    urlTemplate: `${url}/collection?search={search_term_string}`,
-                },
-                'query-input': 'required name=search_term_string',
-            },
+    useEffect(() => {
+        document.title = fullTitle;
+        
+        const updateMeta = (name: string, content: string, property = false) => {
+            let meta = document.querySelector(property ? `meta[property="${name}"]` : `meta[name="${name}"]`);
+            if (!meta) {
+                meta = document.createElement('meta');
+                if (property) {
+                    meta.setAttribute('property', name);
+                } else {
+                    meta.setAttribute('name', name);
+                }
+                document.head.appendChild(meta);
+            }
+            meta.setAttribute('content', content);
         };
 
-        if (product) {
-            return {
+        const updateLink = (rel: string, href: string) => {
+            let link = document.querySelector(`link[rel="${rel}"]`);
+            if (!link) {
+                link = document.createElement('link');
+                link.setAttribute('rel', rel);
+                document.head.appendChild(link);
+            }
+            link.setAttribute('href', href);
+        };
+
+        const removeExistingLD = () => {
+            document.querySelectorAll('script[type="application/ld+json"]').forEach(el => el.remove());
+        };
+
+        const addStructuredData = (data: object) => {
+            const script = document.createElement('script');
+            script.type = 'application/ld+json';
+            script.textContent = JSON.stringify(data);
+            document.head.appendChild(script);
+        };
+
+        const generateStructuredData = () => {
+            const baseData = {
                 '@context': 'https://schema.org',
-                '@type': 'Product',
-                name: product.name,
-                image: product.image || image,
+                '@type': 'WebSite',
+                name: siteName,
+                url: url,
                 description: description,
-                brand: {
-                    '@type': 'Brand',
-                    name: product.brand || siteName,
-                },
-                sku: product.sku,
-                offers: {
-                    '@type': 'Offer',
-                    url: url,
-                    priceCurrency: product.currency || 'INR',
-                    price: product.price,
-                    availability: product.availability === 'out_of_stock'
-                        ? 'https://schema.org/OutOfStock'
-                        : 'https://schema.org/InStock',
-                    seller: {
-                        '@type': 'Organization',
-                        name: siteName,
+                potentialAction: {
+                    '@type': 'SearchAction',
+                    target: {
+                        '@type': 'EntryPoint',
+                        urlTemplate: `${url}/collection?search={search_term_string}`,
                     },
+                    'query-input': 'required name=search_term_string',
                 },
-                aggregateRating: product.rating ? {
-                    '@type': 'AggregateRating',
-                    ratingValue: product.rating,
-                    reviewCount: product.reviewCount || 1,
-                } : undefined,
             };
+
+            if (product) {
+                return {
+                    '@context': 'https://schema.org',
+                    '@type': 'Product',
+                    name: product.name,
+                    image: product.image || image,
+                    description: description,
+                    brand: {
+                        '@type': 'Brand',
+                        name: product.brand || siteName,
+                    },
+                    sku: product.sku,
+                    offers: {
+                        '@type': 'Offer',
+                        url: url,
+                        priceCurrency: product.currency || 'INR',
+                        price: product.price,
+                        availability: product.availability === 'out_of_stock'
+                            ? 'https://schema.org/OutOfStock'
+                            : 'https://schema.org/InStock',
+                        seller: {
+                            '@type': 'Organization',
+                            name: siteName,
+                        },
+                    },
+                    aggregateRating: product.rating ? {
+                        '@type': 'AggregateRating',
+                        ratingValue: product.rating,
+                        reviewCount: product.reviewCount || 1,
+                    } : undefined,
+                };
+            }
+
+            return baseData;
+        };
+
+        const organizationData = {
+            '@context': 'https://schema.org',
+            '@type': 'Organization',
+            name: siteName,
+            url: url,
+            logo: `${url}/logo.png`,
+            contactPoint: {
+                '@type': 'ContactPoint',
+                telephone: '+91-1234567890',
+                contactType: 'customer service',
+                areaServed: 'IN',
+                availableLanguage: ['English', 'Hindi'],
+            },
+            sameAs: [
+                'https://facebook.com/fjewelry',
+                'https://instagram.com/fjewelry',
+                'https://twitter.com/fjewelry',
+            ],
+        };
+
+        updateMeta('title', fullTitle);
+        updateMeta('description', description);
+        updateMeta('keywords', keywords);
+        updateMeta('author', siteName);
+        updateMeta('robots', 'index, follow');
+        updateLink('canonical', url);
+
+        updateMeta('og:type', type, true);
+        updateMeta('og:url', url, true);
+        updateMeta('og:title', fullTitle, true);
+        updateMeta('og:description', description, true);
+        updateMeta('og:image', image, true);
+        updateMeta('og:site_name', siteName, true);
+        updateMeta('og:locale', 'en_IN', true);
+
+        updateMeta('twitter:card', 'summary_large_image');
+        updateMeta('twitter:url', url);
+        updateMeta('twitter:title', fullTitle);
+        updateMeta('twitter:description', description);
+        updateMeta('twitter:image', image);
+
+        if (product) {
+            updateMeta('product:price:amount', String(product.price), true);
+            updateMeta('product:price:currency', product.currency || 'INR', true);
+            updateMeta('product:availability', product.availability || 'in_stock', true);
         }
 
-        return baseData;
-    };
+        removeExistingLD();
+        addStructuredData(generateStructuredData());
+        addStructuredData(organizationData);
 
-    // Organization structured data for rich snippets
-    const organizationData = {
-        '@context': 'https://schema.org',
-        '@type': 'Organization',
-        name: siteName,
-        url: url,
-        logo: `${url}/logo.png`,
-        contactPoint: {
-            '@type': 'ContactPoint',
-            telephone: '+91-1234567890',
-            contactType: 'customer service',
-            areaServed: 'IN',
-            availableLanguage: ['English', 'Hindi'],
-        },
-        sameAs: [
-            'https://facebook.com/fjewelry',
-            'https://instagram.com/fjewelry',
-            'https://twitter.com/fjewelry',
-        ],
-    };
+    }, [fullTitle, description, keywords, image, url, type, product, siteName]);
 
-    return (
-        <Helmet>
-            {/* Primary Meta Tags */}
-            <title>{fullTitle}</title>
-            <meta name="title" content={fullTitle} />
-            <meta name="description" content={description} />
-            <meta name="keywords" content={keywords} />
-            <meta name="author" content={siteName} />
-            <meta name="robots" content="index, follow" />
-            <link rel="canonical" href={url} />
-
-            {/* Open Graph / Facebook */}
-            <meta property="og:type" content={type} />
-            <meta property="og:url" content={url} />
-            <meta property="og:title" content={fullTitle} />
-            <meta property="og:description" content={description} />
-            <meta property="og:image" content={image} />
-            <meta property="og:site_name" content={siteName} />
-            <meta property="og:locale" content="en_IN" />
-
-            {/* Twitter */}
-            <meta name="twitter:card" content="summary_large_image" />
-            <meta name="twitter:url" content={url} />
-            <meta name="twitter:title" content={fullTitle} />
-            <meta name="twitter:description" content={description} />
-            <meta name="twitter:image" content={image} />
-
-            {/* Product-specific meta (if applicable) */}
-            {product && (
-                <>
-                    <meta property="product:price:amount" content={String(product.price)} />
-                    <meta property="product:price:currency" content={product.currency || 'INR'} />
-                    <meta property="product:availability" content={product.availability || 'in_stock'} />
-                </>
-            )}
-
-            {/* Structured Data */}
-            <script type="application/ld+json">
-                {JSON.stringify(generateStructuredData())}
-            </script>
-            <script type="application/ld+json">
-                {JSON.stringify(organizationData)}
-            </script>
-        </Helmet>
-    );
+    return null;
 };
 
 export default SEO;

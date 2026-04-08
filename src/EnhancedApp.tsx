@@ -1,11 +1,10 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { EnhancedAuthProvider } from './context/EnhancedAuthContext';
-import { CartProvider, WishlistProvider } from './context';
+import { AuthProvider, CartProvider, WishlistProvider } from './context';
 
 // Components
-import EnhancedNavbar from './components/EnhancedNavbar';
+import Navbar from './components/Navbar';
 import OnboardingFlow from './components/OnboardingFlow';
-import AdaptiveHomepage from './components/AdaptiveHomepage';
+import Home from './pages/Home';
 import About from './pages/About';
 import Contact from './pages/Contact';
 import History from './pages/History';
@@ -24,15 +23,7 @@ import Dashboard from './pages/Dashboard';
 import OrderDetail from './pages/OrderDetail';
 import Addresses from './pages/Addresses';
 import Feedback from './pages/Feedback';
-import Login from './pages/Login';
-import Signup from './pages/Signup';
-import VerifyEmail from './pages/VerifyEmail';
-import ResendVerification from './pages/ResendVerification';
-import ForgotPassword from './pages/ForgotPassword';
-import ResetPassword from './pages/ResetPassword';
-import TwoFactorSetup from './pages/TwoFactorSetup';
-import TwoFactorVerify from './pages/TwoFactorVerify';
-import CustomerSupport from './pages/CustomerSupport';
+import AuthModal from './components/AuthModal';
 
 // Admin pages
 import AdminLayout from './pages/admin/AdminLayout';
@@ -49,10 +40,10 @@ import Settings from './pages/admin/Settings';
 import ErrorBoundary from './components/ErrorBoundary';
 import './index.css';
 
-// Layout wrapper for public pages (with Enhanced Navbar and Footer)
+// Layout wrapper for public pages (with Navbar and Footer)
 const PublicLayout = ({ children }: { children: React.ReactNode }) => (
   <div className="min-h-screen flex flex-col">
-    <EnhancedNavbar />
+    <Navbar />
     <main className="flex-1">
       {children}
     </main>
@@ -70,16 +61,17 @@ function EnhancedApp() {
   return (
     <ErrorBoundary>
       <Router>
-        <EnhancedAuthProvider>
+        <AuthProvider>
           <CartProvider>
             <WishlistProvider>
+              <AuthModal />
               <div className="relative">
                 <Routes>
                   {/* Onboarding Route - No Navbar/Footer */}
                   <Route path="/onboarding" element={<OnboardingLayout><OnboardingFlow /></OnboardingLayout>} />
 
-                  {/* Enhanced Homepage with Personalization */}
-                  <Route path="/" element={<PublicLayout><AdaptiveHomepage /></PublicLayout>} />
+                  {/* Homepage */}
+                  <Route path="/" element={<PublicLayout><Home /></PublicLayout>} />
 
                   {/* Admin Routes - No Navbar/Footer */}
                   <Route path="/admin" element={<AdminLayout />}>
@@ -104,17 +96,7 @@ function EnhancedApp() {
                   <Route path="/rashi-jewellery" element={<PublicLayout><RashiJewellery /></PublicLayout>} />
                   <Route path="/birthstone-jewellery" element={<PublicLayout><BirthstoneJewellery /></PublicLayout>} />
                   <Route path="/product/:slug" element={<PublicLayout><ProductDetail /></PublicLayout>} />
-                  <Route path="/support" element={<PublicLayout><CustomerSupport /></PublicLayout>} />
-
-                  {/* Auth pages - Standalone */}
-                  <Route path="/login" element={<Login />} />
-                  <Route path="/signup" element={<Signup />} />
-                  <Route path="/verify-email/:token" element={<VerifyEmail />} />
-                  <Route path="/resend-verification" element={<ResendVerification />} />
-                  <Route path="/forgot-password" element={<ForgotPassword />} />
-                  <Route path="/reset-password/:token" element={<ResetPassword />} />
-                  <Route path="/two-factor-setup" element={<TwoFactorSetup />} />
-                  <Route path="/two-factor-verify" element={<TwoFactorVerify />} />
+                  <Route path="/support" element={<PublicLayout><Contact /></PublicLayout>} />
 
                   {/* Protected pages */}
                   <Route path="/cart" element={<PublicLayout><Cart /></PublicLayout>} />
@@ -131,7 +113,7 @@ function EnhancedApp() {
               </div>
             </WishlistProvider>
           </CartProvider>
-        </EnhancedAuthProvider>
+        </AuthProvider>
       </Router>
     </ErrorBoundary>
   );
