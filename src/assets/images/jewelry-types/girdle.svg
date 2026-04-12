@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <rect width="200" height="200" fill="#f8f9fa"/>
+  <g transform="scale(1)">
+    
+                <!-- Girdle - waist belt -->
+                <rect x="60" y="95" width="80" height="10" rx="3" fill="#D4AF37" stroke="#000" stroke-width="1"/>
+                <path d="M 100 105 L 100 140" stroke="#D4AF37" stroke-width="3"/>
+                <circle cx="100" cy="145" r="6" fill="#FF69B4"/>
+                <circle cx="90" cy="130" r="4" fill="#FFD700"/>
+                <circle cx="110" cy="120" r="4" fill="#00CED1"/>
+            
+  </g>
+  <text x="50%" y="180" text-anchor="middle" font-family="Arial" font-size="10" fill="#6c757d">Girdle</text>
+  <text x="50%" y="192" text-anchor="middle" font-family="Arial" font-size="8" fill="#6c757d">Waist belt with dangling ends</text>
+</svg>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <rect width="200" height="200" fill="#f8f9fa"/>
+  <g transform="scale(1)">
+    
+                <!-- Buyao - dangling hairpin -->
+                <line x1="100" y1="50" x2="100" y2="120" stroke="#CD7F32" stroke-width="4"/>
+                <circle cx="100" cy="45" r="8" fill="#CD7F32"/>
+                <circle cx="90" cy="70" r="5" fill="#FF69B4" opacity="0.7"/>
+                <circle cx="110" cy="90" r="5" fill="#FFB6C1" opacity="0.7"/>
+                <circle cx="95" cy="110" r="4" fill="#FFD700" opacity="0.7"/>
+            
+  </g>
+  <text x="50%" y="180" text-anchor="middle" font-family="Arial" font-size="10" fill="#6c757d">Buyao</text>
+  <text x="50%" y="192" text-anchor="middle" font-family="Arial" font-size="8" fill="#6c757d">Dangling hairpins that sway as the wearer walks</text>
+</svg>

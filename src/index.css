@@ -1,0 +1,257 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lora:wght@400;500;600&family=Montserrat:wght@400;500;600;700&family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply m-0 p-0 box-border;
+  }
+
+  body {
+    @apply font-body text-jewelry-dark min-h-screen;
+    background: linear-gradient(to bottom, #0A0A0A, #2C2C2C);
+  }
+
+  html {
+    @apply scroll-smooth;
+  }
+}
+
+@layer utilities {
+  .glass {
+    background: rgba(44, 44, 44, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+  }
+
+  .glass-light {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+  }
+}
+
+/* ========================================
+   HIDE BROWSER SCROLLBAR COMPLETELY
+   Custom scrollbar component handles scrolling
+   ======================================== */
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+*::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  background: transparent !important;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+html,
+body,
+* {
+  -ms-overflow-style: none !important;
+  /* IE and Edge */
+  scrollbar-width: none !important;
+  /* Firefox */
+}
+
+/* Specific override for custom scroll container */
+.custom-scroll-container::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+}
+
+.custom-scroll-container {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+
+/* Hide scrollbars in specific elements where needed */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Selection styling */
+::selection {
+  background-color: #D4AF37;
+  color: #0A0A0A;
+}
+
+/* Video-like animations for History page */
+@keyframes kenBurns {
+  0% {
+    transform: scale(1.1) translate(0, 0);
+  }
+
+  50% {
+    transform: scale(1.2) translate(-2%, -2%);
+  }
+
+  100% {
+    transform: scale(1.1) translate(0, 0);
+  }
+}
+
+@keyframes slowPan {
+  0% {
+    transform: scale(1.1) translateX(0);
+  }
+
+  50% {
+    transform: scale(1.1) translateX(-4%);
+  }
+
+  100% {
+    transform: scale(1.1) translateX(0);
+  }
+}
+
+@keyframes subtleZoom {
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes shimmerOverlay {
+  0% {
+    background-position: -200% center;
+  }
+
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.ken-burns-effect {
+  animation: kenBurns 20s ease-in-out infinite;
+}
+
+.slow-pan {
+  animation: slowPan 15s ease-in-out infinite;
+}
+
+.subtle-zoom {
+  animation: subtleZoom 12s ease-in-out infinite;
+}
+
+.video-like-image {
+  position: relative;
+  overflow: hidden;
+}
+
+.video-like-image::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(212, 175, 55, 0.1) 50%,
+      transparent 100%);
+  background-size: 200% 100%;
+  animation: shimmerOverlay 8s linear infinite;
+  pointer-events: none;
+}
+
+/* Swiper Navigation Buttons Styling */
+.swiper-button-next,
+.swiper-button-prev {
+  color: #D4AF37 !important;
+  background-color: rgba(212, 175, 55, 0.15) !important;
+  width: 50px !important;
+  height: 50px !important;
+  border-radius: 50% !important;
+  border: 2px solid rgba(212, 175, 55, 0.3) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.3s ease !important;
+}
+
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+  background-color: rgba(212, 175, 55, 0.25) !important;
+  border-color: #D4AF37 !important;
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.4) !important;
+}
+
+.swiper-button-next::after,
+.swiper-button-prev::after {
+  font-size: 20px !important;
+}
+
+/* Adjust category info badge position - move it down */
+.category-swiper .absolute.top-4.right-4 {
+  top: 20px !important;
+}
+
+/* Skeleton shimmer animation */
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 1.5s infinite;
+  background: linear-gradient(90deg,
+      rgba(44, 44, 44, 0.8) 25%,
+      rgba(68, 68, 68, 0.8) 50%,
+      rgba(44, 44, 44, 0.8) 75%);
+  background-size: 200% 100%;
+}
+
+/* Lazy loading fade-in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.lazy-image {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Focus visible for accessibility */
+:focus-visible {
+  outline: 2px solid #D4AF37;
+  outline-offset: 2px;
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

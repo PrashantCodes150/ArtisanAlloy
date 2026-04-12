@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <rect width="200" height="200" fill="#f8f9fa"/>
+  <g transform="scale(1)">
+    
+                <!-- Navratna Haar - nine-gem necklace -->
+                <circle cx="100" cy="100" r="50" stroke="#FFD700" stroke-width="5" fill="none"/>
+                <circle cx="100" cy="55" r="8" fill="#F00"/> <!-- Ruby -->
+                <circle cx="130" cy="70" r="8" fill="#00F"/> <!-- Sapphire -->
+                <circle cx="145" cy="100" r="8" fill="#FF0"/> <!-- Yellow Topaz -->
+                <circle cx="130" cy="130" r="8" fill="#000"/> <!-- Cat's Eye -->
+                <circle cx="100" cy="145" r="8" fill="#EA0"/> <!-- Pearl -->
+                <circle cx="70" cy="130" r="8" fill="#0F0"/> <!-- Emerald -->
+                <circle cx="55" cy="100" r="8" fill="#A52A2A"/> <!-- Garnet -->
+                <circle cx="70" cy="70" r="8" fill="#800"/> <!-- Coral -->
+                <circle cx="100" cy="100" r="6" fill="#FFF"/> <!-- Diamond -->
+            
+  </g>
+  <text x="50%" y="180" text-anchor="middle" font-family="Arial" font-size="10" fill="#6c757d">Navratna Haar</text>
+  <text x="50%" y="192" text-anchor="middle" font-family="Arial" font-size="8" fill="#6c757d">Nine-gemstone necklace</text>
+</svg>

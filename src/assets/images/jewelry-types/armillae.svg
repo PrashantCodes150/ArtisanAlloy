@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <rect width="200" height="200" fill="#f8f9fa"/>
+  <g transform="scale(1)">
+    
+                <!-- Armillae - military bracelets -->
+                <circle cx="100" cy="100" r="30" stroke="#D4AF37" stroke-width="10" fill="none"/>
+                <circle cx="75" cy="85" r="5" fill="#FFD700"/>
+                <circle cx="125" cy="85" r="5" fill="#FFD700"/>
+                <circle cx="100" cy="125" r="5" fill="#FFD700"/>
+            
+  </g>
+  <text x="50%" y="180" text-anchor="middle" font-family="Arial" font-size="10" fill="#6c757d">Armillae</text>
+  <text x="50%" y="192" text-anchor="middle" font-family="Arial" font-size="8" fill="#6c757d">Military decoration bracelets</text>
+</svg>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <rect width="200" height="200" fill="#f8f9fa"/>
+  <g transform="scale(1)">
+    
+                <!-- Fibula - garment brooch -->
+                <path d="M 70 100 Q 100 70, 130 100" stroke="#C0C0C0" stroke-width="10" fill="none"/>
+                <circle cx="100" cy="85" r="12" fill="#C0C0C0"/>
+                <circle cx="100" cy="85" r="6" fill="#FFD700"/>
+            
+  </g>
+  <text x="50%" y="180" text-anchor="middle" font-family="Arial" font-size="10" fill="#6c757d">Fibula</text>
+  <text x="50%" y="192" text-anchor="middle" font-family="Arial" font-size="8" fill="#6c757d">Brooch for fastening garments</text>
+</svg>

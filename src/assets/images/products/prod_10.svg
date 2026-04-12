@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <rect width="200" height="200" fill="#f8f9fa"/>
+  <g transform="scale(1)">
+    
+                <path d="M 100 60 C 80 40, 60 60, 60 80 C 60 100, 100 130, 100 130 C 100 130, 140 100, 140 80 C 140 60, 120 40, 100 60 Z" fill="#FFD700"/>
+                <line x1="100" y1="30" x2="100" y2="60" stroke="#FFD700" stroke-width="5"/>
+  </g>
+  <text x="50%" y="180" text-anchor="middle" font-family="Arial" font-size="12" fill="#6c757d">Necklace #10</text>
+</svg>

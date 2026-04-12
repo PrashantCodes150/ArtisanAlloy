@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <rect width="200" height="200" fill="#f8f9fa"/>
+  <g transform="scale(1)">
+    
+                <!-- Khamsa/Hamsa - hand symbol -->
+                <path d="M 100 70 Q 70 90, 80 130 L 85 125 Q 85 100, 100 90 Q 115 100, 115 125 L 120 130 Q 130 90, 100 70" fill="#4169E1" stroke="#000" stroke-width="1"/>
+                <circle cx="100" cy="95" r="10" fill="#4169E1"/>
+                <circle cx="100" cy="95" r="5" fill="#87CEEB" opacity="0.7"/>
+            
+  </g>
+  <text x="50%" y="180" text-anchor="middle" font-family="Arial" font-size="10" fill="#6c757d">Khamsa / Hamsa</text>
+  <text x="50%" y="192" text-anchor="middle" font-family="Arial" font-size="8" fill="#6c757d">Palm-shaped protection symbols</text>
+</svg>

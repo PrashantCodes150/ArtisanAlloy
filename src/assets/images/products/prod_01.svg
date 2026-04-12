@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <rect width="200" height="200" fill="#f8f9fa"/>
+  <g transform="scale(1)">
+    
+                <circle cx="100" cy="100" r="60" stroke="#FFD700" stroke-width="15" fill="none"/>
+                <circle cx="100" cy="100" r="40" stroke="#FFD700" stroke-width="10" fill="none"/>
+  </g>
+  <text x="50%" y="180" text-anchor="middle" font-family="Arial" font-size="12" fill="#6c757d">Hoops #1</text>
+</svg>
