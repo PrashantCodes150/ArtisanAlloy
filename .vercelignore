@@ -1,0 +1,10 @@
+# Backend is deployed on Render - ignore the entire api folder
+api/
+
+# Also ignore dev/build artifacts
+node_modules/
+*.sh
+*.md
+eslint-report.json
+git_status.txt
+build_log.txt
