@@ -67,13 +67,17 @@ const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:5174',
   'http://localhost:3000',
+  // Production Vercel URL
+  'https://f-jewelry-react.vercel.app',
+  // Allow ALL Vercel preview deploy URLs for this project (wildcard)
+  'https://*.vercel.app',
 ].filter(Boolean) as string[];
 
 // Add Vercel preview/production URLs dynamically
 if (process.env.VERCEL_URL) {
   allowedOrigins.push(`https://${process.env.VERCEL_URL}`);
 }
-// Support multiple frontend domains (comma-separated)
+// Support multiple frontend domains (comma-separated) via env var
 if (process.env.ALLOWED_ORIGINS) {
   const additionalOrigins = process.env.ALLOWED_ORIGINS.split(',').map(o => o.trim());
   allowedOrigins.push(...additionalOrigins);
@@ -83,10 +87,13 @@ app.use(cors({
   origin: (origin, callback) => {
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
-    
+
     const isAllowed = allowedOrigins.some(allowedOrigin => {
+      if (!allowedOrigin) return false;
+      // Support wildcard patterns like https://*.vercel.app
       if (allowedOrigin.includes('*')) {
-        const regex = new RegExp('^' + allowedOrigin.replace(/\*/g, '.*') + '$');
+        const escaped = allowedOrigin.replace(/[.+?^${}()|[\]\\]/g, '\\$&').replace(/\*/g, '.*');
+        const regex = new RegExp('^' + escaped + '$');
         return regex.test(origin);
       }
       return allowedOrigin === origin;
@@ -95,6 +102,7 @@ app.use(cors({
     if (isAllowed || process.env.NODE_ENV === 'development') {
       callback(null, true);
     } else {
+      console.warn(`CORS blocked origin: ${origin}`);
       callback(new Error('Not allowed by CORS'));
     }
   },
@@ -102,6 +110,9 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Cache-Control', 'Pragma'],
 }));
+
+// Handle preflight requests explicitly before other middleware
+app.options('*', cors());
 
 // Body parser - reading data from body into req.body
 app.use(express.json({ limit: '10kb' }));
