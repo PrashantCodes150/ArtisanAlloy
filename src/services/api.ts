@@ -23,12 +23,22 @@ const getBaseURL = () => {
 // Create axios instance with default config
 const api = axios.create({
   baseURL: getBaseURL(),
-  timeout: 30000, // 30 second timeout for slower connections
+  timeout: 90000, // 90 seconds - enough for Render free tier cold start (~50s)
   headers: {
     'Content-Type': 'application/json',
   },
   withCredentials: false, // We'll handle credentials manually
 });
+
+// Wake up the Render backend on app load (free tier goes to sleep after 15m inactivity)
+// Call this once when the app starts so it's warm when the user tries to login
+export const wakeUpBackend = () => {
+  const baseURL = getBaseURL();
+  const healthURL = baseURL.replace('/api/v1', '') + '/api/v1/health';
+  axios.get(healthURL, { timeout: 90000 })
+    .then(() => console.log('✅ Backend is awake'))
+    .catch(() => console.log('⏳ Backend is warming up...'));
+};
 
 // Request interceptor - add auth token
 api.interceptors.request.use(
