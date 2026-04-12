@@ -18,13 +18,28 @@ const createTransporter = () => {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS,
     },
+    connectionTimeout: 5000,  // fail fast if SMTP unreachable
+    greetingTimeout: 5000,
+    socketTimeout: 10000,
   });
+};
+
+/**
+ * Check if email is configured
+ */
+const isEmailConfigured = (): boolean => {
+  return !!(process.env.EMAIL_USER && process.env.EMAIL_PASS);
 };
 
 /**
  * Send email using nodemailer
  */
 export const sendEmail = async (options: EmailOptions): Promise<boolean> => {
+  if (!isEmailConfigured()) {
+    logger.warn('Email not configured (EMAIL_USER/EMAIL_PASS missing) - skipping email send');
+    return false;
+  }
+
   try {
     const transporter = createTransporter();
 
