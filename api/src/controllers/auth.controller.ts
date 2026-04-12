@@ -657,6 +657,9 @@ export const generateBackupCodes = asyncHandler(async (req: Request, res: Respon
  * GET /api/v1/auth/google
  */
 export const googleAuth = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+  if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET || !process.env.GOOGLE_CALLBACK_URL) {
+    return next(new AppError('Google OAuth is not configured on this server.', 503));
+  }
   passport.authenticate('google', { scope: ['profile', 'email'] })(req, res, next);
 });
 
@@ -665,6 +668,9 @@ export const googleAuth = asyncHandler(async (req: Request, res: Response, next:
  * GET /api/v1/auth/google/callback
  */
 export const googleAuthCallback = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+  if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET || !process.env.GOOGLE_CALLBACK_URL) {
+    return next(new AppError('Google OAuth is not configured on this server.', 503));
+  }
   passport.authenticate('google', { session: false }, (err: any, user: any, info: any) => {
     if (err || !user) {
       return res.redirect(`${process.env.FRONTEND_URL}/login?error=auth_failed`);
