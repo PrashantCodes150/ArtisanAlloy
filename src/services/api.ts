@@ -67,7 +67,7 @@ api.interceptors.response.use(
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
-try {
+      try {
         const refreshToken = localStorage.getItem('refreshToken');
         if (refreshToken) {
           const response = await axios.post(
@@ -95,12 +95,13 @@ try {
           return api(originalRequest);
         }
       } catch (refreshError) {
-        // Refresh failed - clear tokens and redirect to login
+        // Refresh failed - clear tokens and emit event (don't hard redirect)
         console.error('Token refresh failed:', refreshError);
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
         localStorage.removeItem('user');
-        window.location.href = '/login-required';
+        // Dispatch event so AuthContext can handle logout gracefully
+        window.dispatchEvent(new CustomEvent('auth:logout'));
       }
     }
 
