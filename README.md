@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="public/favicon.svg" alt="ArtisanAlloy Emblem" width="100" height="100" />
+  <img src="public/favicon.svg" alt="ArtisanAlloy Emblem" width="110" height="110" />
   <h1>💍 ArtisanAlloy</h1>
   <h3>Where Elegance Meets Perfection</h3>
   <p><b>An Ultra-Luxury, High-Performance Handcrafted Jewelry E-Commerce Platform Built with React, TypeScript, Framer Motion, and Node.js</b></p>
@@ -18,25 +18,46 @@
 
 ---
 
-## 🌟 Executive Summary
+## 🌟 Executive Summary & Vision
 
 **ArtisanAlloy** is a state-of-the-art web application engineered to redefine digital jewelry retailing. Combining curated visual aesthetics (dark mode glassmorphism, golden typography, and micro-animations) with robust full-stack engineering, ArtisanAlloy delivers an immersive shopping experience. From kundan bridal sets to minimalist contemporary diamonds, every touchpoint is crafted for high performance, accessibility, and security.
 
+<div align="center">
+  <img src="public/screenshots/hero.png" alt="ArtisanAlloy Luxury Hero Experience" width="90%" style="border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);" />
+  <p><i>The obsidian dark-mode hero section featuring tailored HSL gold typography and smooth glassmorphism.</i></p>
+</div>
+
 ---
 
-## 📸 Visual Showcase & UI Experience
+## 💎 Core Functional Modules & UI Experience
 
-Here is a glimpse into the tailored user interface and responsive layouts designed to captivate high-ticket buyers:
+### 🛍️ 1. Curated Catalog & Live Multi-Dimensional Filtering
+Customers can effortlessly explore jewelry collections filtered by metal purity (18K, 22K, 24K Gold, Platinum, Sterling Silver), gemstone varieties, and price brackets. Powered by **Fuse.js**, our typo-tolerant real-time search engine instantly locates specific pieces even with misspelled queries.
 
-| **Luxury Home & Hero Experience** | **Curated Catalog & Live Filtering** |
-|:---:|:---:|
-| <img src="public/screenshots/hero.png" alt="ArtisanAlloy Hero Experience" width="450" /> | <img src="public/screenshots/collection.png" alt="ArtisanAlloy Jewelry Collection" width="450" /> |
-| *Immersive hero section with smooth typography and dark-gold aesthetics.* | *Real-time category filtering, discounts, and high-def product cards.* |
+<div align="center">
+  <img src="public/screenshots/collection.png" alt="ArtisanAlloy Jewelry Collection" width="90%" style="border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);" />
+  <p><i>Interactive product cards showing percentage discounts, wishlist toggles, and high-definition jewelry imagery.</i></p>
+</div>
 
-| **Educational Knowledge Base (Learn Section)** | **Dynamic Promotional Banners & Specials** |
-|:---:|:---:|
-| <img src="public/screenshots/dropdown.png" alt="ArtisanAlloy Knowledge Base" width="450" /> | <img src="public/screenshots/specials.png" alt="ArtisanAlloy Gemstone Specials" width="450" /> |
-| *Deep dive into jewelry history, birthstones, and live metal rates.* | *Interactive sliders showcasing ruby, sapphire, and diamond exclusives.* |
+---
+
+### 🎓 2. Educational "Learn" Ecosystem & Navigation
+ArtisanAlloy elevates standard e-commerce into a private luxury salon by providing educational resources. Through our dedicated **Learn** menu, buyers can check daily live metal rates, discover astrological Rashi and Birthstone jewelry, and read historical deep dives into jewelry artistry.
+
+<div align="center">
+  <img src="public/screenshots/dropdown.png" alt="ArtisanAlloy Knowledge Base Navigation" width="90%" style="border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);" />
+  <p><i>Seamless glassmorphic dropdown navigation providing instant access to jewelry types, metal rates, and gemstone guides.</i></p>
+</div>
+
+---
+
+### 🌟 3. Dynamic Promotional Banners & Exclusive Collections
+To engage high-net-worth buyers, the platform features auto-scrolling promotional banners highlighting seasonal collections, such as Ruby & Sapphire gemstone specials, tailored for formal luxury events.
+
+<div align="center">
+  <img src="public/screenshots/specials.png" alt="ArtisanAlloy Gemstone Specials" width="90%" style="border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);" />
+  <p><i>High-impact promotional showcases engineered with Framer Motion gesture sliders.</i></p>
+</div>
 
 ---
 
@@ -80,7 +101,7 @@ graph TD
 
 ---
 
-## ✨ Key Features & Highlights
+## ✨ Key Features & Technical Highlights
 
 * 💎 **Visual Excellence & Glassmorphism:** Curated HSL color palettes, custom Google Fonts typography (*Outfit* & *Playfair Display*), and subtle neon-gold glow accents create an unforgettable first impression.
 * ⚡ **Blazing Fast Performance:** Built on Vite 6 with optimized dependency pre-bundling, lazy-loading, and responsive asset sizing for near-instant page transitions.
