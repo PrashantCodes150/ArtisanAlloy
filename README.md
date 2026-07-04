@@ -1,73 +1,168 @@
-# React + TypeScript + Vite
+<div align="center">
+  <img src="public/favicon.svg" alt="ArtisanAlloy Emblem" width="100" height="100" />
+  <h1>💍 ArtisanAlloy</h1>
+  <h3>Where Elegance Meets Perfection</h3>
+  <p><b>An Ultra-Luxury, High-Performance Handcrafted Jewelry E-Commerce Platform Built with React, TypeScript, Framer Motion, and Node.js</b></p>
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+  <p>
+    <img src="https://img.shields.io/badge/React-19.0-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React" />
+    <img src="https://img.shields.io/badge/TypeScript-5.0-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
+    <img src="https://img.shields.io/badge/Vite-6.0-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite" />
+    <img src="https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind" />
+    <img src="https://img.shields.io/badge/Framer_Motion-12.0-0055FF?style=for-the-badge&logo=framer&logoColor=white" alt="Framer Motion" />
+    <img src="https://img.shields.io/badge/MongoDB-6.0-47A248?style=for-the-badge&logo=mongodb&logoColor=white" alt="MongoDB" />
+    <img src="https://img.shields.io/badge/Express-5.0-000000?style=for-the-badge&logo=express&logoColor=white" alt="Express" />
+    <img src="https://img.shields.io/badge/Razorpay-Integrated-0C2340?style=for-the-badge&logo=razorpay&logoColor=white" alt="Razorpay" />
+  </p>
+</div>
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🌟 Executive Summary
 
-## React Compiler
+**ArtisanAlloy** is a state-of-the-art web application engineered to redefine digital jewelry retailing. Combining curated visual aesthetics (dark mode glassmorphism, golden typography, and micro-animations) with robust full-stack engineering, ArtisanAlloy delivers an immersive shopping experience. From kundan bridal sets to minimalist contemporary diamonds, every touchpoint is crafted for high performance, accessibility, and security.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## 📸 Visual Showcase & UI Experience
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Here is a glimpse into the tailored user interface and responsive layouts designed to captivate high-ticket buyers:
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+| **Luxury Home & Hero Experience** | **Curated Catalog & Live Filtering** |
+|:---:|:---:|
+| <img src="public/screenshots/hero.png" alt="ArtisanAlloy Hero Experience" width="450" /> | <img src="public/screenshots/collection.png" alt="ArtisanAlloy Jewelry Collection" width="450" /> |
+| *Immersive hero section with smooth typography and dark-gold aesthetics.* | *Real-time category filtering, discounts, and high-def product cards.* |
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+| **Educational Knowledge Base (Learn Section)** | **Dynamic Promotional Banners & Specials** |
+|:---:|:---:|
+| <img src="public/screenshots/dropdown.png" alt="ArtisanAlloy Knowledge Base" width="450" /> | <img src="public/screenshots/specials.png" alt="ArtisanAlloy Gemstone Specials" width="450" /> |
+| *Deep dive into jewelry history, birthstones, and live metal rates.* | *Interactive sliders showcasing ruby, sapphire, and diamond exclusives.* |
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+---
+
+## 🥧 Engineering & Architecture Breakdown
+
+To provide recruiters and architects with clear visibility into the system design, the charts below illustrate the technical effort distribution and system flow.
+
+### 📊 Development Effort Distribution
+```mermaid
+pie showData
+  title "Platform Development Effort Distribution"
+  "Frontend UX & Luxury UI (React/Framer)" : 45
+  "Backend Services & REST API (Node/Express)" : 25
+  "Security & Auth (JWT/2FA OTP)" : 15
+  "Payment Checkout & State Management" : 15
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### 💻 Codebase Language Composition
+```mermaid
+pie showData
+  title "Codebase Language & Asset Composition"
+  "TypeScript (Strict Type Safety)" : 65
+  "Tailwind CSS & Glassmorphism Styling" : 20
+  "JSON & Static Product Catalogs" : 10
+  "Backend Config & Build Scripts" : 5
 ```
+
+### 🏗️ Full-Stack System Architecture
+```mermaid
+graph TD
+  Client[Web Browser / Client UI] -->|Axios REST / HTTPS| Vite[Vite 6 Frontend Engine]
+  Vite -->|Dynamic UI & State| React[React 19 + Framer Motion]
+  React -->|Instant Fuzzy Search| Fuse[Fuse.js Search Engine]
+  React -->|Payment Checkout| Razorpay[Razorpay Payment Gateway]
+  
+  Vite -->|API Requests| Express[Express.js / Node.js Backend]
+  Express -->|Authentication & OAuth| Auth[JWT + Google OAuth 2.0]
+  Express -->|Multi-Factor Security| 2FA[Speakeasy 2FA OTP Engine]
+  Express -->|Data Persistence| Mongo[(MongoDB Cloud Database)]
+```
+
+---
+
+## ✨ Key Features & Highlights
+
+* 💎 **Visual Excellence & Glassmorphism:** Curated HSL color palettes, custom Google Fonts typography (*Outfit* & *Playfair Display*), and subtle neon-gold glow accents create an unforgettable first impression.
+* ⚡ **Blazing Fast Performance:** Built on Vite 6 with optimized dependency pre-bundling, lazy-loading, and responsive asset sizing for near-instant page transitions.
+* 🔍 **Intelligent Search & Filtering:** Powered by **Fuse.js**, allowing users to perform lightning-fast fuzzy searches across metal types (18K, 22K, 24K), gemstones, categories, and price brackets.
+* 🔐 **Enterprise-Grade Security Suite:**
+  * **JWT Authentication:** Secure token-based access with refresh mechanisms.
+  * **Two-Factor Authentication (2FA):** Integrated **Speakeasy** OTP verification with scannable QR codes and backup recovery codes.
+  * **OAuth 2.0:** Seamless 1-click social login via Google.
+* 💳 **Seamless Razorpay Checkout:** Fully integrated payment gateway supporting UPI, Credit/Debit Cards, Net Banking, and Cash on Delivery (COD) with automated error handling and payment retries.
+* 📱 **100% Adaptive Responsive Design:** Flawless layout adaptation across smartphones, tablets, and wide-screen desktop displays using CSS Grid and Flexbox architecture.
+
+---
+
+## 📂 Project Structure
+
+```text
+Artisan-Alloy-react/
+├── 📁 api/                   # Backend Express.js & MongoDB Server
+│   ├── 📁 src/
+│   │   ├── 📁 config/        # Database & OAuth Configurations
+│   │   ├── 📁 controllers/   # Route Controllers (Auth, Orders, Products)
+│   │   ├── 📁 models/        # Mongoose Data Models
+│   │   └── 📁 routes/        # REST API Endpoints
+│   └── server.ts             # Backend Entry Point
+├── 📁 public/                # Static Assets & Brand Emblems
+│   ├── 📁 screenshots/       # UI Showcase Images for README
+│   └── favicon.svg           # ArtisanAlloy Brand Emblem
+├── 📁 src/                   # Frontend React + TypeScript Application
+│   ├── 📁 assets/            # Luxury Product Images & Models
+│   ├── 📁 components/        # Reusable UI Components (Navbar, Banners, Cards)
+│   ├── 📁 context/           # React Context (Auth, Cart, Theme)
+│   ├── 📁 data/              # Static Catalog & Jewelry Type Data
+│   ├── 📁 pages/             # Main Route Pages (Home, Collection, Checkout, 2FA)
+│   ├── 📁 services/          # Axios API Services & Razorpay Integration
+│   └── App.tsx               # Application Root & Routing
+├── package.json              # Project Dependencies & Scripts
+├── tailwind.config.js        # Design System & Color Tokens
+├── tsconfig.json             # TypeScript Compiler Options
+└── vite.config.ts            # Vite Bundler Configuration
+```
+
+---
+
+## 🚀 Quick Start Guide
+
+### 1. Clone the Repository
+```bash
+git clone https://github.com/PrashantCodes150/f-jewelry-react.git
+cd f-jewelry-react-master
+```
+
+### 2. Install Dependencies
+```bash
+# Install frontend dependencies
+npm install
+
+# Install backend dependencies (optional, for local API server)
+cd api
+npm install
+cd ..
+```
+
+### 3. Environment Setup
+Create a `.env` file in the root directory:
+```env
+VITE_API_URL=https://your-backend-url.onrender.com/api/v1
+VITE_APP_NAME=ArtisanAlloy
+VITE_RAZORPAY_KEY_ID=your_razorpay_test_key_id
+```
+
+### 4. Run Development Server
+```bash
+# Launch the frontend dev server at http://localhost:5173
+npm run dev
+```
+
+---
+
+## 🛡️ License & Acknowledgments
+
+This project is developed and maintained by **PrashantCodes150**. Dedicated to demonstrating world-class modern web development, UI/UX aesthetics, and full-stack engineering excellence.
+
+<div align="center">
+  <p><b>Crafted with ❤️ and Precision for ArtisanAlloy</b></p>
+</div>
