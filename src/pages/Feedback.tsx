@@ -262,8 +262,8 @@ const Feedback = () => {
             </div>
             <p className="font-sans text-jewelry-cream/60 text-sm mb-4">
               For urgent matters, please contact our customer support team directly at
-              <a href="mailto:support@fjewelry.com" className="text-jewelry-gold hover:underline ml-1">
-                support@fjewelry.com
+              <a href="mailto:support@ArtisanAlloy.com" className="text-jewelry-gold hover:underline ml-1">
+                support@ArtisanAlloy.com
               </a>
             </p>
           </div>

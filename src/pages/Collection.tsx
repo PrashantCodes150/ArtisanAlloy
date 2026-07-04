@@ -125,10 +125,10 @@ const Collection = () => {
     return (
         <div className="pt-24 min-h-screen">
             <SEO
-                title="Jewelry Collection - Shop Gold, Diamond & Silver Jewelry | F Jewelry"
+                title="Jewelry Collection - Shop Gold, Diamond & Silver Jewelry | ArtisanAlloy"
                 description="Explore our exquisite collection of handcrafted jewelry. Shop rings, necklaces, earrings, bracelets in gold, diamond, and silver with exceptional quality."
-                keywords="jewelry collection, gold jewelry, diamond jewelry, silver jewelry, rings, necklaces, earrings, bracelets, buy jewelry online, F Jewelry"
-                url="https://f-jewelry.com/collection"
+                keywords="jewelry collection, gold jewelry, diamond jewelry, silver jewelry, rings, necklaces, earrings, bracelets, buy jewelry online, ArtisanAlloy"
+                url="https://Artisan-Alloy.com/collection"
             />
 
             {/* Premium Jewelry Banner */}

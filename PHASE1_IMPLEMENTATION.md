@@ -1,4 +1,4 @@
-# Phase 1 Implementation Summary - F Jewelry E-Commerce
+# Phase 1 Implementation Summary - ArtisanAlloy E-Commerce
 
 ## ✅ Completed Features
 
@@ -163,7 +163,7 @@ EMAIL_HOST=smtp.gmail.com
 EMAIL_PORT=587
 EMAIL_USER=your-email@gmail.com
 EMAIL_PASS=your-app-password
-EMAIL_FROM=F Jewelry <noreply@f-jewelry.com>
+EMAIL_FROM=ArtisanAlloy <noreply@Artisan-Alloy.com>
 
 # SSL (Production)
 SSL_KEY_PATH=/path/to/privkey.pem

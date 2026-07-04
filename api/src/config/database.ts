@@ -14,7 +14,7 @@ const getMongoose = async () => {
 export const connectDB = async (): Promise<void> => {
   try {
     const mongoose = await getMongoose();
-    const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/f-jewelry';
+    const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/Artisan-Alloy';
 
     if (mongoURI.startsWith('mongodb+srv://')) {
       dns.setServers(['8.8.8.8', '8.8.4.4']);

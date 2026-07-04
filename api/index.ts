@@ -37,9 +37,9 @@ let dbConnected = false;
 
 const initializeDatabase = async () => {
   if (dbConnecting || dbConnected) return;
-  
+
   dbConnecting = true;
-  
+
   try {
     if (!process.env.MONGODB_URI) {
       console.warn('⚠️  MONGODB_URI environment variable is not set. Database-dependent features will not work.');
@@ -77,7 +77,7 @@ const allowedOrigins = [
   'http://localhost:5174',
   'http://localhost:3000',
   // Production Vercel URL
-  'https://f-jewelry-react.vercel.app',
+  'https://Artisan-Alloy-react.vercel.app',
   // Allow ALL Vercel preview deploy URLs
   'https://*.vercel.app',
 ].filter(Boolean) as string[];
@@ -128,7 +128,7 @@ app.use(session({
     mongoUrl: process.env.MONGODB_URI || process.env.MONGO_URI,
     ttl: 24 * 60 * 60, // 24 hours
   }),
-  cookie: { 
+  cookie: {
     secure: process.env.NODE_ENV === 'production',
     sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
     httpOnly: true,
@@ -147,7 +147,7 @@ const API_VERSION = '/api/v1';
 app.get('/', (req: Request, res: Response) => {
   res.status(200).json({
     status: 'success',
-    message: 'F Jewelry API is live! 💎',
+    message: 'ArtisanAlloy API is live! 💎',
   });
 });
 
@@ -155,7 +155,7 @@ app.get('/', (req: Request, res: Response) => {
 app.get(`${API_VERSION}/health`, (req: Request, res: Response) => {
   res.status(200).json({
     status: 'success',
-    message: 'F Jewelry API is running! 💎',
+    message: 'ArtisanAlloy API is running! 💎',
     timestamp: new Date().toISOString(),
     environment: process.env.NODE_ENV || 'production',
     databaseConnected: dbConnected,
@@ -176,7 +176,7 @@ const checkDatabaseConnection = async (req: Request, res: Response, next: NextFu
     if (!dbConnecting) {
       initializeDatabase().catch(err => console.error('Reconnection error:', err));
     }
-    
+
     // If still not connected, return error for API routes
     if (mongoose.connection.readyState !== 1) {
       return res.status(503).json({
@@ -186,7 +186,7 @@ const checkDatabaseConnection = async (req: Request, res: Response, next: NextFu
       });
     }
   }
-  
+
   next();
 };
 

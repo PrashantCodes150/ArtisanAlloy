@@ -3,12 +3,12 @@ import { motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 // Import advertisement images
-import model1 from '../assets/images/advertismnet_models/Gemini_Generated_Image_5jf6il5jf6il5jf6.png';
-import model2 from '../assets/images/advertismnet_models/Gemini_Generated_Image_f0f99mf0f99mf0f9.png';
-import model3 from '../assets/images/advertismnet_models/Gemini_Generated_Image_n7g0vnn7g0vnn7g0.png';
-import model4 from '../assets/images/advertismnet_models/Gemini_Generated_Image_xkeowrxkeowrxkeo.png';
-import model5 from '../assets/images/advertismnet_models/Gemini_Generated_Image_plqbh4plqbh4plqb.png';
-import model6 from '../assets/images/advertismnet_models/Gemini_Generated_Image_gkqygagkqygagkqy.png';
+import model1 from '../assets/images/advertismnet_models/Gemini_Generated_Image_5jf6il5jf6il5jf6.jpg';
+import model2 from '../assets/images/advertismnet_models/Gemini_Generated_Image_f0f99mf0f99mf0f9.jpg';
+import model3 from '../assets/images/advertismnet_models/Gemini_Generated_Image_n7g0vnn7g0vnn7g0.jpg';
+import model4 from '../assets/images/advertismnet_models/Gemini_Generated_Image_xkeowrxkeowrxkeo.jpg';
+import model5 from '../assets/images/advertismnet_models/Gemini_Generated_Image_plqbh4plqbh4plqb.jpg';
+import model6 from '../assets/images/advertismnet_models/Gemini_Generated_Image_gkqygagkqygagkqy.jpg';
 
 interface BannerItem {
   id: string;

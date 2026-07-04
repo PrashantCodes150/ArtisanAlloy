@@ -60,7 +60,7 @@ body {
 
 ## 🚀 Ready to Use
 
-Your F Jewelry website should now display properly with:
+Your ArtisanAlloy website should now display properly with:
 - Beautiful jewelry-themed design
 - Complete authentication system
 - No black screen issue

@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: f-jewelry-backend
+    name: Artisan-Alloy-backend
     env: node
     region: oregon
     plan: free
@@ -22,7 +22,7 @@ services:
         value: 30d
       - key: FRONTEND_URL
         fromDatabase:
-          name: f-jewelry-backend
+          name: Artisan-Alloy-backend
           property: FRONTEND_URL
       - key: RAZORPAY_KEY_ID
         sync: false

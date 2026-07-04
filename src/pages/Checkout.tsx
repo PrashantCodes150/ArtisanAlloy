@@ -55,7 +55,7 @@ const Checkout = () => {
         script.src = 'https://checkout.razorpay.com/v1/checkout.js';
         script.async = true;
         script.setAttribute('data-no-service-worker', 'true'); // Prevent service worker interference
-        
+
         const loadPromise = new Promise<boolean>((resolve, reject) => {
           const timeout = setTimeout(() => {
             reject(new Error('Razorpay script loading timeout'));
@@ -155,7 +155,7 @@ const Checkout = () => {
         key: razorpayKeyId,
         amount: Math.round(amount * 100), // Amount in paise (rounded to nearest integer)
         currency: 'INR',
-        name: 'F Jewelry',
+        name: 'ArtisanAlloy',
         description: `Order Payment`,
         order_id: razorpayOrderId,
         prefill: {

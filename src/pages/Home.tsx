@@ -44,8 +44,8 @@ const Home = () => {
     return (
         <div className="pt-24">
             <SEO
-                title="F Jewelry - Luxury Handcrafted Jewelry | Timeless Elegance"
-                description="Discover exquisite handcrafted jewelry at F Jewelry. Shop premium gold, diamond, and silver jewelry for weddings, engagements, and special occasions. Free shipping on orders over ₹999."
+                title="ArtisanAlloy - Luxury Handcrafted Jewelry | Timeless Elegance"
+                description="Discover exquisite handcrafted jewelry at ArtisanAlloy. Shop premium gold, diamond, and silver jewelry for weddings, engagements, and special occasions. Free shipping on orders over ₹999."
                 keywords="jewelry, gold jewelry, diamond jewelry, silver jewelry, wedding jewelry, engagement rings, necklaces, earrings, bracelets, Indian jewelry"
             />
 
@@ -266,7 +266,7 @@ const Home = () => {
             <section className="py-16 px-4">
                 <div className="max-w-6xl mx-auto">
                     <h2 className="font-display text-2xl md:text-3xl font-bold text-jewelry-gold text-center mb-10">
-                        Why Choose F Jewelry?
+                        Why Choose ArtisanAlloy?
                     </h2>
                     <TrustBadges variant="horizontal" showLabels={true} />
                 </div>

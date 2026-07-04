@@ -1,8 +1,8 @@
-# F Jewelry - Complete 503 Error Fix (April 2026)
+# ArtisanAlloy - Complete 503 Error Fix (April 2026)
 
 ## ✅ What Was Fixed
 
-Your F Jewelry application was returning **503 Service Unavailable** errors after deployment to Vercel. This has been completely fixed.
+Your ArtisanAlloy application was returning **503 Service Unavailable** errors after deployment to Vercel. This has been completely fixed.
 
 ### The Root Causes (All Fixed Now)
 
@@ -30,7 +30,7 @@ Go to: **Vercel Dashboard → Your Project → Settings → Environment Variable
 Add these (most critical):
 
 ```
-MONGODB_URI=mongodb+srv://your-user:your-password@cluster.mongodb.net/f-jewelry?retryWrites=true&w=majority
+MONGODB_URI=mongodb+srv://your-user:your-password@cluster.mongodb.net/Artisan-Alloy?retryWrites=true&w=majority
 JWT_SECRET=(generate with: node -e "console.log(require('crypto').randomBytes(32).toString('hex'))")
 REFRESH_TOKEN_SECRET=(generate another one)
 FRONTEND_URL=https://your-vercel-domain.vercel.app

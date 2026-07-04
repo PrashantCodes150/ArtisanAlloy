@@ -2,9 +2,9 @@ const options = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'F Jewelry E-Commerce API',
+      title: 'ArtisanAlloy E-Commerce API',
       version: '1.0.0',
-      description: 'API documentation for F Jewelry E-Commerce Platform',
+      description: 'API documentation for ArtisanAlloy E-Commerce Platform',
       license: {
         name: 'MIT',
         url: 'http://github.com/gruntjs/grunt/blob/master/LICENSE-MIT',
@@ -16,7 +16,7 @@ const options = {
         description: 'Development server',
       },
       {
-        url: 'https://api.f-jewelry.com/api/v1',
+        url: 'https://api.Artisan-Alloy.com/api/v1',
         description: 'Production server',
       },
     ],

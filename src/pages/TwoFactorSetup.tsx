@@ -75,13 +75,13 @@ export default function TwoFactorSetup() {
     if (!setupData) return;
 
     const codesText = setupData.backupCodes.join('\n');
-    const blob = new Blob([`F-Jewelry 2FA Backup Codes\n\n${codesText}`], {
+    const blob = new Blob([`artisan-alloy 2FA Backup Codes\n\n${codesText}`], {
       type: 'text/plain'
     });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'f-jewelry-2fa-backup-codes.txt';
+    a.download = 'Artisan-Alloy-2fa-backup-codes.txt';
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -124,11 +124,10 @@ export default function TwoFactorSetup() {
           {[1, 2, 3].map((s) => (
             <div key={s} className="flex items-center">
               <div
-                className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
-                  s <= step
+                className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${s <= step
                     ? 'bg-purple-600 text-white'
                     : 'bg-gray-200 text-gray-400'
-                }`}
+                  }`}
               >
                 {s < step ? (
                   <Check className="w-5 h-5" />
@@ -138,9 +137,8 @@ export default function TwoFactorSetup() {
               </div>
               {s < 3 && (
                 <div
-                  className={`w-16 h-1 mx-2 transition-colors ${
-                    s < step ? 'bg-purple-600' : 'bg-gray-200'
-                  }`}
+                  className={`w-16 h-1 mx-2 transition-colors ${s < step ? 'bg-purple-600' : 'bg-gray-200'
+                    }`}
                 />
               )}
             </div>

@@ -18,9 +18,9 @@
    - **Output Directory**: `dist`
 
 5. Add Environment Variables (under "Environment Variables"):
-   - `VITE_API_URL` = your Render backend URL (e.g., `https://f-jewelry-backend.onrender.com/api/v1`)
-   - `VITE_BACKEND_URL` = your Render backend URL (e.g., `https://f-jewelry-backend.onrender.com`)
-   - `VITE_APP_NAME` = `F Jewelry`
+   - `VITE_API_URL` = your Render backend URL (e.g., `https://Artisan-Alloy-backend.onrender.com/api/v1`)
+   - `VITE_BACKEND_URL` = your Render backend URL (e.g., `https://Artisan-Alloy-backend.onrender.com`)
+   - `VITE_APP_NAME` = `ArtisanAlloy`
    - `VITE_USE_MOCK_AUTH` = `false`
    - `VITE_RAZORPAY_KEY_ID` = your Razorpay key ID
 
@@ -49,9 +49,9 @@ vercel --prod
 
 ## After Deployment
 
-1. Copy your Vercel frontend URL (e.g., `https://f-jewelry.vercel.app`)
+1. Copy your Vercel frontend URL (e.g., `https://Artisan-Alloy.vercel.app`)
 2. Update your Render backend environment variable:
-   - `FRONTEND_URL` = `https://f-jewelry.vercel.app`
+   - `FRONTEND_URL` = `https://Artisan-Alloy.vercel.app`
 3. Restart your Render backend service
 
 ## Important Notes
@@ -70,6 +70,6 @@ Make sure your backend allows requests from your Vercel frontend domain. The bac
 
 1. Go to your project settings on Vercel
 2. Click **"Domains"**
-3. Add your custom domain (e.g., `f-jewelry.com`)
+3. Add your custom domain (e.g., `Artisan-Alloy.com`)
 4. Update DNS records as instructed by Vercel
 5. Update `VITE_API_URL` to use your custom domain

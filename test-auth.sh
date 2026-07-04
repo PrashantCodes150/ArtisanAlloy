@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "🔐 F Jewelry Authentication System Test"
+echo "🔐 ArtisanAlloy Authentication System Test"
 echo "======================================"
 
 # Test 1: Check if backend can start

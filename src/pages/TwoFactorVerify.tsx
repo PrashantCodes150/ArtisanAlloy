@@ -185,7 +185,7 @@ export default function TwoFactorVerify() {
             <h3 className="text-sm font-medium text-gray-700 mb-2">How to get your code:</h3>
             <ol className="text-xs text-gray-600 space-y-1">
               <li>1. Open your authenticator app (Google Authenticator, Authy, etc.)</li>
-              <li>2. Find the entry for "F-Jewelry"</li>
+              <li>2. Find the entry for "artisan-alloy"</li>
               <li>3. Enter the 6-digit code shown</li>
             </ol>
           </div>

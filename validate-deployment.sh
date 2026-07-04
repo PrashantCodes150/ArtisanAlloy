@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# F Jewelry - Deployment Validation Script
+# ArtisanAlloy - Deployment Validation Script
 # Run this after deploying to Vercel to verify everything works
 
 echo "================================"
-echo "F Jewelry Deployment Validator"
+echo "ArtisanAlloy Deployment Validator"
 echo "================================"
 echo ""
 

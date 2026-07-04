@@ -3,34 +3,52 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
   ],
   "headers": [
     {
       "source": "/sw.js",
       "headers": [
-        { "key": "Content-Type", "value": "application/javascript" },
-        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
+        {
+          "key": "Content-Type",
+          "value": "application/javascript"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, no-store, must-revalidate"
+        }
       ]
     },
     {
       "source": "/manifest.json",
       "headers": [
-        { "key": "Content-Type", "value": "application/manifest+json" },
-        { "key": "Cache-Control", "value": "public, max-age=86400" }
+        {
+          "key": "Content-Type",
+          "value": "application/manifest+json"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400"
+        }
       ]
     },
     {
       "source": "/assets/(.*)",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
       ]
     }
   ],
   "env": {
-    "VITE_API_URL": "https://f-jewelry-backend-mwgz.onrender.com/api/v1",
-    "VITE_BACKEND_URL": "https://f-jewelry-backend-mwgz.onrender.com",
-    "VITE_APP_NAME": "F Jewelry",
+    "VITE_API_URL": "https://Artisan-Alloy-backend-mwgz.onrender.com/api/v1",
+    "VITE_BACKEND_URL": "https://Artisan-Alloy-backend-mwgz.onrender.com",
+    "VITE_APP_NAME": "ArtisanAlloy",
     "VITE_USE_MOCK_AUTH": "false"
   }
 }

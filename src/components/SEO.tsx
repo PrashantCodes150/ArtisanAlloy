@@ -21,16 +21,16 @@ interface SEOProps {
 }
 
 const SEO = ({
-    title = 'F Jewelry - Luxury Handcrafted Jewelry | Timeless Elegance',
-    description = 'Discover exquisite handcrafted jewelry at F Jewelry. Shop premium gold, diamond, and silver jewelry for weddings, engagements, and special occasions. Free shipping on orders over ₹999.',
+    title = 'ArtisanAlloy - Luxury Handcrafted Jewelry | Timeless Elegance',
+    description = 'Discover exquisite handcrafted jewelry at ArtisanAlloy. Shop premium gold, diamond, and silver jewelry for weddings, engagements, and special occasions. Free shipping on orders over ₹999.',
     keywords = 'jewelry, gold jewelry, diamond jewelry, silver jewelry, wedding jewelry, engagement rings, necklaces, earrings, bracelets, Indian jewelry, luxury jewelry, handcrafted jewelry',
     image = '/og-image.jpg',
-    url = 'https://f-jewelry.com',
+    url = 'https://Artisan-Alloy.com',
     type = 'website',
     product,
 }: SEOProps) => {
-    const siteName = 'F Jewelry';
-    const fullTitle = title.includes('F Jewelry') ? title : `${title} | F Jewelry`;
+    const siteName = 'ArtisanAlloy';
+    const fullTitle = title.includes('ArtisanAlloy') ? title : `${title} | ArtisanAlloy`;
 
     // Generate JSON-LD structured data
     const generateStructuredData = () => {
@@ -101,9 +101,9 @@ const SEO = ({
             availableLanguage: ['English', 'Hindi'],
         },
         sameAs: [
-            'https://facebook.com/fjewelry',
-            'https://instagram.com/fjewelry',
-            'https://twitter.com/fjewelry',
+            'https://facebook.com/ArtisanAlloy',
+            'https://instagram.com/ArtisanAlloy',
+            'https://twitter.com/ArtisanAlloy',
         ],
     };
 

@@ -1,4 +1,4 @@
-# 🎨 F Jewelry Website - Supporting Small Craftspersons
+# 🎨 ArtisanAlloy Website - Supporting Small Craftspersons
 
 ## 📋 **Content Added to Home Page**
 
@@ -58,4 +58,4 @@ We are committed to supporting local artisans and preserving traditional jewelry
 ✅ **Design**: Clean, professional layout
 ✅ **Responsive**: Works on all devices
 
-Your F Jewelry website now tells a more complete story about supporting the entire jewelry ecosystem! 🛍✨
+Your ArtisanAlloy website now tells a more complete story about supporting the entire jewelry ecosystem! 🛍✨

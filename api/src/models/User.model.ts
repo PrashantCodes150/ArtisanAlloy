@@ -341,8 +341,8 @@ userSchema.methods.createEmailVerificationToken = function(): string {
 userSchema.methods.createTwoFactorSecret = function(): string {
   const speakeasy = require('speakeasy');
   const secret = speakeasy.generateSecret({
-    name: `F-Jewelry (${this.email})`,
-    issuer: 'F-Jewelry',
+    name: `artisan-alloy (${this.email})`,
+    issuer: 'artisan-alloy',
     length: 32,
   });
   

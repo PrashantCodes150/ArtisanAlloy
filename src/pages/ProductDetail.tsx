@@ -38,19 +38,19 @@ const ProductDetail = () => {
   const adModelImages = product
     ? [
       product.image || '/placeholder.svg',
-      '/assets/images/advertismnet_models/Gemini_Generated_Image_5jf6il5jf6il5jf6.png',
-      '/assets/images/advertismnet_models/Gemini_Generated_Image_f0f99mf0f99mf0f9.png',
-      '/assets/images/advertismnet_models/Gemini_Generated_Image_gkqygagkqygagkqy.png',
-      '/assets/images/advertismnet_models/Gemini_Generated_Image_n7g0vnn7g0vnn7g0.png',
-      '/assets/images/advertismnet_models/Gemini_Generated_Image_plqbh4plqbh4plqb.png'
+      '/assets/images/advertismnet_models/Gemini_Generated_Image_5jf6il5jf6il5jf6.jpg',
+      '/assets/images/advertismnet_models/Gemini_Generated_Image_f0f99mf0f99mf0f9.jpg',
+      '/assets/images/advertismnet_models/Gemini_Generated_Image_gkqygagkqygagkqy.jpg',
+      '/assets/images/advertismnet_models/Gemini_Generated_Image_n7g0vnn7g0vnn7g0.jpg',
+      '/assets/images/advertismnet_models/Gemini_Generated_Image_plqbh4plqbh4plqb.jpg'
     ]
     : [
       '/placeholder.svg',
-      '/assets/images/advertismnet_models/Gemini_Generated_Image_5jf6il5jf6il5jf6.png',
-      '/assets/images/advertismnet_models/Gemini_Generated_Image_f0f99mf0f99mf0f9.png',
-      '/assets/images/advertismnet_models/Gemini_Generated_Image_gkqygagkqygagkqy.png',
-      '/assets/images/advertismnet_models/Gemini_Generated_Image_n7g0vnn7g0vnn7g0.png',
-      '/assets/images/advertismnet_models/Gemini_Generated_Image_plqbh4plqbh4plqb.png'
+      '/assets/images/advertismnet_models/Gemini_Generated_Image_5jf6il5jf6il5jf6.jpg',
+      '/assets/images/advertismnet_models/Gemini_Generated_Image_f0f99mf0f99mf0f9.jpg',
+      '/assets/images/advertismnet_models/Gemini_Generated_Image_gkqygagkqygagkqy.jpg',
+      '/assets/images/advertismnet_models/Gemini_Generated_Image_n7g0vnn7g0vnn7g0.jpg',
+      '/assets/images/advertismnet_models/Gemini_Generated_Image_plqbh4plqbh4plqb.jpg'
     ];
 
   // Auto-scroll functionality - only if we have multiple images and product exists
@@ -153,8 +153,8 @@ const ProductDetail = () => {
   return (
     <div className="pt-24 min-h-screen bg-gradient-jewelry-dark">
       <SEO
-        title={`${product?.name || 'Product'} - Luxury Jewelry | F Jewelry`}
-        description={product?.description || `Buy ${product?.name || 'this product'} at F Jewelry. Premium handcrafted jewelry with excellent craftsmanship.`}
+        title={`${product?.name || 'Product'} - Luxury Jewelry | ArtisanAlloy`}
+        description={product?.description || `Buy ${product?.name || 'this product'} at ArtisanAlloy. Premium handcrafted jewelry with excellent craftsmanship.`}
         keywords={`${product?.name || ''}, jewelry, luxury jewelry, ${product?.category || ''}, ${product?.type || ''}, ${product?.metalType || ''}, ${product?.birthstone || ''}`}
       />
 

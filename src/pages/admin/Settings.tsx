@@ -36,11 +36,10 @@ const Settings = () => {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all font-sans ${
-                  activeTab === tab.id
-                    ? 'bg-jewelry-gold/20 text-jewelry-gold'
-                    : 'text-jewelry-cream/70 hover:bg-jewelry-gold/10'
-                }`}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all font-sans ${activeTab === tab.id
+                  ? 'bg-jewelry-gold/20 text-jewelry-gold'
+                  : 'text-jewelry-cream/70 hover:bg-jewelry-gold/10'
+                  }`}
               >
                 <tab.icon className="w-5 h-5" />
                 {tab.label}
@@ -59,7 +58,7 @@ const Settings = () => {
                   <label className="block text-sm text-jewelry-cream/60 mb-2">Store Name</label>
                   <input
                     type="text"
-                    defaultValue="F Jewelry"
+                    defaultValue="ArtisanAlloy"
                     className="w-full px-4 py-3 rounded-lg bg-jewelry-dark-light border border-jewelry-gold/30 text-jewelry-cream"
                   />
                 </div>
@@ -67,7 +66,7 @@ const Settings = () => {
                   <label className="block text-sm text-jewelry-cream/60 mb-2">Store Email</label>
                   <input
                     type="email"
-                    defaultValue="contact@f-jewelry.com"
+                    defaultValue="contact@Artisan-Alloy.com"
                     className="w-full px-4 py-3 rounded-lg bg-jewelry-dark-light border border-jewelry-gold/30 text-jewelry-cream"
                   />
                 </div>
@@ -123,7 +122,7 @@ const Settings = () => {
                     <label className="block text-sm text-jewelry-cream/60 mb-2">Email From Name</label>
                     <input
                       type="text"
-                      defaultValue="F Jewelry"
+                      defaultValue="ArtisanAlloy"
                       className="w-full px-4 py-3 rounded-lg bg-jewelry-dark-light border border-jewelry-gold/30 text-jewelry-cream"
                     />
                   </div>

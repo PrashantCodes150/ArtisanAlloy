@@ -1,4 +1,4 @@
-# F Jewelry - 503 Error Troubleshooting Guide
+# ArtisanAlloy - 503 Error Troubleshooting Guide
 
 Getting a 503 Service Unavailable error after deploying to Vercel? Follow this guide to fix it.
 
@@ -14,7 +14,7 @@ Expected response:
 ```json
 {
   "status": "success",
-  "message": "F Jewelry API is running! 💎",
+  "message": "ArtisanAlloy API is running! 💎",
   "dbStatus": "connected",
   "timestamp": "2026-04-05T...",
   "environment": "production"
@@ -41,7 +41,7 @@ Expected response:
 2. Check if `MONGODB_URI` is set
 3. If missing, add it:
    ```
-   MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/f-jewelry?retryWrites=true&w=majority
+   MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/Artisan-Alloy?retryWrites=true&w=majority
    ```
 4. Redeploy:
    ```bash

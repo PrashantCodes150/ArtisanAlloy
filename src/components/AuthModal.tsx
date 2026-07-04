@@ -73,7 +73,7 @@ const AuthModal: React.FC = () => {
         ...restData,
         passwordConfirm: confirmPassword,
       };
-      
+
       const user = await register(registerData);
       toast.success('Welcome to the elite circle of connoisseurs.');
       closeAuthModal();
@@ -217,7 +217,7 @@ const AuthModal: React.FC = () => {
                 <GoogleAuthButton onClick={handleGoogleAuth} loading={isLoading} />
 
                 <p className="text-center font-sans text-sm text-jewelry-cream/60 pt-2">
-                  New to F Jewelry?{' '}
+                  New to ArtisanAlloy?{' '}
                   <button
                     type="button"
                     onClick={() => setView('signup')}

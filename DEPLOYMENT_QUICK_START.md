@@ -1,4 +1,4 @@
-# F Jewelry - Quick Deployment Guide
+# ArtisanAlloy - Quick Deployment Guide
 
 **TL;DR**: Deploy to Vercel in 5 minutes
 
@@ -27,7 +27,7 @@ Save these outputs - you'll need them soon.
 2. Add these variables (most critical first):
 
 ```
-MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/f-jewelry?retryWrites=true&w=majority
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/Artisan-Alloy?retryWrites=true&w=majority
 JWT_SECRET=(paste the first generated key)
 REFRESH_TOKEN_SECRET=(paste the second generated key)
 FRONTEND_URL=https://your-vercel-domain.vercel.app
@@ -77,7 +77,7 @@ Expected response:
 ```json
 {
   "status": "success",
-  "message": "F Jewelry API is running! 💎",
+  "message": "ArtisanAlloy API is running! 💎",
   "databaseConnected": true,
   "environment": "production"
 }
@@ -139,7 +139,7 @@ If you don't have MongoDB Atlas set up:
 
 Connection string format:
 ```
-mongodb+srv://username:password@cluster.mongodb.net/f-jewelry?retryWrites=true&w=majority
+mongodb+srv://username:password@cluster.mongodb.net/Artisan-Alloy?retryWrites=true&w=majority
 ```
 
 ## Environment Variables Reference

@@ -68,7 +68,7 @@ const allowedOrigins = [
   'http://localhost:5174',
   'http://localhost:3000',
   // Production Vercel URL
-  'https://f-jewelry-react.vercel.app',
+  'https://Artisan-Alloy-react.vercel.app',
   // Allow ALL Vercel preview deploy URLs for this project (wildcard)
   'https://*.vercel.app',
 ].filter(Boolean) as string[];
@@ -145,11 +145,11 @@ const initializeSession = () => {
         resave: false,
         saveUninitialized: false,
         store: MongoStore.create({
-          mongoUrl: process.env.MONGODB_URI || 'mongodb://localhost:27017/f-jewelry',
+          mongoUrl: process.env.MONGODB_URI || 'mongodb://localhost:27017/Artisan-Alloy',
           ttl: 24 * 60 * 60, // 24 hours
           autoRemove: 'native'
         }),
-        cookie: { 
+        cookie: {
           secure: process.env.NODE_ENV === 'production',
           sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
           maxAge: 24 * 60 * 60 * 1000 // 24 hours
@@ -161,7 +161,7 @@ const initializeSession = () => {
         secret: process.env.JWT_SECRET || 'dev-secret-key-change-in-production',
         resave: false,
         saveUninitialized: false,
-        cookie: { 
+        cookie: {
           secure: process.env.NODE_ENV === 'production',
           sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
           maxAge: 24 * 60 * 60 * 1000 // 24 hours
@@ -173,7 +173,7 @@ const initializeSession = () => {
     secret: process.env.JWT_SECRET || 'dev-secret-key-change-in-production',
     resave: false,
     saveUninitialized: false,
-    cookie: { 
+    cookie: {
       secure: process.env.NODE_ENV === 'production',
       sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
       maxAge: 24 * 60 * 60 * 1000 // 24 hours
@@ -200,7 +200,7 @@ const API_VERSION = '/api/v1';
 app.get('/', (req: Request, res: Response) => {
   res.status(200).json({
     status: 'success',
-    message: 'F Jewelry API is live! 💎',
+    message: 'ArtisanAlloy API is live! 💎',
   });
 });
 
@@ -208,7 +208,7 @@ app.get('/', (req: Request, res: Response) => {
 app.get(`${API_VERSION}/health`, (req: Request, res: Response) => {
   res.status(200).json({
     status: 'success',
-    message: 'F Jewelry API is running! 💎',
+    message: 'ArtisanAlloy API is running! 💎',
     dbStatus: mongoose.connection.readyState === 1 ? 'connected' : 'connecting/disconnected',
     timestamp: new Date().toISOString(),
     environment: process.env.NODE_ENV,

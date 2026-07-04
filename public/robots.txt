@@ -1,11 +1,11 @@
-# F Jewelry - Robots.txt
-# https://f-jewelry.com/robots.txt
+# ArtisanAlloy - Robots.txt
+# https://Artisan-Alloy.com/robots.txt
 
 User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://f-jewelry.com/sitemap.xml
+Sitemap: https://Artisan-Alloy.com/sitemap.xml
 
 # Disallow admin and private areas
 Disallow: /admin/

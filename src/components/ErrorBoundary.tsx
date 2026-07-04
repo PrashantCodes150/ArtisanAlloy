@@ -97,10 +97,10 @@ class ErrorBoundary extends Component<Props, State> {
                         <p className="mt-8 text-xs text-jewelry-cream/50">
                             If the problem persists, please contact{' '}
                             <a
-                                href="mailto:support@f-jewelry.com"
+                                href="mailto:support@Artisan-Alloy.com"
                                 className="text-jewelry-gold hover:underline"
                             >
-                                support@f-jewelry.com
+                                support@Artisan-Alloy.com
                             </a>
                         </p>
                     </div>

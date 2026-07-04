@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "🔧 F-Jewelry Authentication Flow Fix"
+echo "🔧 artisan-alloy Authentication Flow Fix"
 echo "=================================="
 
 echo ""

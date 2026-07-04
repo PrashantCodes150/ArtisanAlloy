@@ -10,7 +10,7 @@ const OnboardingFlow: React.FC = () => {
     occasion: '',
     style: ''
   });
-  
+
   const navigate = useNavigate();
 
   const handleNext = () => {
@@ -44,7 +44,7 @@ const OnboardingFlow: React.FC = () => {
               <Shield className="w-10 h-10 text-jewelry-dark" />
             </div>
             <h1 className="font-display text-3xl font-bold text-jewelry-cream mb-4">
-              Welcome to F Jewelry!
+              Welcome to ArtisanAlloy!
             </h1>
             <p className="font-sans text-jewelry-cream/80 mb-6">
               Let's personalize your experience. We'll help you discover jewelry that matches your style.
@@ -123,11 +123,10 @@ const OnboardingFlow: React.FC = () => {
               <button
                 key={type.id}
                 onClick={() => handleInputChange('jewelryType', type.id)}
-                className={`p-4 rounded-xl border transition-all ${
-                  preferences.jewelryType === type.id
+                className={`p-4 rounded-xl border transition-all ${preferences.jewelryType === type.id
                     ? 'border-jewelry-gold bg-jewelry-gold/10'
                     : 'border-jewelry-gold/20 hover:border-jewelry-gold/40'
-                }`}
+                  }`}
               >
                 <div className="text-2xl mb-2">{type.icon}</div>
                 <div className="font-sans text-sm text-jewelry-cream">{type.name}</div>
@@ -145,11 +144,10 @@ const OnboardingFlow: React.FC = () => {
             <button
               onClick={handleNext}
               disabled={!preferences.jewelryType}
-              className={`flex-1 py-3 rounded-lg font-sans font-semibold flex items-center justify-center gap-2 transition-all ${
-                preferences.jewelryType
+              className={`flex-1 py-3 rounded-lg font-sans font-semibold flex items-center justify-center gap-2 transition-all ${preferences.jewelryType
                   ? 'bg-gradient-gold text-jewelry-dark hover:shadow-lg hover:shadow-jewelry-gold/30'
                   : 'bg-jewelry-dark-light text-jewelry-cream/50 cursor-not-allowed'
-              }`}
+                }`}
             >
               Continue
               <ArrowRight className="w-4 h-4" />
@@ -190,11 +188,10 @@ const OnboardingFlow: React.FC = () => {
               <button
                 key={budget.id}
                 onClick={() => handleInputChange('budget', budget.range)}
-                className={`w-full p-4 rounded-xl border transition-all text-left ${
-                  preferences.budget === budget.range
+                className={`w-full p-4 rounded-xl border transition-all text-left ${preferences.budget === budget.range
                     ? 'border-jewelry-gold bg-jewelry-gold/10'
                     : 'border-jewelry-gold/20 hover:border-jewelry-gold/40'
-                }`}
+                  }`}
               >
                 <div className="font-sans text-jewelry-cream font-medium">{budget.name}</div>
               </button>
@@ -211,11 +208,10 @@ const OnboardingFlow: React.FC = () => {
             <button
               onClick={handleNext}
               disabled={!preferences.budget}
-              className={`flex-1 py-3 rounded-lg font-sans font-semibold flex items-center justify-center gap-2 transition-all ${
-                preferences.budget
+              className={`flex-1 py-3 rounded-lg font-sans font-semibold flex items-center justify-center gap-2 transition-all ${preferences.budget
                   ? 'bg-gradient-gold text-jewelry-dark hover:shadow-lg hover:shadow-jewelry-gold/30'
                   : 'bg-jewelry-dark-light text-jewelry-cream/50 cursor-not-allowed'
-              }`}
+                }`}
             >
               Continue
               <ArrowRight className="w-4 h-4" />
@@ -268,11 +264,10 @@ const OnboardingFlow: React.FC = () => {
                 <button
                   key={occasion.id}
                   onClick={() => handleInputChange('occasion', occasion.id)}
-                  className={`p-3 rounded-lg border text-xs transition-all ${
-                    preferences.occasion === occasion.id
+                  className={`p-3 rounded-lg border text-xs transition-all ${preferences.occasion === occasion.id
                       ? 'border-jewelry-gold bg-jewelry-gold/10'
                       : 'border-jewelry-gold/20 hover:border-jewelry-gold/40'
-                  }`}
+                    }`}
                 >
                   <div className="text-lg">{occasion.icon}</div>
                   <div className="font-sans mt-1">{occasion.name}</div>
@@ -288,11 +283,10 @@ const OnboardingFlow: React.FC = () => {
                 <button
                   key={style.id}
                   onClick={() => handleInputChange('style', style.id)}
-                  className={`p-3 rounded-lg border text-xs transition-all ${
-                    preferences.style === style.id
+                  className={`p-3 rounded-lg border text-xs transition-all ${preferences.style === style.id
                       ? 'border-jewelry-gold bg-jewelry-gold/10'
                       : 'border-jewelry-gold/20 hover:border-jewelry-gold/40'
-                  }`}
+                    }`}
                 >
                   <div className="text-lg">{style.icon}</div>
                   <div className="font-sans mt-1">{style.name}</div>

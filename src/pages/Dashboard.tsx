@@ -124,7 +124,7 @@ const Dashboard = () => {
             Welcome back, {user?.firstName}!
           </h1>
           <p className="font-sans text-jewelry-cream/60">
-            Here's an overview of your F Jewelry account
+            Here's an overview of your ArtisanAlloy account
           </p>
         </div>
 

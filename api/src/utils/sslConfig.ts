@@ -1,5 +1,5 @@
 /**
- * SSL/HTTPS Configuration Guide for F Jewelry Backend
+ * SSL/HTTPS Configuration Guide for ArtisanAlloy Backend
  * 
  * This file provides utilities and documentation for setting up SSL/HTTPS
  * in production environments.
@@ -77,7 +77,7 @@ export const SSL_SETUP_GUIDE = `
    # Install Nginx
    sudo apt install nginx
 
-   # Nginx config (/etc/nginx/sites-available/f-jewelry):
+   # Nginx config (/etc/nginx/sites-available/Artisan-Alloy):
    
    server {
        listen 80;
@@ -119,7 +119,7 @@ export const SSL_SETUP_GUIDE = `
    }
 
    # Enable site
-   sudo ln -s /etc/nginx/sites-available/f-jewelry /etc/nginx/sites-enabled/
+   sudo ln -s /etc/nginx/sites-available/Artisan-Alloy /etc/nginx/sites-enabled/
    sudo nginx -t
    sudo systemctl reload nginx
 

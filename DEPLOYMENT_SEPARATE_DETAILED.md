@@ -57,7 +57,7 @@
 
 **Key Point**: Your frontend and backend are on **DIFFERENT DOMAINS**:
 - Frontend: `your-jewelry-app.vercel.app`
-- Backend: `f-jewelry-backend.onrender.com`
+- Backend: `Artisan-Alloy-backend.onrender.com`
 
 The frontend must know the backend URL to make API calls.
 
@@ -101,7 +101,7 @@ api/
 2. Click **"New +"** → **"Web Service"**
 3. **Connect your GitHub repository**
 4. Configure the service:
-   - **Name**: `f-jewelry-backend` (or your choice)
+   - **Name**: `Artisan-Alloy-backend` (or your choice)
    - **Region**: Choose closest to your users
    - **Branch**: `main` (or your main branch)
    - **Root Directory**: `api` ← **IMPORTANT: This must be "api"**
@@ -171,13 +171,13 @@ Value: production
 
 ```
 Key: MONGODB_URI
-Value: mongodb+srv://username:password@cluster.mongodb.net/f-jewelry?retryWrites=true&w=majority
+Value: mongodb+srv://username:password@cluster.mongodb.net/Artisan-Alloy?retryWrites=true&w=majority
 ```
 ⚠️ Replace with your actual MongoDB Atlas connection string (see MongoDB setup below)
 
 ```
 Key: JWT_SECRET
-Value: super-secret-jwt-key-for-f-jewelry-production-min-32-chars
+Value: super-secret-jwt-key-for-Artisan-Alloy-production-min-32-chars
 ```
 ⚠️ Change this to your own random string (minimum 32 characters)
 
@@ -193,7 +193,7 @@ Value: 7
 
 ```
 Key: REFRESH_TOKEN_SECRET
-Value: super-secret-refresh-token-key-f-jewelry-min-32-characters
+Value: super-secret-refresh-token-key-Artisan-Alloy-min-32-characters
 ```
 ⚠️ Change this to a DIFFERENT random string (minimum 32 characters)
 
@@ -273,7 +273,7 @@ Value: dummy-email-password
 
 ```
 Key: EMAIL_FROM
-Value: F Jewelry <noreply@example.com>
+Value: ArtisanAlloy <noreply@example.com>
 ```
 
 ```
@@ -335,10 +335,10 @@ After adding all variables:
    mongodb+srv://username:<password>@cluster0.xxxxx.mongodb.net/?retryWrites=true&w=majority
    ```
 5. Replace `<password>` with your actual password
-6. Add database name at the end: `/f-jewelry`
+6. Add database name at the end: `/Artisan-Alloy`
 7. Final format:
    ```
-   mongodb+srv://username:password@cluster0.xxxxx.mongodb.net/f-jewelry?retryWrites=true&w=majority
+   mongodb+srv://username:password@cluster0.xxxxx.mongodb.net/Artisan-Alloy?retryWrites=true&w=majority
    ```
 
 ---
@@ -357,7 +357,7 @@ After adding all variables:
 
 ### 3.3: Configure Project
 
-**Project Name**: `f-jewelry-frontend` (or your choice)
+**Project Name**: `Artisan-Alloy-frontend` (or your choice)
 
 **Framework Preset**: `Vite`
 
@@ -410,7 +410,7 @@ Environment: Production ✅
 
 ```
 Key: VITE_APP_NAME
-Value: F Jewelry
+Value: ArtisanAlloy
 Environment: Production ✅
 ```
 
@@ -437,7 +437,7 @@ Environment: Production ✅
 After adding all environment variables:
 1. Click **"Deploy"**
 2. Wait 2-3 minutes for the build
-3. Vercel will give you a URL like: `https://f-jewelry-frontend.vercel.app`
+3. Vercel will give you a URL like: `https://Artisan-Alloy-frontend.vercel.app`
 
 ---
 
@@ -454,7 +454,7 @@ https://your-backend-url.onrender.com/api/v1/health
 ```json
 {
   "status": "success",
-  "message": "F Jewelry API is running!",
+  "message": "ArtisanAlloy API is running!",
   "timestamp": "2026-04-05T12:00:00.000Z",
   "environment": "production",
   "databaseConnected": true
@@ -517,7 +517,7 @@ Since email might not work with dummy values, you can:
 **Option B**: Create user directly in MongoDB
 1. Go to MongoDB Atlas
 2. Click "Browse Collections"
-3. Find `f-jewelry` database → `users` collection
+3. Find `Artisan-Alloy` database → `users` collection
 4. Check if your registered user exists
 
 ### 6.2: Test Login
@@ -852,7 +852,7 @@ EMAIL_HOST=smtp.gmail.com
 EMAIL_PORT=587
 EMAIL_USER=noreply@example.com
 EMAIL_PASS=dummy-password-not-real
-EMAIL_FROM=F Jewelry <noreply@example.com>
+EMAIL_FROM=ArtisanAlloy <noreply@example.com>
 ```
 
 #### Cloudinary:
@@ -927,7 +927,7 @@ CLOUDINARY_API_SECRET=dummy-api-secret-here
 
 - [ ] `VITE_API_URL=https://your-backend.onrender.com/api/v1`
 - [ ] `VITE_BACKEND_URL=https://your-backend.onrender.com`
-- [ ] `VITE_APP_NAME=F Jewelry`
+- [ ] `VITE_APP_NAME=ArtisanAlloy`
 - [ ] `VITE_USE_MOCK_AUTH=false`
 - [ ] `VITE_RAZORPAY_KEY_ID=rzp_test_xxxxxxxxxxxx`
 
@@ -959,7 +959,7 @@ Fill these in once deployed:
 ```
 Frontend URL: https://____________________.vercel.app
 Backend URL:  https://____________________.onrender.com
-MongoDB:      mongodb+srv://_____:_____@cluster_____.mongodb.net/f-jewelry
+MongoDB:      mongodb+srv://_____:_____@cluster_____.mongodb.net/Artisan-Alloy
 ```
 
 ---
@@ -1034,7 +1034,7 @@ MONGODB_URI=mongodb://localhost:27017  ← Localhost won't work on Render!
 ```
 ✅ **Fix**:
 ```
-MONGODB_URI=mongodb+srv://user:pass@cluster.mongodb.net/f-jewelry
+MONGODB_URI=mongodb+srv://user:pass@cluster.mongodb.net/Artisan-Alloy
 ```
 
 ❌ **Mistake 5**: FRONTEND_URL mismatch

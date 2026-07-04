@@ -44,7 +44,7 @@ export const sendEmail = async (options: EmailOptions): Promise<boolean> => {
     const transporter = createTransporter();
 
     const mailOptions = {
-      from: process.env.EMAIL_FROM || 'F Jewelry <noreply@f-jewelry.com>',
+      from: process.env.EMAIL_FROM || 'ArtisanAlloy <noreply@Artisan-Alloy.com>',
       to: options.to,
       subject: options.subject,
       html: options.html,
@@ -73,7 +73,7 @@ export const emailTemplates = {
     <head>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Verify Your Email - F Jewelry</title>
+      <title>Verify Your Email - ArtisanAlloy</title>
       <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #1a1a2e; color: #ffffff; margin: 0; padding: 0; }
         .container { max-width: 600px; margin: 0 auto; padding: 40px 20px; }
@@ -91,12 +91,12 @@ export const emailTemplates = {
     <body>
       <div class="container">
         <div class="header">
-          <div class="logo">✦ F Jewelry</div>
+          <div class="logo">✦ ArtisanAlloy</div>
         </div>
         <div class="content">
-          <h1>Welcome to F Jewelry!</h1>
+          <h1>Welcome to ArtisanAlloy!</h1>
           <p>Hello ${firstName},</p>
-          <p>Thank you for creating an account with F Jewelry. To complete your registration and access all features, please verify your email address by clicking the button below:</p>
+          <p>Thank you for creating an account with ArtisanAlloy. To complete your registration and access all features, please verify your email address by clicking the button below:</p>
           <p style="text-align: center;">
             <a href="${verificationUrl}" class="button">Verify Email Address</a>
           </p>
@@ -106,7 +106,7 @@ export const emailTemplates = {
           <p>If you didn't create an account with us, please ignore this email.</p>
         </div>
         <div class="footer">
-          <p>© ${new Date().getFullYear()} F Jewelry. All rights reserved.</p>
+          <p>© ${new Date().getFullYear()} ArtisanAlloy. All rights reserved.</p>
           <p>Crafted with ♥ for jewelry lovers</p>
         </div>
       </div>
@@ -123,7 +123,7 @@ export const emailTemplates = {
     <head>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Reset Your Password - F Jewelry</title>
+      <title>Reset Your Password - ArtisanAlloy</title>
       <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #1a1a2e; color: #ffffff; margin: 0; padding: 0; }
         .container { max-width: 600px; margin: 0 auto; padding: 40px 20px; }
@@ -141,12 +141,12 @@ export const emailTemplates = {
     <body>
       <div class="container">
         <div class="header">
-          <div class="logo">✦ F Jewelry</div>
+          <div class="logo">✦ ArtisanAlloy</div>
         </div>
         <div class="content">
           <h1>Password Reset Request</h1>
           <p>Hello ${firstName},</p>
-          <p>We received a request to reset the password for your F Jewelry account. Click the button below to create a new password:</p>
+          <p>We received a request to reset the password for your ArtisanAlloy account. Click the button below to create a new password:</p>
           <p style="text-align: center;">
             <a href="${resetUrl}" class="button">Reset Password</a>
           </p>
@@ -158,7 +158,7 @@ export const emailTemplates = {
           <p>If you didn't request a password reset, please ignore this email or contact our support team if you have concerns.</p>
         </div>
         <div class="footer">
-          <p>© ${new Date().getFullYear()} F Jewelry. All rights reserved.</p>
+          <p>© ${new Date().getFullYear()} ArtisanAlloy. All rights reserved.</p>
         </div>
       </div>
     </body>
@@ -183,7 +183,7 @@ export const emailTemplates = {
     <head>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Order Confirmed - F Jewelry</title>
+      <title>Order Confirmed - ArtisanAlloy</title>
       <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #1a1a2e; color: #ffffff; margin: 0; padding: 0; }
         .container { max-width: 600px; margin: 0 auto; padding: 40px 20px; }
@@ -208,7 +208,7 @@ export const emailTemplates = {
     <body>
       <div class="container">
         <div class="header">
-          <div class="logo">✦ F Jewelry</div>
+          <div class="logo">✦ ArtisanAlloy</div>
         </div>
         <div class="content">
           <div style="text-align: center;">
@@ -260,8 +260,8 @@ export const emailTemplates = {
           <p>We'll send you another email when your order ships with tracking information.</p>
         </div>
         <div class="footer">
-          <p>© ${new Date().getFullYear()} F Jewelry. All rights reserved.</p>
-          <p>Questions? Contact us at support@f-jewelry.com</p>
+          <p>© ${new Date().getFullYear()} ArtisanAlloy. All rights reserved.</p>
+          <p>Questions? Contact us at support@Artisan-Alloy.com</p>
         </div>
       </div>
     </body>
@@ -277,7 +277,7 @@ export const emailTemplates = {
     <head>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Payment Successful - F Jewelry</title>
+      <title>Payment Successful - ArtisanAlloy</title>
       <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #1a1a2e; color: #ffffff; margin: 0; padding: 0; }
         .container { max-width: 600px; margin: 0 auto; padding: 40px 20px; }
@@ -295,7 +295,7 @@ export const emailTemplates = {
     <body>
       <div class="container">
         <div class="header">
-          <div class="logo">✦ F Jewelry</div>
+          <div class="logo">✦ ArtisanAlloy</div>
         </div>
         <div class="content">
           <div style="text-align: center;">
@@ -317,7 +317,7 @@ export const emailTemplates = {
           <p style="margin-top: 30px;">Your order is now being processed and will be shipped soon. You'll receive tracking details once dispatched.</p>
         </div>
         <div class="footer">
-          <p>© ${new Date().getFullYear()} F Jewelry. All rights reserved.</p>
+          <p>© ${new Date().getFullYear()} ArtisanAlloy. All rights reserved.</p>
         </div>
       </div>
     </body>
@@ -339,7 +339,7 @@ export const emailTemplates = {
     <head>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Order Shipped - F Jewelry</title>
+      <title>Order Shipped - ArtisanAlloy</title>
       <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #1a1a2e; color: #ffffff; margin: 0; padding: 0; }
         .container { max-width: 600px; margin: 0 auto; padding: 40px 20px; }
@@ -356,7 +356,7 @@ export const emailTemplates = {
     <body>
       <div class="container">
         <div class="header">
-          <div class="logo">✦ F Jewelry</div>
+          <div class="logo">✦ ArtisanAlloy</div>
         </div>
         <div class="content">
           <div style="text-align: center;">
@@ -377,7 +377,7 @@ export const emailTemplates = {
           <p>Your beautiful jewelry will arrive soon! We hope you love it as much as we loved creating it.</p>
         </div>
         <div class="footer">
-          <p>© ${new Date().getFullYear()} F Jewelry. All rights reserved.</p>
+          <p>© ${new Date().getFullYear()} ArtisanAlloy. All rights reserved.</p>
         </div>
       </div>
     </body>
@@ -396,7 +396,7 @@ export const sendVerificationEmail = async (
   const verificationUrl = `${process.env.FRONTEND_URL}/verify-email/${verificationToken}`;
   return sendEmail({
     to: email,
-    subject: 'Verify Your Email - F Jewelry',
+    subject: 'Verify Your Email - ArtisanAlloy',
     html: emailTemplates.verificationEmail(firstName, verificationUrl),
   });
 };
@@ -409,7 +409,7 @@ export const sendPasswordResetEmail = async (
   const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
   return sendEmail({
     to: email,
-    subject: 'Reset Your Password - F Jewelry',
+    subject: 'Reset Your Password - ArtisanAlloy',
     html: emailTemplates.passwordResetEmail(firstName, resetUrl),
   });
 };
@@ -427,7 +427,7 @@ export const sendOrderConfirmationEmail = async (
 ): Promise<boolean> => {
   return sendEmail({
     to: email,
-    subject: `Order Confirmed - ${orderNumber} | F Jewelry`,
+    subject: `Order Confirmed - ${orderNumber} | ArtisanAlloy`,
     html: emailTemplates.orderConfirmationEmail(firstName, orderNumber, items, subtotal, shipping, tax, total, shippingAddress),
   });
 };
@@ -441,7 +441,7 @@ export const sendPaymentSuccessEmail = async (
 ): Promise<boolean> => {
   return sendEmail({
     to: email,
-    subject: `Payment Received - ${orderNumber} | F Jewelry`,
+    subject: `Payment Received - ${orderNumber} | ArtisanAlloy`,
     html: emailTemplates.paymentSuccessEmail(firstName, orderNumber, amount, transactionId),
   });
 };
@@ -456,7 +456,7 @@ export const sendOrderShippedEmail = async (
 ): Promise<boolean> => {
   return sendEmail({
     to: email,
-    subject: `Order Shipped - ${orderNumber} | F Jewelry`,
+    subject: `Order Shipped - ${orderNumber} | ArtisanAlloy`,
     html: emailTemplates.orderShippedEmail(firstName, orderNumber, trackingNumber, carrier, trackingUrl),
   });
 };

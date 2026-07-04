@@ -29,15 +29,15 @@ const About = () => {
     return (
         <div className="pt-24">
             <SEO
-                title="About Us - Our Story & Heritage | F Jewelry"
-                description="Discover the F Jewelry story. Since 1990, we've been crafting timeless, handmade jewelry using ethically sourced materials. Learn about our artisans and values."
-                keywords="about F Jewelry, jewelry craftsmanship, handmade jewelry, ethical jewelry, jewelry artisans, luxury jewelry India"
-                url="https://f-jewelry.com/about"
+                title="About Us - Our Story & Heritage | ArtisanAlloy"
+                description="Discover the ArtisanAlloy story. Since 1990, we've been crafting timeless, handmade jewelry using ethically sourced materials. Learn about our artisans and values."
+                keywords="about ArtisanAlloy, jewelry craftsmanship, handmade jewelry, ethical jewelry, jewelry artisans, luxury jewelry India"
+                url="https://Artisan-Alloy.com/about"
             />
             {/* Hero Section */}
             <section className="relative h-96 flex items-center justify-center overflow-hidden">
                 <div className="absolute inset-0 z-0">
-                    <img src={necklaceImg} alt="About F Jewelry" className="w-full h-full object-cover opacity-30" />
+                    <img src={necklaceImg} alt="About ArtisanAlloy" className="w-full h-full object-cover opacity-30" />
                     <div className="absolute inset-0 bg-gradient-to-b from-jewelry-dark-deep/90 to-jewelry-dark"></div>
                 </div>
                 <div className="relative z-10 text-center px-4">
@@ -62,7 +62,7 @@ const About = () => {
                                 A Legacy of Excellence
                             </h2>
                             <p className="font-sans text-jewelry-cream/80 leading-relaxed mb-4">
-                                Founded in 1990, F Jewelry began as a small family workshop with a simple vision: to create jewelry that transcends time and trends. What started as a passion project has grown into a renowned name in luxury jewelry.
+                                Founded in 1990, ArtisanAlloy began as a small family workshop with a simple vision: to create jewelry that transcends time and trends. What started as a passion project has grown into a renowned name in luxury jewelry.
                             </p>
                             <p className="font-sans text-jewelry-cream/80 leading-relaxed mb-4">
                                 Our master artisans combine generations of traditional goldsmithing techniques with contemporary design sensibilities. Each piece is meticulously handcrafted, ensuring that no two items are exactly alike.
@@ -174,10 +174,10 @@ const About = () => {
                         Meet Our Artisans
                     </h2>
                     <p className="font-sans text-jewelry-cream/80 max-w-3xl mx-auto leading-relaxed mb-8">
-                        Behind every piece of F Jewelry is a team of passionate craftspeople dedicated to perfection. Our master jewelers, gem specialists, and designers work in harmony to create wearable art that celebrates your most precious moments.
+                        Behind every piece of ArtisanAlloy is a team of passionate craftspeople dedicated to perfection. Our master jewelers, gem specialists, and designers work in harmony to create wearable art that celebrates your most precious moments.
                     </p>
                     <p className="font-sans text-jewelry-cream/70 italic">
-                        "We don't just make jewelry; we craft memories that last forever." - F Jewelry Team
+                        "We don't just make jewelry; we craft memories that last forever." - ArtisanAlloy Team
                     </p>
                 </div>
             </section>

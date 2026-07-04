@@ -35,10 +35,10 @@ const Contact = () => {
             </div>
             <div className="relative z-10">
                 <SEO
-                    title="Contact Us - Get in Touch | F Jewelry"
-                    description="Contact F Jewelry for inquiries, custom orders, or support. Visit our Mumbai showroom or reach us via email and phone. We're here to help with your jewelry needs."
-                    keywords="contact F Jewelry, jewelry shop Mumbai, buy jewelry, custom jewelry order, jewelry inquiry, F Jewelry phone, F Jewelry email"
-                    url="https://f-jewelry.com/contact"
+                    title="Contact Us - Get in Touch | ArtisanAlloy"
+                    description="Contact ArtisanAlloy for inquiries, custom orders, or support. Visit our Mumbai showroom or reach us via email and phone. We're here to help with your jewelry needs."
+                    keywords="contact ArtisanAlloy, jewelry shop Mumbai, buy jewelry, custom jewelry order, jewelry inquiry, ArtisanAlloy phone, ArtisanAlloy email"
+                    url="https://Artisan-Alloy.com/contact"
                 />
                 {/* Hero Section */}
                 <section className="relative py-20 px-4 text-center">
@@ -63,10 +63,10 @@ const Contact = () => {
                                     For inquiries and support
                                 </p>
                                 <a
-                                    href="mailto:contact@f-jewelry.com"
+                                    href="mailto:contact@Artisan-Alloy.com"
                                     className="font-sans text-jewelry-cream hover:text-jewelry-gold transition-colors"
                                 >
-                                    contact@f-jewelry.com
+                                    contact@Artisan-Alloy.com
                                 </a>
                             </div>
 

@@ -5,6 +5,7 @@ import { useAuth, useCart, useWishlist } from '../context';
 import { useAuthToast } from '../utils/authToast';
 import ProfileMenu from './ProfileMenu';
 import AuthModal from './AuthModal';
+import BrandLogo from './BrandLogo';
 
 const Navbar = () => {
     const [isScrolled, setIsScrolled] = useState(false);
@@ -67,13 +68,16 @@ const Navbar = () => {
                 <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
                     <div className="flex items-center justify-between h-24">
                         {/* Logo */}
-                        <Link to="/" className="flex items-center group ml-8">
-                            <span className="font-display text-4xl font-bold bg-gradient-gold bg-clip-text text-transparent group-hover:scale-110 transition-transform duration-300">F</span>
-                            <span className="ml-1 font-sans text-sm text-jewelry-cream/80 hidden sm:block">Luxury Jewelry</span>
+                        <Link to="/" className="flex items-center gap-3 group ml-4 sm:ml-8">
+                            <BrandLogo size={48} className="drop-shadow-[0_0_12px_rgba(212,175,55,0.4)] group-hover:scale-110 transition-transform duration-300" />
+                            <div className="flex flex-col justify-center">
+                                <span className="font-display text-2xl sm:text-3xl font-bold bg-gradient-gold bg-clip-text text-transparent group-hover:scale-105 transition-transform duration-300 leading-none">ArtisanAlloy</span>
+                                <span className="font-sans text-[9px] sm:text-[10px] tracking-[0.35em] text-jewelry-gold uppercase font-semibold mt-1">JEWELRY</span>
+                            </div>
                         </Link>
 
                         {/* Desktop Navigation */}
-                        <div className="hidden md:flex items-center space-x-4 lg:space-x-6 flex-1 justify-center">
+                        <div className="hidden md:flex items-center space-x-5 lg:space-x-8 flex-1 justify-center ml-10 lg:ml-16">
                             {navLinks.map((link) => (
                                 <Link
                                     key={link.name}

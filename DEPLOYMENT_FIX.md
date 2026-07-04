@@ -15,7 +15,7 @@ You're experiencing **Error 500** and **timeout** during login because of miscon
 #### Backend (Render) - Environment Variables:
 ```
 NODE_ENV=production
-MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/f-jewelry
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/Artisan-Alloy
 JWT_SECRET=your-super-secret-jwt-key-min-32-characters-long
 REFRESH_TOKEN_SECRET=your-refresh-token-secret-min-32-chars-long
 JWT_EXPIRES_IN=7d
@@ -48,7 +48,7 @@ RATE_LIMIT_MAX_REQUESTS=100
 ```
 VITE_API_URL=https://your-backend.onrender.com/api/v1
 VITE_BACKEND_URL=https://your-backend.onrender.com
-VITE_APP_NAME=F Jewelry
+VITE_APP_NAME=ArtisanAlloy
 VITE_USE_MOCK_AUTH=false
 VITE_RAZORPAY_KEY_ID=rzp_test_dummy123456
 ```
@@ -69,7 +69,7 @@ VITE_RAZORPAY_KEY_ID=rzp_test_dummy123456
 #### Vercel - Environment Variables (ALL in ONE):
 ```
 NODE_ENV=production
-MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/f-jewelry
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/Artisan-Alloy
 JWT_SECRET=your-super-secret-jwt-key-min-32-characters-long
 REFRESH_TOKEN_SECRET=your-refresh-token-secret-min-32-chars-long
 JWT_EXPIRES_IN=7d
@@ -78,7 +78,7 @@ REFRESH_TOKEN_EXPIRES_IN=30d
 FRONTEND_URL=https://your-app.vercel.app
 VITE_API_URL=/api/v1
 VITE_BACKEND_URL=
-VITE_APP_NAME=F Jewelry
+VITE_APP_NAME=ArtisanAlloy
 VITE_USE_MOCK_AUTH=false
 VITE_RAZORPAY_KEY_ID=rzp_test_dummy123456
 RAZORPAY_KEY_ID=rzp_test_dummy123456
@@ -183,7 +183,7 @@ CLOUDINARY_API_SECRET=dummy-api-secret
 ```
 https://your-backend.onrender.com/api/v1/health
 ```
-Should return: `{"status":"success","message":"F Jewelry API is running!"}`
+Should return: `{"status":"success","message":"ArtisanAlloy API is running!"}`
 
 ### 2. Check Frontend API Connection
 Open browser console (F12) and check network tab when logging in. Look for:

@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Facebook, Instagram, Twitter, Mail, Phone, MapPin } from 'lucide-react';
 import TrustBadges from './TrustBadges';
+import BrandLogo from './BrandLogo';
 
 const Footer = () => {
     const currentYear = new Date().getFullYear();
@@ -11,10 +12,14 @@ const Footer = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                     {/* Brand Section */}
                     <div className="space-y-4">
-                        <Link to="/" className="flex items-center group">
-                            <span className="font-display text-4xl font-bold bg-gradient-gold bg-clip-text text-transparent">
-                                F
-                            </span>
+                        <Link to="/" className="flex items-center gap-3 group">
+                            <BrandLogo size={42} className="drop-shadow-[0_0_10px_rgba(212,175,55,0.3)]" />
+                            <div className="flex flex-col">
+                                <span className="font-display text-2xl font-bold bg-gradient-gold bg-clip-text text-transparent leading-none">
+                                    ArtisanAlloy
+                                </span>
+                                <span className="font-sans text-[10px] tracking-[0.35em] text-jewelry-gold uppercase font-semibold mt-1">JEWELRY</span>
+                            </div>
                         </Link>
                         <p className="text-jewelry-cream/70 text-sm font-sans leading-relaxed">
                             Crafting timeless elegance through exquisite jewelry that tells your unique story.
@@ -75,7 +80,7 @@ const Footer = () => {
                             <li className="flex items-start space-x-3">
                                 <Mail className="w-5 h-5 text-jewelry-rose mt-0.5" />
                                 <span className="text-jewelry-cream/70 text-sm font-sans">
-                                    contact@f-jewelry.com
+                                    contact@Artisan-Alloy.com
                                 </span>
                             </li>
                             <li className="flex items-start space-x-3">
@@ -124,7 +129,7 @@ const Footer = () => {
                 <div className="mt-8 pt-8 border-t border-jewelry-gold/20">
                     <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
                         <p className="text-jewelry-cream/60 text-sm font-sans">
-                            © {currentYear} F Jewelry. All rights reserved.
+                            © {currentYear} ArtisanAlloy. All rights reserved.
                         </p>
                         <div className="flex items-center space-x-4">
                             <span className="text-jewelry-cream/60 text-sm font-sans">We Accept:</span>

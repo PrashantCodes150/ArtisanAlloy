@@ -1,4 +1,4 @@
-# F Jewelry - 503 Error Fix Complete ✅
+# ArtisanAlloy - 503 Error Fix Complete ✅
 
 This document explains the complete fix for the 503 Service Unavailable errors that were occurring after deployment.
 
@@ -95,7 +95,7 @@ Go to **Vercel Dashboard → Your Project → Settings → Environment Variables
 Add these **essential** variables:
 
 ```
-MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/f-jewelry?retryWrites=true&w=majority
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/Artisan-Alloy?retryWrites=true&w=majority
 JWT_SECRET=<generate-new-32-char-key>
 REFRESH_TOKEN_SECRET=<generate-new-32-char-key>
 FRONTEND_URL=https://your-domain.vercel.app
@@ -130,7 +130,7 @@ Expected response:
 ```json
 {
   "status": "success",
-  "message": "F Jewelry API is running! 💎",
+  "message": "ArtisanAlloy API is running! 💎",
   "dbStatus": "connected",
   "timestamp": "2026-04-05T...",
   "environment": "production"

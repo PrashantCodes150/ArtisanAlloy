@@ -1,6 +1,6 @@
-# 🔐 Complete Authentication System for F Jewelry
+# 🔐 Complete Authentication System for ArtisanAlloy
 
-This authentication system provides a production-ready, secure authentication solution with jewelry-themed UI components for the F Jewelry e-commerce platform.
+This authentication system provides a production-ready, secure authentication solution with jewelry-themed UI components for the ArtisanAlloy e-commerce platform.
 
 ## ✨ Features
 
@@ -111,7 +111,7 @@ NODE_ENV=development
 PORT=5000
 
 # MongoDB
-MONGODB_URI=mongodb://localhost:27017/f-jewelry
+MONGODB_URI=mongodb://localhost:27017/Artisan-Alloy
 
 # JWT Secrets (change in production!)
 JWT_SECRET=your-super-secret-jwt-key-min-32-chars
@@ -122,7 +122,7 @@ EMAIL_HOST=smtp.gmail.com
 EMAIL_PORT=587
 EMAIL_USER=your-email@gmail.com
 EMAIL_PASS=your-app-specific-password
-EMAIL_FROM=F Jewelry <noreply@f-jewelry.com>
+EMAIL_FROM=ArtisanAlloy <noreply@Artisan-Alloy.com>
 
 # Frontend URL (for CORS)
 FRONTEND_URL=http://localhost:5173
@@ -131,7 +131,7 @@ FRONTEND_URL=http://localhost:5173
 #### Frontend (.env)
 ```env
 VITE_API_URL=http://localhost:5000/api/v1
-VITE_APP_NAME=F Jewelry
+VITE_APP_NAME=ArtisanAlloy
 ```
 
 ## 🔧 API Endpoints
@@ -326,4 +326,4 @@ For issues related to authentication:
 
 ---
 
-**Built with ❤️ for F Jewelry - Your Premium Jewelry Destination**
+**Built with ❤️ for ArtisanAlloy - Your Premium Jewelry Destination**

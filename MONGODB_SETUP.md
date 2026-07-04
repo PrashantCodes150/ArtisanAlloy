@@ -31,7 +31,7 @@ sudo systemctl start mongod
 4. Get connection string
 5. Update .env file:
 ```
-MONGODB_URI=mongodb+srv://<username>:<password>@cluster.xxxxx.mongodb.net/f-jewelry?retryWrites=true&w=majority
+MONGODB_URI=mongodb+srv://<username>:<password>@cluster.xxxxx.mongodb.net/Artisan-Alloy?retryWrites=true&w=majority
 ```
 
 ## Option 3: Quick Test with Docker

@@ -79,7 +79,7 @@ const Dashboard = () => {
       {/* Page Header */}
       <div>
         <h1 className="font-display text-3xl font-bold text-jewelry-gold">Dashboard</h1>
-        <p className="text-jewelry-cream/60 font-sans mt-1">Welcome to F Jewelry Admin Panel</p>
+        <p className="text-jewelry-cream/60 font-sans mt-1">Welcome to ArtisanAlloy Admin Panel</p>
       </div>
 
       {/* Stats Cards */}
@@ -165,14 +165,14 @@ const Dashboard = () => {
       <div className="glass rounded-xl p-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="font-display text-xl text-jewelry-cream">Recent Orders</h2>
-          <Link 
-            to="/admin/orders" 
+          <Link
+            to="/admin/orders"
             className="text-sm text-jewelry-gold hover:underline font-sans"
           >
             View All →
           </Link>
         </div>
-        
+
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
@@ -202,7 +202,7 @@ const Dashboard = () => {
                     ₹{order.total?.toLocaleString()}
                   </td>
                   <td className="py-4">
-                    <Link 
+                    <Link
                       to={`/admin/orders/${order._id}`}
                       className="text-jewelry-gold hover:text-jewelry-gold/80"
                     >

@@ -1,4 +1,4 @@
-# F-Jewelry Authentication Flow Fix
+# artisan-alloy Authentication Flow Fix
 
 ## Root Causes Identified & Fixed
 

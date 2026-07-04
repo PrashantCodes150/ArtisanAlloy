@@ -180,7 +180,7 @@ const sendAbandonedCartEmail = async (cart: PopulatedCart) => {
     const emailContent = generateAbandonedCartEmail(cart);
     
     await transporter.sendMail({
-      from: process.env.EMAIL_FROM || '"F Jewelry" <noreply@fjewelry.com>',
+      from: process.env.EMAIL_FROM || '"ArtisanAlloy" <noreply@ArtisanAlloy.com>',
       to: cart.userEmail,
       subject: emailContent.subject,
       html: emailContent.html,
@@ -203,7 +203,7 @@ const generateAbandonedCartEmail = (cart: PopulatedCart) => {
   const itemCount = cartItems.length;
   const cartValue = cart.totalAmount || 0;
 
-  const subject = `Did you forget something? Complete your purchase at F Jewelry`;
+  const subject = `Did you forget something? Complete your purchase at ArtisanAlloy`;
 
   const html = `
     <!DOCTYPE html>
@@ -211,7 +211,7 @@ const generateAbandonedCartEmail = (cart: PopulatedCart) => {
     <head>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Complete Your Purchase - F Jewelry</title>
+      <title>Complete Your Purchase - ArtisanAlloy</title>
       <style>
         body {
           font-family: Arial, sans-serif;
@@ -359,7 +359,7 @@ const generateAbandonedCartEmail = (cart: PopulatedCart) => {
     </head>
     <body>
       <div class="header">
-        <div class="logo">F Jewelry</div>
+        <div class="logo">ArtisanAlloy</div>
         <h1 style="color: white; margin: 0;">Complete Your Purchase</h1>
         <p style="color: white; margin: 5px 0 0;">Your items are waiting for you!</p>
       </div>
@@ -429,13 +429,13 @@ const generateAbandonedCartEmail = (cart: PopulatedCart) => {
 
       <div class="footer">
         <p>This is an automated reminder. Your cart will expire in 24 hours.</p>
-        <p>&copy; 2024 F Jewelry. All rights reserved.</p>
+        <p>&copy; 2024 ArtisanAlloy. All rights reserved.</p>
       </div>
     </body>
     </html>
   `;
 
-  return { subject, html, text: `Complete your purchase at F Jewelry. Your cart contains ${itemCount} items worth ₹${cartValue}.` };
+  return { subject, html, text: `Complete your purchase at ArtisanAlloy. Your cart contains ${itemCount} items worth ₹${cartValue}.` };
 };
 
 /**

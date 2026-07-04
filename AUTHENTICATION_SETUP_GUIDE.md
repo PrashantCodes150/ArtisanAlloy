@@ -1,6 +1,6 @@
-# F Jewelry E-commerce - Complete Authentication System Setup Guide
+# ArtisanAlloy E-commerce - Complete Authentication System Setup Guide
 
-This guide will help you set up and run the complete authentication system for F Jewelry E-commerce website.
+This guide will help you set up and run the complete authentication system for ArtisanAlloy E-commerce website.
 
 ## 🚀 Features Implemented
 
@@ -39,7 +39,7 @@ This guide will help you set up and run the complete authentication system for F
 ## 🗂️ Project Structure
 
 ```
-f-jewelry-react/
+Artisan-Alloy-react/
 ├── backend/                    # Node.js/Express server
 │   ├── src/
 │   │   ├── controllers/        # API controllers
@@ -85,7 +85,7 @@ PORT=5000
 FRONTEND_URL=http://localhost:5173
 
 # MongoDB Configuration
-MONGODB_URI=mongodb://localhost:27017/f-jewelry
+MONGODB_URI=mongodb://localhost:27017/Artisan-Alloy
 
 # JWT Configuration
 JWT_SECRET=your-super-secure-jwt-secret-key-change-this-in-production
@@ -103,7 +103,7 @@ EMAIL_HOST=smtp.gmail.com
 EMAIL_PORT=587
 EMAIL_USER=your-email@gmail.com
 EMAIL_PASS=your-app-password
-EMAIL_FROM=F Jewelry <noreply@fjewelry.com>
+EMAIL_FROM=ArtisanAlloy <noreply@ArtisanAlloy.com>
 ```
 
 #### Step 3: Google OAuth Setup (Optional but Recommended)
@@ -258,7 +258,7 @@ vercel --prod
 #### Option 2: Heroku
 ```bash
 # Install Heroku CLI
-heroku create f-jewelry-backend
+heroku create Artisan-Alloy-backend
 git add .
 git commit -m "Deploy to Heroku"
 git push heroku main
@@ -344,7 +344,7 @@ For any issues or questions:
 
 ## 🎉 You're All Set!
 
-Your F Jewelry E-commerce website now has a complete, production-ready authentication system similar to Amazon, Myntra, and Flipkart!
+Your ArtisanAlloy E-commerce website now has a complete, production-ready authentication system similar to Amazon, Myntra, and Flipkart!
 
 ### Key Features Working:
 - ✅ Secure user registration and login

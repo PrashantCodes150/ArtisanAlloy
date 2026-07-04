@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# F Jewelry - Vercel Deployment Setup Script
+# ArtisanAlloy - Vercel Deployment Setup Script
 # This script helps configure environment variables for Vercel deployment
 
 echo "================================"
-echo "F Jewelry - Vercel Setup"
+echo "ArtisanAlloy - Vercel Setup"
 echo "================================"
 echo ""
 
@@ -24,7 +24,7 @@ echo ""
 
 # Prompt for critical values
 read -p "Enter your MongoDB Atlas connection string (MONGODB_URI): " mongodb_uri
-read -p "Enter your Frontend URL (e.g., https://f-jewelry.vercel.app): " frontend_url
+read -p "Enter your Frontend URL (e.g., https://Artisan-Alloy.vercel.app): " frontend_url
 read -p "Enter your Google Client ID: " google_client_id
 read -p "Enter your Google Client Secret: " google_client_secret
 read -p "Enter your Razorpay Key ID: " razorpay_key_id
@@ -38,12 +38,12 @@ refresh_token_secret=$(generate_key)
 
 # Create .env.local file
 cat > .env.local << EOF
-# F Jewelry - Development Environment Variables
+# ArtisanAlloy - Development Environment Variables
 
 # ===== FRONTEND CONFIGURATION =====
 VITE_API_URL=/api/v1
 VITE_BACKEND_URL=
-VITE_APP_NAME=F Jewelry
+VITE_APP_NAME=ArtisanAlloy
 VITE_USE_MOCK_AUTH=false
 VITE_RAZORPAY_KEY_ID=$razorpay_key_id
 

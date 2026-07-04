@@ -1,4 +1,4 @@
-# F Jewelry - Pre-Deployment Checklist
+# ArtisanAlloy - Pre-Deployment Checklist
 
 Complete this checklist before deploying to Vercel to ensure everything works correctly.
 
@@ -151,11 +151,11 @@ Run these curl commands (replace domain):
 ```bash
 # Test 1: Root endpoint
 curl https://your-domain.vercel.app/
-# Should return: {"status":"success","message":"F Jewelry API is live! 💎"}
+# Should return: {"status":"success","message":"ArtisanAlloy API is live! 💎"}
 
 # Test 2: Health check
 curl https://your-domain.vercel.app/api/v1/health
-# Should return: {"status":"success","message":"F Jewelry API is running! 💎",...}
+# Should return: {"status":"success","message":"ArtisanAlloy API is running! 💎",...}
 
 # Test 3: Test API endpoint
 curl -X POST https://your-domain.vercel.app/api/v1/auth/register \

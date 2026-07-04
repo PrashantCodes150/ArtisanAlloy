@@ -47,7 +47,7 @@ export default function CustomerSupport() {
       // Simulate loading initial messages
       const initialMessage: Message = {
         id: '1',
-        text: 'Hello! Welcome to F Jewelry Customer Support. I\'m here to help you with any questions about our products, orders, or services. How can I assist you today?',
+        text: 'Hello! Welcome to ArtisanAlloy Customer Support. I\'m here to help you with any questions about our products, orders, or services. How can I assist you today?',
         sender: 'support',
         timestamp: new Date().toISOString(),
         supportAgent: {
@@ -253,7 +253,7 @@ export default function CustomerSupport() {
           <div className="mt-8 p-6 bg-purple-50 rounded-xl">
             <div className="flex items-center gap-4 text-center">
               <Mail className="w-5 h-5 text-purple-600" />
-              <p className="text-sm text-purple-700">Email: support@fjewelry.com</p>
+              <p className="text-sm text-purple-700">Email: support@ArtisanAlloy.com</p>
               <Phone className="w-5 h-5 text-purple-600" />
               <p className="text-sm text-purple-700">Phone: +1-800-F-JEWELRY</p>
             </div>

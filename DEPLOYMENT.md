@@ -1,9 +1,9 @@
-# F-Jewelry Deployment Guide
+# artisan-alloy Deployment Guide
 
 ## Project Structure
 
 ```
-f-jewelry-react/
+Artisan-Alloy-react/
 ├── api/                    # Backend (Deploy to Render)
 │   ├── src/
 │   ├── package.json
@@ -51,7 +51,7 @@ f-jewelry-react/
 | `MONGODB_URI` | MongoDB Atlas connection string |
 | `JWT_SECRET` | JWT signing secret (min 32 chars) |
 | `REFRESH_TOKEN_SECRET` | Refresh token secret |
-| `FRONTEND_URL` | Vercel frontend URL (e.g., `https://f-jewelry.vercel.app`) |
+| `FRONTEND_URL` | Vercel frontend URL (e.g., `https://Artisan-Alloy.vercel.app`) |
 | `ALLOWED_ORIGINS` | Comma-separated additional domains (optional) |
 
 ## Step 2: Deploy Frontend to Vercel
@@ -69,7 +69,7 @@ f-jewelry-react/
 |----------|-------|
 | `VITE_API_URL` | `https://your-backend.onrender.com/api/v1` |
 | `VITE_BACKEND_URL` | `https://your-backend.onrender.com` |
-| `VITE_APP_NAME` | `F Jewelry` |
+| `VITE_APP_NAME` | `ArtisanAlloy` |
 | `VITE_USE_MOCK_AUTH` | `false` |
 | `VITE_RAZORPAY_KEY_ID` | Your Razorpay key |
 
@@ -79,7 +79,7 @@ f-jewelry-react/
 
 After both deployments:
 
-1. Copy your **Vercel frontend URL** (e.g., `https://f-jewelry.vercel.app`)
+1. Copy your **Vercel frontend URL** (e.g., `https://Artisan-Alloy.vercel.app`)
 2. In Render dashboard, update backend env var:
    - `FRONTEND_URL` = your Vercel URL
 3. Restart the Render service

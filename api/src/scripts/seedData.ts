@@ -5,7 +5,7 @@ import bcrypt from 'bcryptjs';
 
 dotenv.config();
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/f-jewelry';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/Artisan-Alloy';
 
 // Categories Data
 const categoriesData = [
@@ -15,20 +15,20 @@ const categoriesData = [
   { name: 'Daily Wear', slug: 'daily-wear', type: 'occasion', description: 'Comfortable everyday jewelry', order: 3, isFeatured: true, isActive: true },
   { name: 'Festival', slug: 'festival', type: 'occasion', description: 'Traditional festival jewelry', order: 4, isFeatured: true, isActive: true },
   { name: 'Office', slug: 'office', type: 'occasion', description: 'Professional office wear jewelry', order: 5, isFeatured: false, isActive: true },
-  
+
   // Personality Categories
   { name: 'Bold', slug: 'bold', type: 'personality', description: 'Statement pieces for bold personalities', order: 1, isFeatured: true, isActive: true },
   { name: 'Minimalist', slug: 'minimalist', type: 'personality', description: 'Simple and elegant designs', order: 2, isFeatured: true, isActive: true },
   { name: 'Vintage', slug: 'vintage', type: 'personality', description: 'Classic vintage-inspired pieces', order: 3, isFeatured: true, isActive: true },
   { name: 'Trendy', slug: 'trendy', type: 'personality', description: 'Latest fashion trends', order: 4, isFeatured: false, isActive: true },
-  
+
   // Material Categories
   { name: 'Gold Plated', slug: 'gold-plated', type: 'material', description: 'Premium gold plated jewelry', order: 1, isFeatured: true, isActive: true },
   { name: 'Silver', slug: 'silver', type: 'material', description: 'Pure silver jewelry', order: 2, isFeatured: true, isActive: true },
   { name: 'Kundan', slug: 'kundan', type: 'material', description: 'Traditional kundan work', order: 3, isFeatured: true, isActive: true },
   { name: 'Pearl', slug: 'pearl', type: 'material', description: 'Elegant pearl jewelry', order: 4, isFeatured: false, isActive: true },
   { name: 'Meenakari', slug: 'meenakari', type: 'material', description: 'Colorful meenakari designs', order: 5, isFeatured: false, isActive: true },
-  
+
   // Jewelry Type Categories
   { name: 'Necklaces', slug: 'necklaces', type: 'jewelry-type', description: 'Beautiful necklace sets', order: 1, isFeatured: true, isActive: true },
   { name: 'Earrings', slug: 'earrings', type: 'jewelry-type', description: 'Stunning earrings collection', order: 2, isFeatured: true, isActive: true },
@@ -37,7 +37,7 @@ const categoriesData = [
   { name: 'Bracelets', slug: 'bracelets', type: 'jewelry-type', description: 'Stylish bracelets', order: 5, isFeatured: false, isActive: true },
   { name: 'Anklets', slug: 'anklets', type: 'jewelry-type', description: 'Beautiful anklets', order: 6, isFeatured: false, isActive: true },
   { name: 'Maang Tikka', slug: 'maang-tikka', type: 'jewelry-type', description: 'Traditional maang tikka', order: 7, isFeatured: false, isActive: true },
-  
+
   // Gifting Categories
   { name: 'For Her', slug: 'for-her', type: 'gifting', description: 'Perfect gifts for women', order: 1, isFeatured: true, isActive: true },
   { name: 'Anniversary', slug: 'anniversary', type: 'gifting', description: 'Anniversary special jewelry', order: 2, isFeatured: true, isActive: true },
@@ -343,7 +343,7 @@ const couponsData = [
 const adminUserData = {
   firstName: 'Admin',
   lastName: 'User',
-  email: 'admin@fjewelry.com',
+  email: 'admin@ArtisanAlloy.com',
   password: 'Admin@123',
   role: 'admin',
   isEmailVerified: true,
@@ -364,7 +364,7 @@ const testUserData = {
 async function seedDatabase() {
   try {
     console.log('🌱 Starting database seeding...\n');
-    
+
     // Connect to MongoDB
     await mongoose.connect(MONGODB_URI);
     console.log('✅ Connected to MongoDB\n');
@@ -413,7 +413,7 @@ async function seedDatabase() {
       } else {
         category = necklaceCategory?._id;
       }
-      
+
       return { ...product, category };
     });
 
@@ -439,7 +439,7 @@ async function seedDatabase() {
     console.log('👤 Creating admin user...');
     const hashedAdminPassword = await bcrypt.hash(adminUserData.password, 12);
     await User.create({ ...adminUserData, password: hashedAdminPassword });
-    console.log('✅ Admin user created (admin@fjewelry.com / Admin@123)\n');
+    console.log('✅ Admin user created (admin@ArtisanAlloy.com / Admin@123)\n');
 
     // Seed Test User
     console.log('👤 Creating test user...');
@@ -450,17 +450,17 @@ async function seedDatabase() {
     console.log('═══════════════════════════════════════════');
     console.log('🎉 Database seeding completed successfully!');
     console.log('═══════════════════════════════════════════\n');
-    
+
     console.log('📊 Summary:');
     console.log(`   • ${categories.length} categories`);
     console.log(`   • ${products.length} products`);
     console.log(`   • ${coupons.length} coupons`);
     console.log(`   • 2 users (1 admin, 1 customer)\n`);
-    
+
     console.log('🔐 Login Credentials:');
-    console.log('   Admin: admin@fjewelry.com / Admin@123');
+    console.log('   Admin: admin@ArtisanAlloy.com / Admin@123');
     console.log('   Test:  test@example.com / Test@123\n');
-    
+
     console.log('🎟️  Available Coupons:');
     couponsData.forEach(coupon => {
       console.log(`   • ${coupon.code} - ${coupon.description}`);

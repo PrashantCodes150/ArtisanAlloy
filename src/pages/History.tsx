@@ -297,7 +297,7 @@ const History = () => {
                             designers honor traditional craftsmanship while incorporating cutting-edge materials and sustainable practices.
                         </p>
                         <p className="font-sans text-jewelry-cream/80 leading-relaxed">
-                            At <strong className="text-jewelry-gold">F Jewelry</strong>, we honor this timeless legacy by creating pieces that connect you
+                            At <strong className="text-jewelry-gold">ArtisanAlloy</strong>, we honor this timeless legacy by creating pieces that connect you
                             to centuries of artistry while celebrating your unique, modern story. Every piece we craft carries forward the spirit of
                             ancient artisans who transformed precious materials into wearable art.
                         </p>

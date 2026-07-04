@@ -1,4 +1,4 @@
-# 🎨 F Jewelry Website Theme Cleanup - Complete!
+# 🎨 ArtisanAlloy Website Theme Cleanup - Complete!
 
 ## 🧹 Changes Made
 
@@ -43,7 +43,7 @@
 
 ## 🎯 **Final Result**
 
-Your F Jewelry website now has:
+Your ArtisanAlloy website now has:
 - **Professional, elegant dark theme**
 - **Clean, distraction-free design**
 - **Complete auth system** with jewelry theming

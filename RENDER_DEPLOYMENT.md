@@ -12,7 +12,7 @@
 2. Click **"New +"** → **"Web Service"**
 3. Connect your GitHub account and select this repository
 4. Configure the service:
-   - **Name**: `f-jewelry-backend` (or your preferred name)
+   - **Name**: `Artisan-Alloy-backend` (or your preferred name)
    - **Region**: Choose closest to your users
    - **Branch**: `main`
    - **Root Directory**: `api`
@@ -27,7 +27,7 @@
    - `MONGODB_URI` = your MongoDB Atlas connection string
    - `JWT_SECRET` = generate a secure random string (min 32 chars)
    - `REFRESH_TOKEN_SECRET` = generate another secure random string
-   - `FRONTEND_URL` = your Vercel frontend URL (e.g., `https://f-jewelry.vercel.app`)
+   - `FRONTEND_URL` = your Vercel frontend URL (e.g., `https://Artisan-Alloy.vercel.app`)
    - Add other required variables from `api/.env.example`
 
 6. Click **"Create Web Service"**
@@ -57,11 +57,11 @@ npm run start
 
 ## After Deployment
 
-1. Copy your Render backend URL (e.g., `https://f-jewelry-backend.onrender.com`)
+1. Copy your Render backend URL (e.g., `https://Artisan-Alloy-backend.onrender.com`)
 2. Update your frontend's `.env` file:
    ```
-   VITE_API_URL=https://f-jewelry-backend.onrender.com/api/v1
-   VITE_BACKEND_URL=https://f-jewelry-backend.onrender.com
+   VITE_API_URL=https://Artisan-Alloy-backend.onrender.com/api/v1
+   VITE_BACKEND_URL=https://Artisan-Alloy-backend.onrender.com
    ```
 3. Redeploy your Vercel frontend to apply the new environment variables
 

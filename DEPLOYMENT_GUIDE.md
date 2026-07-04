@@ -1,6 +1,6 @@
-# F Jewelry - Deployment Guide (Vercel)
+# ArtisanAlloy - Deployment Guide (Vercel)
 
-This guide explains how to deploy the F Jewelry e-commerce application to Vercel with proper configuration to avoid 503 errors.
+This guide explains how to deploy the ArtisanAlloy e-commerce application to Vercel with proper configuration to avoid 503 errors.
 
 ## Prerequisites
 
@@ -45,7 +45,7 @@ Add these critical variables:
 
 ```
 # Database (REQUIRED - without this, you'll get 503 errors)
-MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/f-jewelry?retryWrites=true&w=majority
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/Artisan-Alloy?retryWrites=true&w=majority
 
 # Security Keys (generate new ones)
 JWT_SECRET=<your-32-char-random-string>
@@ -106,7 +106,7 @@ EMAIL_PASS=<your-app-password>
 
 #### 4. **Wrong FRONTEND_URL**
 - **Cause**: CORS errors, API calls blocked
-- **Solution**: Set to your Vercel domain (e.g., `https://f-jewelry.vercel.app`)
+- **Solution**: Set to your Vercel domain (e.g., `https://Artisan-Alloy.vercel.app`)
 
 #### 5. **Node.js Build Issues**
 - **Check**: Vercel build logs in Dashboard
@@ -159,7 +159,7 @@ curl https://your-domain.vercel.app/api/v1/auth/register
    ```json
    {
      "status": "success",
-     "message": "F Jewelry API is running! 💎",
+     "message": "ArtisanAlloy API is running! 💎",
      "databaseConnected": true,
      "environment": "production"
    }

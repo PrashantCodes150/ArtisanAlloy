@@ -117,7 +117,7 @@ class WishlistSharingService {
       <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Wishlist Shared with You - F Jewelry</title>
+        <title>Wishlist Shared with You - ArtisanAlloy</title>
         <style>
           body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #1a1a2e; color: #ffffff; margin: 0; padding: 0; }
           .container { max-width: 600px; margin: 0 auto; padding: 40px 20px; }
@@ -134,11 +134,11 @@ class WishlistSharingService {
       <body>
         <div class="container">
           <div class="header">
-            <div class="logo">✦ F Jewelry</div>
+            <div class="logo">✦ ArtisanAlloy</div>
           </div>
           <div class="content">
             <h1>You've Received a Wishlist!</h1>
-            <p><strong>${data.senderName}</strong> has shared a wishlist with you on F Jewelry.</p>
+            <p><strong>${data.senderName}</strong> has shared a wishlist with you on ArtisanAlloy.</p>
             
             ${data.message ? `
             <div class="sender-message">
@@ -157,8 +157,8 @@ class WishlistSharingService {
             <p>You can browse all items and even purchase them directly for ${data.senderName}!</p>
           </div>
           <div class="footer">
-            <p>© ${new Date().getFullYear()} F Jewelry. All rights reserved.</p>
-            <p>Questions? Contact us at support@f-jewelry.com</p>
+            <p>© ${new Date().getFullYear()} ArtisanAlloy. All rights reserved.</p>
+            <p>Questions? Contact us at support@Artisan-Alloy.com</p>
           </div>
         </div>
       </body>

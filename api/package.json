@@ -1,7 +1,7 @@
 {
-  "name": "f-jewelry-backend",
+  "name": "Artisan-Alloy-backend",
   "version": "1.0.0",
-  "description": "Backend API for F Jewelry E-Commerce Platform",
+  "description": "Backend API for ArtisanAlloy E-Commerce Platform",
   "scripts": {
     "dev": "nodemon --exec ts-node src/server.ts",
     "build": "tsc",
@@ -17,7 +17,7 @@
     "express",
     "mongodb"
   ],
-  "author": "F Jewelry",
+  "author": "ArtisanAlloy",
   "license": "MIT",
   "dependencies": {
     "@types/bcryptjs": "^2.4.6",
