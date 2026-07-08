@@ -14,6 +14,12 @@
     <img src="https://img.shields.io/badge/Express-5.0-000000?style=for-the-badge&logo=express&logoColor=white" alt="Express" />
     <img src="https://img.shields.io/badge/Razorpay-Integrated-0C2340?style=for-the-badge&logo=razorpay&logoColor=white" alt="Razorpay" />
   </p>
+  
+  <div style="margin-top: 20px;">
+    <a href="https://github.com/PrashantCodes150">
+      <img src="https://github-profile-trophy.vercel.app/?username=PrashantCodes150&theme=onedark&column=4&margin-w=15&margin-h=15" alt="GitHub Trophies" />
+    </a>
+  </div>
 </div>
 
 ---
